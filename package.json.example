@@ -1,0 +1,1 @@
+"seeder": "ts-node src/utils/seeder.ts", // previously it was like this 

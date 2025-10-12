@@ -1,0 +1,6 @@
+::::::::::::::::::::::::::::::::::::: netstat -ano | findstr :<PORT>
+to kill a process by pid  ::::::::::: taskkill /PID <PORT> /F
+
+
+[ERROR] Error: listen EADDRINUSE: address already in use 172.26.89.58:6733
+>  sudo fuser -k 6733/tcp

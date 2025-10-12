@@ -1,0 +1,21 @@
+flowchart LR
+   subgraph Description
+      
+        direction LR
+
+         Ad[To Join a conversation]
+         Cd[To send a new message in a conversation]
+         Bd[To leave a conversation]
+         Dd[Get all conversations with pagination]
+        
+  end
+
+  subgraph Event
+        direction LR
+        A1[create conversation manullay pass participants which is arrayOfUserId and message] 
+
+        A[join] --pass {conversationId}--> Ad
+        C[send-new-message] --pass {conversationId, message}-->Cd
+        B[leave] --pass {conversationId}--> Bd    
+        D[get-all-conversations-with-pagination] --pass {page, limit}--> Dd
+  end

@@ -1,0 +1,75 @@
+#version: "3.9"
+
+services:
+  backend:
+    build: .
+    container_name: suplify-backend
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+    depends_on:
+      - redis
+      - kafka
+    volumes:
+      - .:/usr/src/app
+      #- /usr/src/app
+    command: pnpm run dev
+    networks:
+      - suplify-network
+    environment:
+      # CRITICAL: Override Redis/Kafka connections for Docker networking
+      # These will override any values in your .env file
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      KAFKA_BROKERS: kafka:9092
+
+
+#  🔁 Why remove - /usr/src/app/node_modules?
+#If you mount an empty named volume (/usr/src/app/node_modules), it overrides the real node_modules from the image → your app breaks because modules are missing inside container.
+# For development, just mount your code and let the image keep its node_modules.
+  redis:
+    image: redis:7-alpine
+    container_name: suplify-redis
+    restart: always
+    ports:
+      - "6379:6379" #"6380:6379"
+    command: redis-server --appendonly yes
+    networks:
+      - suplify-network
+
+  kafka:
+    image: bitnami/kafka:3.7.0
+    container_name: suplify-kafka
+    restart: always
+    ports:
+      - "9092:9092"
+    environment:
+      - KAFKA_CFG_NODE_ID=1
+      - KAFKA_CFG_PROCESS_ROLES=broker,controller
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092 #localhost
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka:9093 # localhost
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      # Set reasonable message size limits (10MB) // By Claude
+      - KAFKA_CFG_MESSAGE_MAX_BYTES=10485760
+      - KAFKA_CFG_REPLICA_FETCH_MAX_BYTES=10485760
+      - KAFKA_CFG_SOCKET_REQUEST_MAX_BYTES=10485760
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
+    networks:
+      - suplify-network
+
+volumes:
+  redis_data:
+    driver: local
+  kafka_data:
+    driver: local
+
+networks:
+  suplify-network:
+    driver: bridge
