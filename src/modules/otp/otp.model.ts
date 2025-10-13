@@ -1,3 +1,4 @@
+//@ts-ignore
 import mongoose, { Schema } from 'mongoose';
 import IOtp, { OtpType } from './otp.interface';
 
