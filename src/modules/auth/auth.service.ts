@@ -6,15 +6,15 @@ import ApiError from '../../errors/ApiError';
 //@ts-ignore
 import { StatusCodes } from 'http-status-codes';
 import eventEmitterForOTPCreateAndSendMail, { OtpService } from '../otp/otp.service';
-import { User } from '../user/user.model';
+import { User } from '../user.module/user/user.model';
 //@ts-ignore
 import bcryptjs from 'bcryptjs';
-import { TUser } from '../user/user.interface';
+import { TUser } from '../user.module/user/user.interface';
 import { config } from '../../config';
 import { TokenService } from '../token/token.service';
 import { TokenType } from '../token/token.interface';
 import { OtpType } from '../otp/otp.interface';
-import { UserProfile } from '../user/userProfile/userProfile.model';
+import { UserProfile } from '../user.module/userProfile/userProfile.model';
 import { WalletService } from '../wallet.module/wallet/wallet.service';
 import { TCurrency } from '../../enums/payment';
 

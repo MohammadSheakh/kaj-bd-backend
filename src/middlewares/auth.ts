@@ -2,16 +2,16 @@ import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { Secret } from 'jsonwebtoken';
 import { roleRights, TRole } from './roles';
-import { User } from '../modules/user/user.model';
+import { User } from '../modules/user.module/user/user.model';
 import ApiError from '../errors/ApiError';
 import catchAsync from '../shared/catchAsync';
 import { config } from '../config';
 import { TokenType } from '../modules/token/token.interface';
 import { TokenService } from '../modules/token/token.service';
-import { IUser } from '../modules/user/user.interface';
-import { IUserProfile } from '../modules/user/userProfile/userProfile.interface';
-import { UserProfile } from '../modules/user/userProfile/userProfile.model';
-import { TApprovalStatus } from '../modules/user/userProfile/userProfile.constant';
+import { IUser } from '../modules/user.module/user/user.interface';
+import { IUserProfile } from '../modules/user.module/userProfile/userProfile.interface';
+import { UserProfile } from '../modules/user.module/userProfile/userProfile.model';
+import { TApprovalStatus } from '../modules/user.module/userProfile/userProfile.constant';
 
 const auth = (...roles: TRole[]/******** Previously it was string[] */) =>
   catchAsync(async (req: Request, res: Response, next: NextFunction) => {

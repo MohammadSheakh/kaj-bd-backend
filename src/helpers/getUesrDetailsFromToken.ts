@@ -2,7 +2,7 @@ import * as jwt from 'jsonwebtoken';
 import httpStatus from 'http-status';
 import { config } from '../config';
 import ApiError from '../errors/ApiError';
-import { User } from '../modules/user/user.model';
+import { User } from '../modules/user.module/user/user.model';
 
 const getUserDetailsFromToken = async (token: string) => {
   // console.log("token from getUserDetails -> ", token)

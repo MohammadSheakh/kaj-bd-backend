@@ -1,13 +1,13 @@
 //@ts-ignore
 import express from 'express';
-import fileUploadHandler from '../../shared/fileUploadHandler';
-import convertHeicToPngMiddleware from '../../shared/convertHeicToPngMiddleware';
+import fileUploadHandler from '../../../shared/fileUploadHandler';
+import convertHeicToPngMiddleware from '../../../shared/convertHeicToPngMiddleware';
 import { UserController } from './user.controller';
-import { validateFiltersForQuery } from '../../middlewares/queryValidation/paginationQueryValidationMiddleware';
-import auth from '../../middlewares/auth';
+import { validateFiltersForQuery } from '../../../middlewares/queryValidation/paginationQueryValidationMiddleware';
+import auth from '../../../middlewares/auth';
 import { IUser } from './user.interface';
-import { TRole } from '../../middlewares/roles';
-import validateRequest from '../../shared/validateRequest';
+import { TRole } from '../../../middlewares/roles';
+import validateRequest from '../../../shared/validateRequest';
 const UPLOADS_FOLDER = 'uploads/users';
 const upload = fileUploadHandler(UPLOADS_FOLDER);
 import * as validation from './user.validation';

@@ -292,7 +292,7 @@ class SocketService {
   }
 
   private async getUserProfile(userId: string) {
-    const User = (await import('../../modules/user/user.model'))//.default;
+    const User = (await import('../../modules/user.module/user/user.model'))//.default;
     return await User.findById(userId, 'id name profileImage');
   }
 

@@ -10,7 +10,7 @@ import { PaymentTransactionRoute } from '../modules/payment.module/paymentTransa
 import stripeAccountRoutes from '../modules/payment.module/stripeAccount/stripeAccount.route';
 import { DoctorAppointmentScheduleRoute } from '../modules/scheduleAndAppointmentBooking.module/doctorAppointmentSchedule/doctorAppointmentSchedule.route';
 import { informationVideoRoute } from '../modules/extra.module/informationVideo/informationVideo.route';
-import { UserRoutes } from '../modules/user/user.route';
+import { UserRoutes } from '../modules/user.module/user/user.route';
 import { DoctorPatientScheduleBookingRoute } from '../modules/scheduleAndAppointmentBooking.module/doctorPatientScheduleBooking/doctorPatientScheduleBooking.route';
 import { WalletTransactionHistoryRoute } from '../modules/wallet.module/walletTransactionHistory/walletTransactionHistory.route';
 import { BankInfoRoute } from '../modules/wallet.module/bankInfo/bankInfo.route';

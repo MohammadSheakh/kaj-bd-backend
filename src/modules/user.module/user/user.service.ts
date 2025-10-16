@@ -1,15 +1,15 @@
 //@ts-ignore
 import { StatusCodes } from 'http-status-codes';
-import ApiError from '../../errors/ApiError';
-import { PaginateOptions, PaginateResult } from '../../types/paginate';
+import ApiError from '../../../errors/ApiError';
+import { PaginateOptions, PaginateResult } from '../../../types/paginate';
 import { IUser, TUser } from './user.interface';
 import { User } from './user.model';
-import { sendAdminOrSuperAdminCreationEmail } from '../../helpers/emailService';
-import { GenericService } from '../_generic-module/generic.services';
-import PaginationService from '../../common/service/paginationService';
-import omit from '../../shared/omit';
-import pick from '../../shared/pick';
-import { UserProfile } from './userProfile/userProfile.model';
+import { sendAdminOrSuperAdminCreationEmail } from '../../../helpers/emailService';
+import { GenericService } from '../../_generic-module/generic.services';
+import PaginationService from '../../../common/service/paginationService';
+import omit from '../../../shared/omit';
+import pick from '../../../shared/pick';
+import { UserProfile } from '../userProfile/userProfile.model';
 
 interface IAdminOrSuperAdminPayload {
   email: string;

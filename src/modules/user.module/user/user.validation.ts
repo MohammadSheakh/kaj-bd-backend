@@ -2,7 +2,7 @@
 import mongoose from 'mongoose';
 //@ts-ignore
 import { z } from 'zod';
-import { TApprovalStatus } from './userProfile/userProfile.constant';
+import { TApprovalStatus } from '../userProfile/userProfile.constant';
 
 export const changeApprovalStatusValidationSchema = z.object({
   // body: z.object({

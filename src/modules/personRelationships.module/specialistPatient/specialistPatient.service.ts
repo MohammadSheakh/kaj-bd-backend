@@ -6,7 +6,7 @@ import { GenericService } from '../../_generic-module/generic.services';
 //@ts-ignore
 import mongoose from 'mongoose';
 import PaginationService from '../../../common/service/paginationService';
-import { User } from '../../user/user.model';
+import { User } from '../../user.module/user/user.model';
 
 export class SpecialistPatientService extends GenericService<
   typeof SpecialistPatient,

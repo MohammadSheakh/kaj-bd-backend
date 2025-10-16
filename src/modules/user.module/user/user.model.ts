@@ -1,13 +1,13 @@
 //@ts-ignore
 import { model, Schema, Types } from 'mongoose';
 import { TProfileImage, TUser, UserModal } from './user.interface';
-import paginate from '../../common/plugins/paginate';
+import paginate from '../../../common/plugins/paginate';
 //@ts-ignore
 import bcryptjs from 'bcryptjs';
-import { config } from '../../config';
+import { config } from '../../../config';
 import { TStatusType } from './user.constant';
-import { Roles } from '../../middlewares/roles';
-import { TSubscription } from '../../enums/subscription';
+import { Roles } from '../../../middlewares/roles';
+import { TSubscription } from '../../../enums/subscription';
 
 // Profile Image Schema
 const profileImageSchema = new Schema<TProfileImage>({

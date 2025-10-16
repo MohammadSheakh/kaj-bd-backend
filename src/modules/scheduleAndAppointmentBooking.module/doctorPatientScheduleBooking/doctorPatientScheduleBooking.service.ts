@@ -11,7 +11,7 @@ import colors from 'colors';
 //@ts-ignore
 import Stripe from "stripe";
 import stripe from '../../../config/stripe.config';
-import { User } from '../../user/user.model';
+import { User } from '../../user.module/user/user.model';
 import ApiError from '../../../errors/ApiError';
 import { config } from '../../../config';
 import { TSubscription } from '../../../enums/subscription';
@@ -26,7 +26,7 @@ import { DoctorPatient } from '../../personRelationships.module/doctorPatient/do
 import { scheduleQueue } from '../../../helpers/bullmq/bullmq';
 import { logger } from '../../../shared/logger';
 import { formatDelay, formatRemainingTime } from '../../../utils/formatDelay';
-import { TUser } from '../../user/user.interface';
+import { TUser } from '../../user.module/user/user.interface';
 import { enqueueWebNotification } from '../../../services/notification.service';
 import { TRole } from '../../../middlewares/roles';
 import { TNotificationType } from '../../notification/notification.constants';

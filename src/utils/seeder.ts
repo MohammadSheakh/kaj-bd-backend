@@ -2,8 +2,8 @@
 import mongoose from 'mongoose';
 //@ts-ignore
 import dotenv from 'dotenv';
-import { User } from '../modules/user/user.model';
-import { UserProfile } from '../modules/user/userProfile/userProfile.model';
+import { User } from '../modules/user.module/user/user.model';
+import { UserProfile } from '../modules/user.module/userProfile/userProfile.model';
 import { TSubscription } from '../enums/subscription';
 // Load environment variables
 dotenv.config();

@@ -11,7 +11,7 @@ import catchAsync from '../../../shared/catchAsync';
 import sendResponse from '../../../shared/sendResponse';
 import omit from '../../../shared/omit';
 import pick from '../../../shared/pick';
-import { TUser } from '../../user/user.interface';
+import { TUser } from '../../user.module/user/user.interface';
 import { IUser } from '../../token/token.interface';
 import { TSubscription } from '../../../enums/subscription';
 

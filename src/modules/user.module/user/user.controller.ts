@@ -1,16 +1,16 @@
 //@ts-ignore
 import { StatusCodes } from 'http-status-codes';
-import catchAsync from '../../shared/catchAsync';
-import sendResponse from '../../shared/sendResponse';
+import catchAsync from '../../../shared/catchAsync';
+import sendResponse from '../../../shared/sendResponse';
 import {  UserService } from './user.service';
 import { User } from './user.model';
-import { GenericController } from '../_generic-module/generic.controller';
+import { GenericController } from '../../_generic-module/generic.controller';
 //@ts-ignore
 import { Request, Response } from 'express';
-import { IUser } from '../token/token.interface';
-import omit from '../../shared/omit';
-import pick from '../../shared/pick';
-import { UserProfile } from './userProfile/userProfile.model';
+import { IUser } from '../../token/token.interface';
+import omit from '../../../shared/omit';
+import pick from '../../../shared/pick';
+import { UserProfile } from '../userProfile/userProfile.model';
 
 const userService = new UserService();
 

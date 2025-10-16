@@ -6,7 +6,7 @@ import { StatusCodes } from 'http-status-codes';
 import Stripe from 'stripe';
 import { config } from '../../../config';
 import stripe from '../../../config/stripe.config';
-import { User } from '../../user/user.model';
+import { User } from '../../user.module/user/user.model';
 import ApiError from '../../../errors/ApiError';
 import { handlePaymentSucceeded } from './handlePaymentSucceeded';
 import { handleFailedPayment } from './handleFailedPayment';

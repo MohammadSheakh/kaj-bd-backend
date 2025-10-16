@@ -4,7 +4,7 @@ import catchAsync from '../../shared/catchAsync';
 import sendResponse from '../../shared/sendResponse';
 import { AuthService } from './auth.service';
 import { AttachmentService } from '../attachments/attachment.service';
-import { UserProfile } from '../user/userProfile/userProfile.model';
+import { UserProfile } from '../user.module/userProfile/userProfile.model';
 import { TRole } from '../../middlewares/roles';
 import { TFolderName } from '../../enums/folderNames';
 import { WalletService } from '../wallet.module/wallet/wallet.service';

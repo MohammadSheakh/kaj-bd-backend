@@ -19,8 +19,8 @@ import { ISpecialistWorkoutClassSchedule } from "../../scheduleAndAppointmentBoo
 import { IUser } from "../../token/token.interface";
 import { ITrainingProgramPurchase } from "../../training.module/trainingProgramPurchase/trainingProgramPurchase.interface";
 import { TrainingProgramPurchaseService } from "../../training.module/trainingProgramPurchase/trainingProgramPurchase.service";
-import { TUser } from "../../user/user.interface";
-import { User } from "../../user/user.model";
+import { TUser } from "../../user.module/user/user.interface";
+import { User } from "../../user.module/user/user.model";
 import { WalletService } from "../../wallet.module/wallet/wallet.service";
 import { TPaymentGateway, TPaymentStatus, TTransactionFor } from "../paymentTransaction/paymentTransaction.constant";
 import { PaymentTransaction } from "../paymentTransaction/paymentTransaction.model";

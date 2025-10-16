@@ -1,7 +1,7 @@
 import express from 'express';
-import * as validation from './demo.validation';
-import { DemoController} from './demo.controller';
-import { IDemo } from './demo.interface';
+import * as validation from './ServiceBooking.validation';
+import { ServiceBookingController} from './ServiceBooking.controller';
+import { IServiceBooking } from './ServiceBooking.interface';
 import { validateFiltersForQuery } from '../../middlewares/queryValidation/paginationQueryValidationMiddleware';
 import validateRequest from '../../shared/validateRequest';
 import auth from '../../middlewares/auth';
@@ -12,7 +12,7 @@ const upload = multer({ storage: storage });
 
 const router = express.Router();
 
-export const optionValidationChecking = <T extends keyof IDemo | 'sortBy' | 'page' | 'limit' | 'populate'>(
+export const optionValidationChecking = <T extends keyof IServiceBooking | 'sortBy' | 'page' | 'limit' | 'populate'>(
   filters: T[]
 ) => {
   return filters;
@@ -26,7 +26,7 @@ const paginationOptions: Array<'sortBy' | 'page' | 'limit' | 'populate'> = [
 ];
 
 // const taskService = new TaskService();
-const controller = new DemoController();
+const controller = new ServiceBookingController();
 
 //
 router.route('/paginate').get(
@@ -78,4 +78,4 @@ router.route('/softDelete/:id').put(
 //[🚧][🧑‍💻✅][🧪] // 🆗
 
 
-export const DemoRoute = router;
+export const ServiceBookingRoute = router;

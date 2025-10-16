@@ -4,7 +4,7 @@
 import { StripeAccount } from './stripeAccount.model';
 import { successHTMLstripeConnection } from './stripeAccount.utils';
 import stripe from '../../../config/stripe.config';
-import { User } from '../../user/user.model';
+import { User } from '../../user.module/user/user.model';
 import { StatusCodes } from 'http-status-codes';
 import ApiError from '../../../errors/ApiError';
 

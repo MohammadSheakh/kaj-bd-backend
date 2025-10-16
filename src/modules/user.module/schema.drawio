@@ -1,0 +1,775 @@
+<mxfile host="65bd71144e">
+    <diagram id="t4pKt7B_yowVfb3mKo2l" name="Page-1">
+        <mxGraphModel dx="2598" dy="1243" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="User 🩹🌀" style="swimlane;fontStyle=2;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=16;" vertex="1" parent="1">
+                    <mxGeometry x="410" y="1104" width="390" height="1022" as="geometry">
+                        <mxRectangle x="20" y="60" width="160" height="26" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="3" value="" style="line;html=1;strokeWidth=1;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;fontSize=16;" vertex="1" parent="2">
+                    <mxGeometry y="26" width="390" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="- userId" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="2">
+                    <mxGeometry y="34" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="- profileId 🔖 FK " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="2">
+                    <mxGeometry y="60" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="- name" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="2">
+                    <mxGeometry y="86" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="- email" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="2">
+                    <mxGeometry y="112" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="- role [ user / provider / admin / subAdmin ]" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="2">
+                    <mxGeometry y="138" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="- subAdminStatus [ active / inactive / none ]  " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="2">
+                    <mxGeometry y="164" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="- providerApprovalStatus [ accept / reject / none] " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="2">
+                    <mxGeometry y="190" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="- hashedPassword" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="2">
+                    <mxGeometry y="216" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="- profileImage" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="2">
+                    <mxGeometry y="242" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" value="- fcmToken" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="2">
+                    <mxGeometry y="268" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" value="- subscriptionType⚡ [ standard / standardPlus /  vise ]" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="2">
+                    <mxGeometry y="294" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" value="- isEmailVerified" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="2">
+                    <mxGeometry y="320" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="16" value="- phoneNumber ⚡ number " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="2">
+                    <mxGeometry y="346" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="17" value="- location [lat, long .. need to think about this ]" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="2">
+                    <mxGeometry y="372" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="18" value="- attachments[] // for profile picture" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fillColor=#cce5ff;strokeColor=#36393d;fontSize=16;" vertex="1" parent="2">
+                    <mxGeometry y="398" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="19" value="- lastPasswordChange ⚡ Date" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="2">
+                    <mxGeometry y="424" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="20" value="- isResetPassword ⚡ Boolean" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="2">
+                    <mxGeometry y="450" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" value="- failedLoginAttempts⚡ Number" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="2">
+                    <mxGeometry y="476" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="22" value="- lockUntil⚡ Date" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="2">
+                    <mxGeometry y="502" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="23" value="- -------------------- Google And Apple Login ------ " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="2">
+                    <mxGeometry y="528" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="24" value="- googleId⚡ String" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="2">
+                    <mxGeometry y="554" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="25" value="- appleId⚡ String" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="2">
+                    <mxGeometry y="580" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="26" value="- authProvider⚡ [ apple / google / local ]" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="2">
+                    <mxGeometry y="606" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="27" value="- googleAccessToken⚡ string" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="2">
+                    <mxGeometry y="632" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="28" value="- appleAccessToken⚡ string" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="2">
+                    <mxGeometry y="658" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="29" value="- isGoogleVerified⚡ boolean" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="2">
+                    <mxGeometry y="684" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="30" value="- isAppleVerified⚡ boolean" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="2">
+                    <mxGeometry y="710" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="31" value="- --------------------  ------ " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="2">
+                    <mxGeometry y="736" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="32" value="- stripe_customer_id⚡ string 🟢" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="2">
+                    <mxGeometry y="762" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="33" value="- payment_method_required⚡ boolean" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="2">
+                    <mxGeometry y="788" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="34" value="- payment_method_added_at 📅 " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="2">
+                    <mxGeometry y="814" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="35" value="- tenant_id ⚡ UUID " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="2">
+                    <mxGeometry y="840" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="36" value="- isDeleted ⚡ boolean " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="2">
+                    <mxGeometry y="866" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="37" value="- deletedAt ⚡ 📅" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="2">
+                    <mxGeometry y="892" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="38" value="- dob ⚡ date" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="2">
+                    <mxGeometry y="918" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="39" value="- gender ⚡ [ male / female ]" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="2">
+                    <mxGeometry y="944" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="40" value="- acceptTOC ⚡ boolean" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="2">
+                    <mxGeometry y="970" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="41" value="- location ⚡ need to think about this " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="2">
+                    <mxGeometry y="996" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="42" value="" style="endArrow=none;html=1;rounded=0;entryX=0.996;entryY=0.005;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.006;exitY=0.991;exitDx=0;exitDy=0;exitPerimeter=0;strokeColor=#CC0000;" edge="1" parent="2" source="41" target="2">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="-80" y="76" as="sourcePoint"/>
+                        <mxPoint x="-30" y="26" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="43" value="User Module&amp;nbsp;1️⃣" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=35;" vertex="1" parent="1">
+                    <mxGeometry x="420" y="1044" width="280" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="44" value="- workType ⚡ string" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="1">
+                    <mxGeometry x="800" y="2054" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="45" value="- yearsOfExperience ⚡ number" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="1">
+                    <mxGeometry x="800" y="2084" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="46" value="User Devices" style="swimlane;fontStyle=2;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=1;fontSize=16;" vertex="1" parent="1">
+                    <mxGeometry x="1275" y="1894" width="320" height="216" as="geometry">
+                        <mxRectangle x="430" y="60" width="160" height="26" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="47" value="" style="line;html=1;strokeWidth=1;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;fontSize=16;" vertex="1" parent="46">
+                    <mxGeometry y="26" width="320" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="48" value="- deviceId" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="46">
+                    <mxGeometry y="34" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="49" value="- userId 🔖 FK // back reference" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=16;" vertex="1" parent="46">
+                    <mxGeometry y="60" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="50" value="- fcmToken" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="46">
+                    <mxGeometry y="86" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="51" value="- deviceType [ios, android, web]" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="46">
+                    <mxGeometry y="112" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="52" value="- deviceName" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="46">
+                    <mxGeometry y="138" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="53" value="- lastActive" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="46">
+                    <mxGeometry y="164" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="54" value="- createdAt" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="46">
+                    <mxGeometry y="190" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="55" value="Security Events ( Audit Log)" style="swimlane;fontStyle=2;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=1;fontSize=16;" vertex="1" parent="1">
+                    <mxGeometry x="1260" y="1580" width="320" height="268" as="geometry">
+                        <mxRectangle x="430" y="60" width="160" height="26" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="56" value="" style="line;html=1;strokeWidth=1;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;fontSize=16;" vertex="1" parent="55">
+                    <mxGeometry y="26" width="320" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="57" value="- eventId" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="55">
+                    <mxGeometry y="34" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="58" value="- userId 🔖 FK // back reference" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=16;" vertex="1" parent="55">
+                    <mxGeometry y="60" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="59" value="- eventType [ login / logout / pass_chng / failed_login]" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="55">
+                    <mxGeometry y="86" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="60" value="- ipAddress" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="55">
+                    <mxGeometry y="112" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="61" value="- userAgent" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="55">
+                    <mxGeometry y="138" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="62" value="- location  (city, country)" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="55">
+                    <mxGeometry y="164" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="63" value="- success boolean" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="55">
+                    <mxGeometry y="190" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="64" value="- metadata  JSON" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="55">
+                    <mxGeometry y="216" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="65" value="- createdAt" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="55">
+                    <mxGeometry y="242" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="66" value="OAuth Accounts Table ⚡⚡" style="swimlane;fontStyle=2;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=1;fontSize=16;" vertex="1" parent="1">
+                    <mxGeometry x="1250" y="1250" width="320" height="268" as="geometry">
+                        <mxRectangle x="430" y="60" width="160" height="26" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="67" value="" style="line;html=1;strokeWidth=1;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;fontSize=16;" vertex="1" parent="66">
+                    <mxGeometry y="26" width="320" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="68" value="- oauthId" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="66">
+                    <mxGeometry y="34" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="69" value="- userId 🔖 FK // back reference" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=16;" vertex="1" parent="66">
+                    <mxGeometry y="60" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="70" value="- authProvider [ google / apple / local ]" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="66">
+                    <mxGeometry y="86" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="71" value="- providerId (string) // google Id or apple Id" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="66">
+                    <mxGeometry y="112" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="72" value="- accessToken (encrypted)" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="66">
+                    <mxGeometry y="138" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="73" value="- refreshToken  (encrypted)" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="66">
+                    <mxGeometry y="164" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="74" value="- tokenExpiry" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="66">
+                    <mxGeometry y="190" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="75" value="- isVerified (boolean)" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="66">
+                    <mxGeometry y="216" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="76" value="- createdAt" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="66">
+                    <mxGeometry y="242" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="77" value="User 🩹🌀" style="swimlane;fontStyle=2;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=16;" vertex="1" parent="1">
+                    <mxGeometry x="830" y="1250" width="390" height="694" as="geometry">
+                        <mxRectangle x="20" y="60" width="160" height="26" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="78" value="" style="line;html=1;strokeWidth=1;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;fontSize=16;" vertex="1" parent="77">
+                    <mxGeometry y="26" width="390" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="79" value="- userId" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="77">
+                    <mxGeometry y="34" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="80" value="- profileId 🔖 FK " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="77">
+                    <mxGeometry y="60" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="81" value="- name" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="77">
+                    <mxGeometry y="86" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="82" value="- email" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="77">
+                    <mxGeometry y="112" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="83" value="- role [ user / provider / admin / subAdmin ]" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="77">
+                    <mxGeometry y="138" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="84" value="- hashedPassword" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="77">
+                    <mxGeometry y="164" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="85" value="- profileImage" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="77">
+                    <mxGeometry y="190" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="86" value="- subscriptionType⚡ [ standard / standardPlus /  vise ]" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="77">
+                    <mxGeometry y="216" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="87" value="- isEmailVerified" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="77">
+                    <mxGeometry y="242" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="88" value="- phoneNumber ⚡ number " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="77">
+                    <mxGeometry y="268" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="89" value="- location [lat, long .. need to think about this ]" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="77">
+                    <mxGeometry y="294" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="90" value="- attachments[] // for profile picture" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fillColor=#cce5ff;strokeColor=#36393d;fontSize=16;" vertex="1" parent="77">
+                    <mxGeometry y="320" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="91" value="- lastPasswordChange ⚡ Date" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="77">
+                    <mxGeometry y="346" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="92" value="- isResetPassword ⚡ Boolean" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="77">
+                    <mxGeometry y="372" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="93" value="- failedLoginAttempts⚡ Number" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="77">
+                    <mxGeometry y="398" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="94" value="- lockUntil⚡ Date" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="77">
+                    <mxGeometry y="424" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="95" value="- -------------------- Google And Apple Login ------ " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="77">
+                    <mxGeometry y="450" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="96" value="- stripe_customer_id⚡ string 🟢" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="77">
+                    <mxGeometry y="476" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="97" value="- payment_method_required⚡ boolean" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="77">
+                    <mxGeometry y="502" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="98" value="- payment_method_added_at 📅 " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="77">
+                    <mxGeometry y="528" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="99" value="- tenant_id ⚡ UUID " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="77">
+                    <mxGeometry y="554" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="100" value="- isDeleted ⚡ boolean " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="77">
+                    <mxGeometry y="580" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="101" value="- deletedAt ⚡ 📅" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="77">
+                    <mxGeometry y="606" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="102" value="Profile Information" style="swimlane;fontStyle=2;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=1;fontSize=16;" vertex="1" parent="1">
+                    <mxGeometry x="1595" y="1250" width="320" height="242" as="geometry">
+                        <mxRectangle x="430" y="60" width="160" height="26" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="103" value="" style="line;html=1;strokeWidth=1;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;fontSize=16;" vertex="1" parent="102">
+                    <mxGeometry y="26" width="320" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="104" value="- profileId" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="102">
+                    <mxGeometry y="34" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="105" value="- attachments [] // front side of certificates" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fillColor=#cce5ff;strokeColor=#36393d;fontSize=16;" vertex="1" parent="102">
+                    <mxGeometry y="60" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="106" value="- attachments [] // back side of certificates" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fillColor=#cce5ff;strokeColor=#36393d;fontSize=16;" vertex="1" parent="102">
+                    <mxGeometry y="86" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="107" value="- dob ⚡ date" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="102">
+                    <mxGeometry y="112" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="108" value="- gender ⚡ [ male / female ]" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="102">
+                    <mxGeometry y="138" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="109" value="- acceptTOC ⚡ boolean" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="102">
+                    <mxGeometry y="164" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="110" value="- location ⚡ need to think about this " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="102">
+                    <mxGeometry y="190" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="111" value="- userId 🔖 FK // back reference" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=16;" vertex="1" parent="102">
+                    <mxGeometry y="216" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="112" value="User Role Data" style="swimlane;fontStyle=2;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=1;fontSize=16;" vertex="1" parent="1">
+                    <mxGeometry x="1610" y="1560" width="320" height="224" as="geometry">
+                        <mxRectangle x="430" y="60" width="160" height="26" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="113" value="" style="line;html=1;strokeWidth=1;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;fontSize=16;" vertex="1" parent="112">
+                    <mxGeometry y="26" width="320" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="114" value="- userRoleDataId" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="112">
+                    <mxGeometry y="34" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="115" value="- userId 🔖 FK // back reference" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=16;" vertex="1" parent="112">
+                    <mxGeometry y="60" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="116" value="- roleType " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="112">
+                    <mxGeometry y="86" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="117" value="- status [ active / inactive / none ]  " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="112">
+                    <mxGeometry y="112" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="118" value="- approvalStatus [ accept / reject / none] " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="112">
+                    <mxGeometry y="138" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="119" value="-  approvedAt" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="112">
+                    <mxGeometry y="164" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="120" value="- createdAt" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="112">
+                    <mxGeometry y="190" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="121" value="&lt;div&gt;status for subAdmin&lt;/div&gt;&lt;div&gt;approvalStatus for provider&lt;/div&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fontSize=16;" vertex="1" parent="1">
+                    <mxGeometry x="1640" y="1810" width="260" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="122" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#d5e8d4;strokeColor=#82b366;gradientColor=#97d077;" vertex="1" parent="1">
+                    <mxGeometry x="1890" y="1510" width="40" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="123" value="" style="swimlane;startSize=0;" vertex="1" parent="1">
+                    <mxGeometry x="390" y="1044" width="1560" height="1116" as="geometry">
+                        <mxRectangle x="780" y="540" width="50" height="40" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="124" value="User 🩹🌀" style="swimlane;fontStyle=2;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=16;" vertex="1" parent="123">
+                    <mxGeometry x="20" y="60" width="390" height="1022" as="geometry">
+                        <mxRectangle x="20" y="60" width="160" height="26" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="125" value="" style="line;html=1;strokeWidth=1;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;fontSize=16;" vertex="1" parent="124">
+                    <mxGeometry y="26" width="390" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="126" value="- userId" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="124">
+                    <mxGeometry y="34" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="127" value="- profileId 🔖 FK " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="124">
+                    <mxGeometry y="60" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="128" value="- name" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="124">
+                    <mxGeometry y="86" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="129" value="- email" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="124">
+                    <mxGeometry y="112" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="130" value="- role [ user / provider / admin / subAdmin ]" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="124">
+                    <mxGeometry y="138" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="131" value="- subAdminStatus [ active / inactive / none ]  " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="124">
+                    <mxGeometry y="164" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="132" value="- providerApprovalStatus [ accept / reject / none] " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="124">
+                    <mxGeometry y="190" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="133" value="- hashedPassword" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="124">
+                    <mxGeometry y="216" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="134" value="- profileImage" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="124">
+                    <mxGeometry y="242" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="135" value="- fcmToken" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="124">
+                    <mxGeometry y="268" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="136" value="- subscriptionType⚡ [ standard / standardPlus /  vise ]" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="124">
+                    <mxGeometry y="294" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="137" value="- isEmailVerified" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="124">
+                    <mxGeometry y="320" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="138" value="- phoneNumber ⚡ number " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="124">
+                    <mxGeometry y="346" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="139" value="- location [lat, long .. need to think about this ]" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="124">
+                    <mxGeometry y="372" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="140" value="- attachments[] // for profile picture" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fillColor=#cce5ff;strokeColor=#36393d;fontSize=16;" vertex="1" parent="124">
+                    <mxGeometry y="398" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="141" value="- lastPasswordChange ⚡ Date" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="124">
+                    <mxGeometry y="424" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="142" value="- isResetPassword ⚡ Boolean" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="124">
+                    <mxGeometry y="450" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="143" value="- failedLoginAttempts⚡ Number" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="124">
+                    <mxGeometry y="476" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="144" value="- lockUntil⚡ Date" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="124">
+                    <mxGeometry y="502" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="145" value="- -------------------- Google And Apple Login ------ " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="124">
+                    <mxGeometry y="528" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="146" value="- googleId⚡ String" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="124">
+                    <mxGeometry y="554" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="147" value="- appleId⚡ String" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="124">
+                    <mxGeometry y="580" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="148" value="- authProvider⚡ [ apple / google / local ]" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="124">
+                    <mxGeometry y="606" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="149" value="- googleAccessToken⚡ string" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="124">
+                    <mxGeometry y="632" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="150" value="- appleAccessToken⚡ string" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="124">
+                    <mxGeometry y="658" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="151" value="- isGoogleVerified⚡ boolean" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="124">
+                    <mxGeometry y="684" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="152" value="- isAppleVerified⚡ boolean" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="124">
+                    <mxGeometry y="710" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="153" value="- --------------------  ------ " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="124">
+                    <mxGeometry y="736" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="154" value="- stripe_customer_id⚡ string 🟢" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="124">
+                    <mxGeometry y="762" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="155" value="- payment_method_required⚡ boolean" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="124">
+                    <mxGeometry y="788" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="156" value="- payment_method_added_at 📅 " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="124">
+                    <mxGeometry y="814" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="157" value="- tenant_id ⚡ UUID " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="124">
+                    <mxGeometry y="840" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="158" value="- isDeleted ⚡ boolean " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="124">
+                    <mxGeometry y="866" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="159" value="- deletedAt ⚡ 📅" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="124">
+                    <mxGeometry y="892" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="160" value="- dob ⚡ date" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="124">
+                    <mxGeometry y="918" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="161" value="- gender ⚡ [ male / female ]" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="124">
+                    <mxGeometry y="944" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="162" value="- acceptTOC ⚡ boolean" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="124">
+                    <mxGeometry y="970" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="163" value="- location ⚡ need to think about this " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="124">
+                    <mxGeometry y="996" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="164" value="" style="endArrow=none;html=1;rounded=0;entryX=0.996;entryY=0.005;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.006;exitY=0.991;exitDx=0;exitDy=0;exitPerimeter=0;strokeColor=#CC0000;" edge="1" parent="124" source="163" target="124">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="-80" y="76" as="sourcePoint"/>
+                        <mxPoint x="-30" y="26" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="165" value="User Module&amp;nbsp;1️⃣" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=35;" vertex="1" parent="123">
+                    <mxGeometry x="30" width="280" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="166" value="- workType ⚡ string" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="123">
+                    <mxGeometry x="410" y="1010" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="167" value="- yearsOfExperience ⚡ number" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="123">
+                    <mxGeometry x="410" y="1040" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="168" value="User Devices" style="swimlane;fontStyle=2;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=1;fontSize=16;" vertex="1" parent="123">
+                    <mxGeometry x="885" y="850" width="320" height="216" as="geometry">
+                        <mxRectangle x="430" y="60" width="160" height="26" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="169" value="" style="line;html=1;strokeWidth=1;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;fontSize=16;" vertex="1" parent="168">
+                    <mxGeometry y="26" width="320" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="170" value="- deviceId" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="168">
+                    <mxGeometry y="34" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="171" value="- userId 🔖 FK // back reference" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=16;" vertex="1" parent="168">
+                    <mxGeometry y="60" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="172" value="- fcmToken" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="168">
+                    <mxGeometry y="86" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="173" value="- deviceType [ios, android, web]" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="168">
+                    <mxGeometry y="112" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="174" value="- deviceName" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="168">
+                    <mxGeometry y="138" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="175" value="- lastActive" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="168">
+                    <mxGeometry y="164" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="176" value="- createdAt" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="168">
+                    <mxGeometry y="190" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="177" value="Security Events ( Audit Log)" style="swimlane;fontStyle=2;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=1;fontSize=16;" vertex="1" parent="123">
+                    <mxGeometry x="870" y="536" width="320" height="268" as="geometry">
+                        <mxRectangle x="430" y="60" width="160" height="26" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="178" value="" style="line;html=1;strokeWidth=1;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;fontSize=16;" vertex="1" parent="177">
+                    <mxGeometry y="26" width="320" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="179" value="- eventId" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="177">
+                    <mxGeometry y="34" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="180" value="- userId 🔖 FK // back reference" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=16;" vertex="1" parent="177">
+                    <mxGeometry y="60" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="181" value="- eventType [ login / logout / pass_chng / failed_login]" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="177">
+                    <mxGeometry y="86" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="182" value="- ipAddress" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="177">
+                    <mxGeometry y="112" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="183" value="- userAgent" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="177">
+                    <mxGeometry y="138" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="184" value="- location  (city, country)" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="177">
+                    <mxGeometry y="164" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="185" value="- success boolean" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="177">
+                    <mxGeometry y="190" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="186" value="- metadata  JSON" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="177">
+                    <mxGeometry y="216" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="187" value="- createdAt" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="177">
+                    <mxGeometry y="242" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="188" value="OAuth Accounts Table ⚡⚡" style="swimlane;fontStyle=2;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=1;fontSize=16;" vertex="1" parent="123">
+                    <mxGeometry x="860" y="206" width="320" height="268" as="geometry">
+                        <mxRectangle x="430" y="60" width="160" height="26" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="189" value="" style="line;html=1;strokeWidth=1;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;fontSize=16;" vertex="1" parent="188">
+                    <mxGeometry y="26" width="320" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="190" value="- oauthId" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="188">
+                    <mxGeometry y="34" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="191" value="- userId 🔖 FK // back reference" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=16;" vertex="1" parent="188">
+                    <mxGeometry y="60" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="192" value="- authProvider [ google / apple / local ]" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="188">
+                    <mxGeometry y="86" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="193" value="- providerId (string) // google Id or apple Id" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="188">
+                    <mxGeometry y="112" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="194" value="- accessToken (encrypted)" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="188">
+                    <mxGeometry y="138" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="195" value="- refreshToken  (encrypted)" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="188">
+                    <mxGeometry y="164" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="196" value="- tokenExpiry" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="188">
+                    <mxGeometry y="190" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="197" value="- isVerified (boolean)" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="188">
+                    <mxGeometry y="216" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="198" value="- createdAt" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="188">
+                    <mxGeometry y="242" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="199" value="User 🩹🌀" style="swimlane;fontStyle=2;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=16;" vertex="1" parent="123">
+                    <mxGeometry x="440" y="206" width="390" height="694" as="geometry">
+                        <mxRectangle x="20" y="60" width="160" height="26" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="200" value="" style="line;html=1;strokeWidth=1;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;fontSize=16;" vertex="1" parent="199">
+                    <mxGeometry y="26" width="390" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="201" value="- userId" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="199">
+                    <mxGeometry y="34" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="202" value="- profileId 🔖 FK " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="199">
+                    <mxGeometry y="60" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="203" value="- name" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="199">
+                    <mxGeometry y="86" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="204" value="- email" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="199">
+                    <mxGeometry y="112" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="205" value="- role [ user / provider / admin / subAdmin ]" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="199">
+                    <mxGeometry y="138" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="206" value="- hashedPassword" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="199">
+                    <mxGeometry y="164" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="207" value="- profileImage" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="199">
+                    <mxGeometry y="190" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="208" value="- subscriptionType⚡ [ standard / standardPlus /  vise ]" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="199">
+                    <mxGeometry y="216" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="209" value="- isEmailVerified" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="199">
+                    <mxGeometry y="242" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="210" value="- phoneNumber ⚡ number " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="199">
+                    <mxGeometry y="268" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="211" value="- location [lat, long .. need to think about this ]" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="199">
+                    <mxGeometry y="294" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="212" value="- attachments[] // for profile picture" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fillColor=#cce5ff;strokeColor=#36393d;fontSize=16;" vertex="1" parent="199">
+                    <mxGeometry y="320" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="213" value="- lastPasswordChange ⚡ Date" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="199">
+                    <mxGeometry y="346" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="214" value="- isResetPassword ⚡ Boolean" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="199">
+                    <mxGeometry y="372" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="215" value="- failedLoginAttempts⚡ Number" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="199">
+                    <mxGeometry y="398" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="216" value="- lockUntil⚡ Date" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="199">
+                    <mxGeometry y="424" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="217" value="- -------------------- Google And Apple Login ------ " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="199">
+                    <mxGeometry y="450" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="218" value="- stripe_customer_id⚡ string 🟢" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="199">
+                    <mxGeometry y="476" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="219" value="- payment_method_required⚡ boolean" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="199">
+                    <mxGeometry y="502" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="220" value="- payment_method_added_at 📅 " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="199">
+                    <mxGeometry y="528" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="221" value="- tenant_id ⚡ UUID " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="199">
+                    <mxGeometry y="554" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="222" value="- isDeleted ⚡ boolean " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="199">
+                    <mxGeometry y="580" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="223" value="- deletedAt ⚡ 📅" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="199">
+                    <mxGeometry y="606" width="390" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="224" value="Profile Information" style="swimlane;fontStyle=2;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=1;fontSize=16;" vertex="1" parent="123">
+                    <mxGeometry x="1205" y="206" width="320" height="242" as="geometry">
+                        <mxRectangle x="430" y="60" width="160" height="26" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="225" value="" style="line;html=1;strokeWidth=1;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;fontSize=16;" vertex="1" parent="224">
+                    <mxGeometry y="26" width="320" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="226" value="- profileId" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="224">
+                    <mxGeometry y="34" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="227" value="- attachments [] // front side of certificates" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fillColor=#cce5ff;strokeColor=#36393d;fontSize=16;" vertex="1" parent="224">
+                    <mxGeometry y="60" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="228" value="- attachments [] // back side of certificates" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fillColor=#cce5ff;strokeColor=#36393d;fontSize=16;" vertex="1" parent="224">
+                    <mxGeometry y="86" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="229" value="- dob ⚡ date" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="224">
+                    <mxGeometry y="112" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="230" value="- gender ⚡ [ male / female ]" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="224">
+                    <mxGeometry y="138" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="231" value="- acceptTOC ⚡ boolean" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="224">
+                    <mxGeometry y="164" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="232" value="- location ⚡ need to think about this " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="224">
+                    <mxGeometry y="190" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="233" value="- userId 🔖 FK // back reference" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=16;" vertex="1" parent="224">
+                    <mxGeometry y="216" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="234" value="User Role Data" style="swimlane;fontStyle=2;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=1;fontSize=16;" vertex="1" parent="123">
+                    <mxGeometry x="1220" y="516" width="320" height="224" as="geometry">
+                        <mxRectangle x="430" y="60" width="160" height="26" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="235" value="" style="line;html=1;strokeWidth=1;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;fontSize=16;" vertex="1" parent="234">
+                    <mxGeometry y="26" width="320" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="236" value="- userRoleDataId" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="234">
+                    <mxGeometry y="34" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="237" value="- userId 🔖 FK // back reference" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=16;" vertex="1" parent="234">
+                    <mxGeometry y="60" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="238" value="- roleType " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="234">
+                    <mxGeometry y="86" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="239" value="- status [ active / inactive / none ]  " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="234">
+                    <mxGeometry y="112" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="240" value="- approvalStatus [ accept / reject / none] " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="234">
+                    <mxGeometry y="138" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="241" value="-  approvedAt" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="234">
+                    <mxGeometry y="164" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="242" value="- createdAt" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="234">
+                    <mxGeometry y="190" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="243" value="&lt;div&gt;status for subAdmin&lt;/div&gt;&lt;div&gt;approvalStatus for provider&lt;/div&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fontSize=16;" vertex="1" parent="123">
+                    <mxGeometry x="1250" y="766" width="260" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="244" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#d5e8d4;strokeColor=#82b366;gradientColor=#97d077;" vertex="1" parent="123">
+                    <mxGeometry x="1500" y="466" width="40" height="40" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

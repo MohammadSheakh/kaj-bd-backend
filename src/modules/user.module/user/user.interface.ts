@@ -1,9 +1,9 @@
 //@ts-ignore
 import { Document, Model, Types } from 'mongoose';
-import { Role } from '../../middlewares/roles';
+import { Role } from '../../../middlewares/roles';
 import { TStatusType } from './user.constant';
-import { PaginateOptions, PaginateResult } from '../../types/paginate';
-import { TSubscription } from '../../enums/subscription';
+import { PaginateOptions, PaginateResult } from '../../../types/paginate';
+import { TSubscription } from '../../../enums/subscription';
 
 export type TProfileImage = {
   imageUrl: string;

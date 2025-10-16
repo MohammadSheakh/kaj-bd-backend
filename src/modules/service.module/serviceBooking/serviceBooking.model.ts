@@ -1,9 +1,9 @@
 import { model, Schema } from 'mongoose';
-import { IDemo, IDemoModel } from './demo.interface';
+import { IServiceBooking, IServiceBookingModel } from './ServiceBooking.interface';
 import paginate from '../../common/plugins/paginate';
 
 
-const demoSchema = new Schema<IDemo>(
+const ServiceBookingSchema = new Schema<IServiceBooking>(
   {
     userId: { //🔗
       type: Schema.Types.ObjectId,
@@ -22,9 +22,9 @@ const demoSchema = new Schema<IDemo>(
   { timestamps: true }
 );
 
-demoSchema.plugin(paginate);
+ServiceBookingSchema.plugin(paginate);
 
-demoSchema.pre('save', function (next) {
+ServiceBookingSchema.pre('save', function (next) {
   // Rename _id to _projectId
   // this._taskId = this._id;
   // this._id = undefined;  // Remove the default _id field
@@ -34,15 +34,15 @@ demoSchema.pre('save', function (next) {
 });
 
 // Use transform to rename _id to _projectId
-demoSchema.set('toJSON', {
+ServiceBookingSchema.set('toJSON', {
   transform: function (doc, ret, options) {
-    ret._demoId = ret._id; // Rename _id to _subscriptionId
+    ret._ServiceBookingId = ret._id; // Rename _id to _subscriptionId
     delete ret._id; // Remove the original _id field
     return ret;
   },
 });
 
-export const Demo = model<
-  IDemo,
-  IDemoModel
->('Demo', demoSchema);
+export const ServiceBooking = model<
+  IServiceBooking,
+  IServiceBookingModel
+>('ServiceBooking', ServiceBookingSchema);

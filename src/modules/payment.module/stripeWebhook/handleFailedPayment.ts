@@ -1,11 +1,11 @@
 //@ts-ignore
 import mongoose from "mongoose";
 import { TDoctorAppointmentScheduleStatus } from "../../scheduleAndAppointmentBooking.module/doctorAppointmentSchedule/doctorAppointmentSchedule.constant";
-import { TUser } from "../../user/user.interface";
+import { TUser } from "../../user.module/user/user.interface";
 import { TTransactionFor } from "../paymentTransaction/paymentTransaction.constant";
 //@ts-ignore
 import Stripe from "stripe";
-import { User } from "../../user/user.model";
+import { User } from "../../user.module/user/user.model";
 import { IUser } from "../../token/token.interface";
 import ApiError from "../../../errors/ApiError";
 //@ts-ignore

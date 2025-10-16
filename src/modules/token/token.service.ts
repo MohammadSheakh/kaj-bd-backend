@@ -1,5 +1,5 @@
 import jwt, { JwtPayload, Secret } from 'jsonwebtoken';
-import { TUser } from '../user/user.interface';
+import { TUser } from '../user.module/user/user.interface';
 import { config } from '../../config';
 import { addMinutes, addDays } from 'date-fns';
 import ApiError from '../../errors/ApiError';

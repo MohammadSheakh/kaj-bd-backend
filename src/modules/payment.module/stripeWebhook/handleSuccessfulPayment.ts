@@ -1,8 +1,8 @@
 import stripe from "../../../config/stripe.config";
 import { UserSubscriptionStatusType } from "../../subscription.module/userSubscription/userSubscription.constant";
 import { UserSubscription } from "../../subscription.module/userSubscription/userSubscription.model";
-import { TUser } from "../../user/user.interface";
-import { User } from "../../user/user.model";
+import { TUser } from "../../user.module/user/user.interface";
+import { User } from "../../user.module/user/user.model";
 import { TPaymentGateway, TPaymentStatus } from "../paymentTransaction/paymentTransaction.constant";
 import { PaymentTransaction } from "../paymentTransaction/paymentTransaction.model";
 

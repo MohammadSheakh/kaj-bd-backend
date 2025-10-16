@@ -1,5 +1,5 @@
 import { UserSubscription } from "../../subscription.module/userSubscription/userSubscription.model";
-import { User } from "../../user/user.model";
+import { User } from "../../user.module/user/user.model";
 
 export interface IMetadataForFreeTrial{
     userId: string;

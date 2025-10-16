@@ -1,0 +1,312 @@
+<mxfile host="65bd71144e">
+    <diagram id="4F-GN6qdr8h_rtFGFUCn" name="Page-1">
+        <mxGraphModel dx="129" dy="1160" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="" style="swimlane;startSize=0;strokeColor=#CC0000;" parent="1" vertex="1">
+                    <mxGeometry x="2070" y="1280" width="410" height="360" as="geometry">
+                        <mxRectangle x="480" y="1600" width="50" height="40" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="3" value="ServicesCategory ⚡" style="swimlane;fontStyle=2;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=1;fontSize=16;" parent="2" vertex="1">
+                    <mxGeometry x="20" y="59" width="305" height="216" as="geometry">
+                        <mxRectangle x="25" y="101.5" width="160" height="26" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="4" value="" style="line;html=1;strokeWidth=1;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;fontSize=16;" parent="3" vertex="1">
+                    <mxGeometry y="26" width="305" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="- serviceCategoryId" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" parent="3" vertex="1">
+                    <mxGeometry y="34" width="305" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="- attachments [] // for icon // only 1 can be uploaded" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fillColor=#cce5ff;strokeColor=#36393d;fontSize=16;" parent="3" vertex="1">
+                    <mxGeometry y="60" width="305" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="- name ⚡ string" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" parent="3" vertex="1">
+                    <mxGeometry y="86" width="305" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="- createdBy⚡ [ admin / user ]" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;fillColor=#b0e3e6;strokeColor=#0e8088;" parent="3" vertex="1">
+                    <mxGeometry y="112" width="305" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="- createdByUserId⚡ null / 🔖 FK " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;fillColor=#b0e3e6;strokeColor=#0e8088;" parent="3" vertex="1">
+                    <mxGeometry y="138" width="305" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="- isVisible⚡ boolean " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;fillColor=#b0e3e6;strokeColor=#0e8088;" parent="3" vertex="1">
+                    <mxGeometry y="164" width="305" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="-  isDeleted ⚡ boolean" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" parent="3" vertex="1">
+                    <mxGeometry y="190" width="305" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="ServiceCategory&amp;nbsp; 1️⃣" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=35;rotation=0;" parent="2" vertex="1">
+                    <mxGeometry x="20" y="-1" width="350" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" value="&lt;div&gt;User -&amp;gt; Home&amp;nbsp;&lt;/div&gt;&lt;div&gt;Admin -&amp;gt; All Service&lt;/div&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fontSize=16;" parent="2" vertex="1">
+                    <mxGeometry x="20" y="290" width="370" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" value="" style="swimlane;startSize=0;strokeColor=#CC0000;" parent="1" vertex="1">
+                    <mxGeometry x="2500" y="760" width="360" height="800" as="geometry">
+                        <mxRectangle x="480" y="1600" width="50" height="40" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="15" value="Works / Service Booking  ⚡" style="swimlane;fontStyle=2;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=1;fontSize=16;" parent="14" vertex="1">
+                    <mxGeometry x="20" y="59" width="330" height="511" as="geometry">
+                        <mxRectangle x="25" y="101.5" width="160" height="26" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="16" value="" style="line;html=1;strokeWidth=1;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;fontSize=16;" parent="15" vertex="1">
+                    <mxGeometry y="26" width="330" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="17" value="- serviceBooking_id" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" parent="15" vertex="1">
+                    <mxGeometry y="34" width="330" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="18" value="- userId  🔖 FK" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="15" vertex="1">
+                    <mxGeometry y="60" width="330" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="19" value="- providerId  🔖 FK" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="15" vertex="1">
+                    <mxGeometry y="86" width="330" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="20" value="- bookingDate ⚡ Date " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" parent="15" vertex="1">
+                    <mxGeometry y="112" width="330" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" value="- completionDate ⚡ Date " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" parent="15" vertex="1">
+                    <mxGeometry y="138" width="330" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="22" value="- bookingTime ⚡ Date " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" parent="15" vertex="1">
+                    <mxGeometry y="164" width="330" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="23" value="- bookingMonth ⚡ String // for sorting" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" parent="15" vertex="1">
+                    <mxGeometry y="190" width="330" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="24" value="-  isDeleted ⚡ boolean" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" parent="15" vertex="1">
+                    <mxGeometry y="216" width="330" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="25" value="- status ⚡ [ pending /accepted / inProgress / " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" parent="15" vertex="1">
+                    <mxGeometry y="242" width="330" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="26" value="     cancelled / paymentRequst / completed ]" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" parent="15" vertex="1">
+                    <mxGeometry y="268" width="330" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="27" value="-  address ⚡ string " style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" parent="15" vertex="1">
+                    <mxGeometry y="294" width="330" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="28" value="-  lat⚡ string " style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" parent="15" vertex="1">
+                    <mxGeometry y="320" width="330" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="29" value="-  long⚡ string " style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" parent="15" vertex="1">
+                    <mxGeometry y="346" width="330" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="30" value="- duration ⚡ string " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" parent="15" vertex="1">
+                    <mxGeometry y="372" width="330" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="31" value="- attachments [] // proof of images" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fillColor=#cce5ff;strokeColor=#36393d;fontSize=16;" parent="15" vertex="1">
+                    <mxGeometry y="398" width="330" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="32" value="- starPrice ⚡ int" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" parent="15" vertex="1">
+                    <mxGeometry y="424" width="330" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="33" value="- otherPartsPrice ⚡ int" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;fillColor=#f8cecc;strokeColor=#b85450;" parent="15" vertex="1">
+                    <mxGeometry y="450" width="330" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="34" value="- totalCost ⚡ int" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" parent="15" vertex="1">
+                    <mxGeometry y="476" width="330" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="35" value="Work&amp;nbsp; 1️⃣" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=35;rotation=0;" parent="14" vertex="1">
+                    <mxGeometry x="20" width="170" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="36" value="Additional Cost  ⚡" style="swimlane;fontStyle=2;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=1;fontSize=16;" parent="14" vertex="1">
+                    <mxGeometry x="15" y="580" width="330" height="190" as="geometry">
+                        <mxRectangle x="25" y="101.5" width="160" height="26" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="37" value="" style="line;html=1;strokeWidth=1;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;fontSize=16;" parent="36" vertex="1">
+                    <mxGeometry y="26" width="330" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="38" value="- otherPartsPriceId" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" parent="36" vertex="1">
+                    <mxGeometry y="34" width="330" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="39" value="- serviceBookingId  🔖 FK" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" parent="36" vertex="1">
+                    <mxGeometry y="60" width="330" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="40" value="- costName ⚡ String " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" parent="36" vertex="1">
+                    <mxGeometry y="86" width="330" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="41" value="- price ⚡ number " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" parent="36" vertex="1">
+                    <mxGeometry y="112" width="330" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="42" value="-  isDeleted ⚡ boolean" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" parent="36" vertex="1">
+                    <mxGeometry y="138" width="330" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="43" value="- proofImage ⚡ [] " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;fillColor=#eeeeee;strokeColor=#36393d;" parent="36" vertex="1">
+                    <mxGeometry y="164" width="330" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="44" value="Service Provider /  ⚡" style="swimlane;fontStyle=2;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=1;fontSize=16;" parent="1" vertex="1">
+                    <mxGeometry x="2510" y="1639" width="380" height="346" as="geometry">
+                        <mxRectangle x="25" y="101.5" width="160" height="26" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="45" value="" style="line;html=1;strokeWidth=1;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;fontSize=16;" parent="44" vertex="1">
+                    <mxGeometry y="26" width="380" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="46" value="- serviceProviderId" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" parent="44" vertex="1">
+                    <mxGeometry y="34" width="380" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="47" value="- providerId  🔖 FK" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="44" vertex="1">
+                    <mxGeometry y="60" width="380" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="48" value="- serviceName⚡ string " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;fillColor=#eeeeee;strokeColor=#36393d;" parent="44" vertex="1">
+                    <mxGeometry y="86" width="380" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="49" value="- serviceCategoryId  🔖 FK // which is workType" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" parent="44" vertex="1">
+                    <mxGeometry y="112" width="380" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="50" value="- starPrice ⚡ int" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" parent="44" vertex="1">
+                    <mxGeometry y="138" width="380" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="51" value="- rating ⚡ int  // based on we find popular provider" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" parent="44" vertex="1">
+                    <mxGeometry y="164" width="380" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="52" value="- introOrBio ⚡ string" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" parent="44" vertex="1">
+                    <mxGeometry y="190" width="380" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="53" value="- description ⚡ string" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" parent="44" vertex="1">
+                    <mxGeometry y="216" width="380" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="54" value="- attachments [] // for gallery" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fillColor=#cce5ff;strokeColor=#36393d;fontSize=16;" parent="44" vertex="1">
+                    <mxGeometry y="242" width="380" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="55" value="- yearsOfExperience ⚡ number" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" parent="44" vertex="1">
+                    <mxGeometry y="268" width="380" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="56" value="- attachments [] // for coverPhoto" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fillColor=#cce5ff;strokeColor=#36393d;fontSize=16;" parent="44" vertex="1">
+                    <mxGeometry y="294" width="380" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="57" value="-  isDeleted ⚡ boolean" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" parent="44" vertex="1">
+                    <mxGeometry y="320" width="380" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="58" value="Service Provider&amp;nbsp; 1️⃣" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=35;rotation=0;" parent="1" vertex="1">
+                    <mxGeometry x="2515" y="1579" width="340" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="59" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.004;entryY=0.593;entryDx=0;entryDy=0;endArrow=ERmany;endFill=0;startArrow=ERone;startFill=0;exitX=0.003;exitY=0.62;exitDx=0;exitDy=0;entryPerimeter=0;exitPerimeter=0;fontSize=16;verticalAlign=middle;" parent="1" source="5" target="49" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="2880" y="1460" as="sourcePoint"/>
+                        <mxPoint x="2940" y="1492" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="60" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=-0.002;entryY=0.588;entryDx=0;entryDy=0;endArrow=ERmany;endFill=0;startArrow=ERone;startFill=0;exitX=1.001;exitY=0.347;exitDx=0;exitDy=0;entryPerimeter=0;exitPerimeter=0;fontSize=16;verticalAlign=middle;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="2245" y="1660" as="sourcePoint"/>
+                        <mxPoint x="2305" y="1692" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="61" value="For Work Type Of Service Provider ..&amp;nbsp;&lt;br&gt;&lt;div&gt;He He Type Another Work Type .. which is not listed ..&lt;/div&gt;&lt;div&gt;then in which category he should fall into&amp;nbsp;&lt;/div&gt;" style="shape=card;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+                    <mxGeometry x="2910" y="1560" width="280" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="62" value="In Service Provider role&lt;br&gt;03 -&amp;gt; 09&lt;br&gt;&lt;div&gt;what is payment Requst ..&lt;/div&gt;&lt;div&gt;after that what should be the flow&lt;/div&gt;" style="shape=card;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+                    <mxGeometry x="2880" y="1070" width="280" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="63" value="&lt;div&gt;Initially Work status should be in &quot;pending&quot; which is shown as&amp;nbsp;&amp;nbsp;&quot;request&quot;&amp;nbsp; to provider ..&lt;/div&gt;&lt;div&gt;then Provider can accpet that ..&lt;/div&gt;&lt;div&gt;status goes to [inProgress]&lt;/div&gt;&lt;div&gt;--&lt;/div&gt;&lt;div&gt;if provider cancel that ..&lt;/div&gt;&lt;div&gt;status goes to [cancelled]&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+                    <mxGeometry x="2890" y="1250" width="270" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="64" value="&lt;div&gt;For each serviceBooking&amp;nbsp;&lt;/div&gt;&lt;div&gt;user can give review&amp;nbsp;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+                    <mxGeometry x="2900" y="760" width="185" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="65" value="as a user .. ekta service booking korar pore &quot;pending&quot; state e&amp;nbsp;&amp;nbsp;&lt;div&gt;4 hours er moddhe sheta cancel kora&amp;nbsp;&lt;/div&gt;&lt;div&gt;jabe na ..&amp;nbsp;&lt;/div&gt;&lt;div&gt;jodi booking ta accepted state e chole jay .. tahole ar cancel kora jabe na ..&amp;nbsp;&amp;nbsp;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+                    <mxGeometry x="2890" y="840" width="240" height="150" as="geometry"/>
+                </mxCell>
+                <mxCell id="66" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#d5e8d4;strokeColor=#82b366;gradientColor=#97d077;" parent="1" vertex="1">
+                    <mxGeometry x="2410" y="1340" width="40" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="67" value="" style="swimlane;startSize=0;strokeColor=#CC0000;" parent="1" vertex="1">
+                    <mxGeometry x="2490" y="1580" width="410" height="530" as="geometry">
+                        <mxRectangle x="480" y="1600" width="50" height="40" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="68" value="Service Provider /  ⚡" style="swimlane;fontStyle=2;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=1;fontSize=16;" parent="67" vertex="1">
+                    <mxGeometry x="20" y="59" width="380" height="346" as="geometry">
+                        <mxRectangle x="25" y="101.5" width="160" height="26" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="69" value="" style="line;html=1;strokeWidth=1;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;fontSize=16;" parent="68" vertex="1">
+                    <mxGeometry y="26" width="380" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="70" value="- serviceProviderId" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" parent="68" vertex="1">
+                    <mxGeometry y="34" width="380" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="71" value="- providerId  🔖 FK" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="68" vertex="1">
+                    <mxGeometry y="60" width="380" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="72" value="- serviceName⚡ string " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;fillColor=#eeeeee;strokeColor=#36393d;" parent="68" vertex="1">
+                    <mxGeometry y="86" width="380" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="73" value="- serviceCategoryId  🔖 FK // which is workType" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" parent="68" vertex="1">
+                    <mxGeometry y="112" width="380" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="74" value="- starPrice ⚡ int" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" parent="68" vertex="1">
+                    <mxGeometry y="138" width="380" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="75" value="- rating ⚡ int  // based on we find popular provider" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" parent="68" vertex="1">
+                    <mxGeometry y="164" width="380" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="76" value="- introOrBio ⚡ string" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" parent="68" vertex="1">
+                    <mxGeometry y="190" width="380" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="77" value="- description ⚡ string" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" parent="68" vertex="1">
+                    <mxGeometry y="216" width="380" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="78" value="- attachments [] // for gallery" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fillColor=#cce5ff;strokeColor=#36393d;fontSize=16;" parent="68" vertex="1">
+                    <mxGeometry y="242" width="380" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="79" value="- yearsOfExperience ⚡ number" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" parent="68" vertex="1">
+                    <mxGeometry y="268" width="380" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="80" value="- attachments [] // for coverPhoto" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fillColor=#cce5ff;strokeColor=#36393d;fontSize=16;" parent="68" vertex="1">
+                    <mxGeometry y="294" width="380" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="81" value="-  isDeleted ⚡ boolean" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" parent="68" vertex="1">
+                    <mxGeometry y="320" width="380" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="82" value="Service Provider&amp;nbsp; 1️⃣" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=35;rotation=0;" parent="67" vertex="1">
+                    <mxGeometry x="25" y="-1" width="340" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="83" value="" style="swimlane;startSize=0;strokeColor=#CC0000;" vertex="1" parent="1">
+                    <mxGeometry x="2010" y="1840" width="410" height="330" as="geometry">
+                        <mxRectangle x="480" y="1600" width="50" height="40" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="84" value="Reviews ⚡" style="swimlane;fontStyle=2;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=1;fontSize=16;" vertex="1" parent="83">
+                    <mxGeometry x="20" y="59" width="380" height="216" as="geometry">
+                        <mxRectangle x="25" y="101.5" width="160" height="26" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="85" value="" style="line;html=1;strokeWidth=1;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;fontSize=16;" vertex="1" parent="84">
+                    <mxGeometry y="26" width="380" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="86" value="- reviewId" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="84">
+                    <mxGeometry y="34" width="380" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="87" value="- review ⚡ string " style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="84">
+                    <mxGeometry y="60" width="380" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="88" value="- rating ⚡ float" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="84">
+                    <mxGeometry y="86" width="380" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="89" value="-  isDeleted ⚡ boolean" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="84">
+                    <mxGeometry y="112" width="380" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="90" value="- userId  🔖 FK" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="84">
+                    <mxGeometry y="138" width="380" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="91" value="- serviceProviderId  🔖 FK 🔥🔥🔥" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="84">
+                    <mxGeometry y="164" width="380" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="92" value="- serviceBookingId  🔖 FK" style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="84">
+                    <mxGeometry y="190" width="380" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="93" value="Reviews&amp;nbsp; 1️⃣" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=35;rotation=0;" vertex="1" parent="83">
+                    <mxGeometry x="20" width="220" height="60" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

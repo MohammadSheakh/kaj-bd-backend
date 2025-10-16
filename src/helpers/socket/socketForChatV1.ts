@@ -11,7 +11,7 @@ import { logger } from '../../shared/logger';
 import getUserDetailsFromToken from '../getUesrDetailsFromToken';
 import { Message } from '../../modules/chatting.module/message/message.model';
 import { Conversation } from '../../modules/chatting.module/conversation/conversation.model';
-import { User } from '../../modules/user/user.model';
+import { User } from '../../modules/user.module/user/user.model';
 import { ConversationParticipents } from '../../modules/chatting.module/conversationParticipents/conversationParticipents.model';
 
 import { ConversationParticipentsService } from '../../modules/chatting.module/conversationParticipents/conversationParticipents.service';

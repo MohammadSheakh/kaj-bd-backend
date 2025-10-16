@@ -3,7 +3,7 @@
 import { StatusCodes } from 'http-status-codes';
 import { INotification } from './notification.interface';
 import { Notification } from './notification.model';
-import { User } from '../user/user.model';
+import { User } from '../user.module/user/user.model';
 import { PaginateOptions, PaginateResult } from '../../types/paginate';
 import ApiError from '../../errors/ApiError';
 

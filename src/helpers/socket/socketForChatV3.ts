@@ -9,9 +9,9 @@ import { logger } from '../../shared/logger';
 //@ts-ignore
 import colors from 'colors';
 import getUserDetailsFromToken from '../getUesrDetailsFromToken';
-import { User } from '../../modules/user/user.model';
+import { User } from '../../modules/user.module/user/user.model';
 import { TRole } from '../../middlewares/roles';
-import { IUser } from '../../modules/user/user.interface';
+import { IUser } from '../../modules/user.module/user/user.interface';
 import { INotification } from '../../modules/notification/notification.interface';
 import { sendPushNotification } from '../../modules/notification/firebaseUtils';
 import { ConversationParticipentsService } from '../../modules/chatting.module/conversationParticipents/conversationParticipents.service';
