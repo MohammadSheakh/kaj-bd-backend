@@ -1,17 +1,40 @@
 import { model, Schema } from 'mongoose';
-import { IUserDevices, IUserDevicesModel } from './UserDevices.interface';
-import paginate from '../../common/plugins/paginate';
+import { IUserDevices, IUserDevicesModel } from './userDevices.interface';
+import paginate from '../../../common/plugins/paginate';
+import { UserDevicesType } from './userDevices.constant';
 
 
 const UserDevicesSchema = new Schema<IUserDevices>(
   {
+    // deviceId: { // this is just id of this schema
+    //   type: String,
+    //   required: [true, 'Device ID is required'],
+    //   unique: true,
+    // },
     userId: { //🔗
       type: Schema.Types.ObjectId,
       ref: 'User',
+      required: [true, 'User ID is required'],
     },
-    message: {
+    fcmToken: {
       type: String,
-      required: [true, 'dateOfBirth is required'],
+      required: [true, 'FCM Token is required'],
+    },
+    deviceType: {
+      type: String,
+      enum: [
+        UserDevicesType.ios, 
+        UserDevicesType.android,
+        UserDevicesType.web
+      ],
+      required: [true, 'Device type is required'],
+    },
+    deviceName: {
+      type: String,
+      trim: true,
+    },
+    lastActive: {
+      type: Date,
     },
     isDeleted: {
       type: Boolean,

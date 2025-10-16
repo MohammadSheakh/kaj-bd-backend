@@ -1,55 +1,47 @@
-//@ts-ignore
 import { model, Schema } from 'mongoose';
-import { TApprovalStatus } from './userProfile.constant';
+import {  TGender } from './userProfile.constant';
 import { IUserProfile, IUserProfileModel } from './userProfile.interface';
 
 const userProfileSchema = new Schema<IUserProfile>({
-    attachments: [ // for specialist and doctor 
+    frontSideCertificateImage: [ // 
         {
             type: Schema.Types.ObjectId,
             ref: 'Attachment',
-            required: [false, 'Attachments is not required'],
+            required: [true, 'Attachments is not required'],
         }
     ],
-    approvalStatus: { /** admin can approve this status ..  */
+    backSideCertificateImage: [ // 
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Attachment',
+            required: [true, 'Attachments is not required'],
+        }
+    ],
+    faceImageFromFrontCam: [ // 
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Attachment',
+            required: [true, 'Attachments is not required'],
+        }
+    ],
+    gender: {
         type: String,
         enum: [
-            TApprovalStatus.pending,
-            TApprovalStatus.approved,
-            TApprovalStatus.rejected
+            TGender.male,
+            TGender.female,
         ],
-        default: TApprovalStatus.pending,
+        required: [true, 'Gender is required'],
+        default: TGender.male,
     },
-    protocolNames : [ // for specialist
-        {
-            type: String,
-            required: [false, 'Protocol name is not required'],
-        }
-    ],
-    howManyPrograms:{ // for specialist
-        type: Number,
-        required: [false, 'How many programs is not required'],
-        default: 0
-    },
-    // TODO : need to test .. while create patient .. is this initiate ?
-    howManyProtocol:{ // for patient
-        type: Number,
-        required: [false, 'How many programs is not required'],
-        default: 0
+    acceptTOC:{ // for specialist
+        type: Boolean,
+        required: [true, 'acceptTOC is required'],
     },
     userId: { //🔗 for back reference .. 
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: false,
     },
-    description: {
-        type: String,
-        required: [false, 'Description is not required'],
-    },
-    address: {
-        type: String,
-        required: [false, 'Address is not required'],
-    }
 });
 
 export const UserProfile = model<IUserProfile, IUserProfileModel>('UserProfile', userProfileSchema);

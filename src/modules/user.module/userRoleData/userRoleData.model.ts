@@ -1,17 +1,39 @@
 import { model, Schema } from 'mongoose';
-import { IUserRoleData, IUserRoleDataModel } from './UserRoleData.interface';
-import paginate from '../../common/plugins/paginate';
-
+import { IUserRoleData, IUserRoleDataModel } from './userRoleData.interface';
+import paginate from '../../../common/plugins/paginate';
+import { TAdminStatus, TProviderApprovalStatus } from './userRoleData.constant';
 
 const UserRoleDataSchema = new Schema<IUserRoleData>(
   {
     userId: { //🔗
       type: Schema.Types.ObjectId,
       ref: 'User',
+      required: [true, 'User ID is required'],
     },
-    message: {
+    // roleType: { // i dont think we need roleType
+    //   type: String,
+    //   required: [true, 'Role type is required'],
+    // },
+    adminStatus: {
       type: String,
-      required: [true, 'dateOfBirth is required'],
+      enum: [
+        TAdminStatus.active, 
+        TAdminStatus.inactive,
+        // TAdminStatus.none // i dont this we need this
+      ],
+      default: TAdminStatus.inactive,
+    },
+    providerApprovalStatus: {
+      type: String,
+      enum: [
+        TProviderApprovalStatus.accept,
+        TProviderApprovalStatus.reject,
+        TProviderApprovalStatus.pending
+      ],
+      default: TProviderApprovalStatus.pending,
+    },
+    approvedAt: {
+      type: Date,
     },
     isDeleted: {
       type: Boolean,

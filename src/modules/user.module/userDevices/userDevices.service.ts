@@ -1,8 +1,7 @@
 import { StatusCodes } from 'http-status-codes';
-import { UserDevices } from './UserDevices.model';
-import { IUserDevices } from './UserDevices.interface';
-import { GenericService } from '../_generic-module/generic.services';
-
+import { UserDevices } from './userDevices.model';
+import { IUserDevices } from './userDevices.interface';
+import { GenericService } from '../../_generic-module/generic.services';
 
 export class UserDevicesService extends GenericService<
   typeof UserDevices,

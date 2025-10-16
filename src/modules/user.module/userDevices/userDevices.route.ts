@@ -1,10 +1,10 @@
 import express from 'express';
-import * as validation from './UserDevices.validation';
-import { UserDevicesController} from './UserDevices.controller';
-import { IUserDevices } from './UserDevices.interface';
-import { validateFiltersForQuery } from '../../middlewares/queryValidation/paginationQueryValidationMiddleware';
-import validateRequest from '../../shared/validateRequest';
-import auth from '../../middlewares/auth';
+import * as validation from './userDevices.validation';
+import { UserDevicesController} from './userDevices.controller';
+import { IUserDevices } from './userDevices.interface';
+import { validateFiltersForQuery } from '../../../middlewares/queryValidation/paginationQueryValidationMiddleware';
+import validateRequest from '../../../shared/validateRequest';
+import auth from '../../../middlewares/auth';
 
 import multer from "multer";
 const storage = multer.memoryStorage();

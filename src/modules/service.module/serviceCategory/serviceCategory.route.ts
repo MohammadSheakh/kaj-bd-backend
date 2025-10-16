@@ -1,10 +1,10 @@
 import express from 'express';
-import * as validation from './ServiceCategory.validation';
-import { ServiceCategoryController} from './ServiceCategory.controller';
-import { IServiceCategory } from './ServiceCategory.interface';
-import { validateFiltersForQuery } from '../../middlewares/queryValidation/paginationQueryValidationMiddleware';
-import validateRequest from '../../shared/validateRequest';
-import auth from '../../middlewares/auth';
+import * as validation from './serviceCategory.validation';
+import { ServiceCategoryController} from './serviceCategory.controller';
+import { IServiceCategory } from './serviceCategory.interface';
+import { validateFiltersForQuery } from '../../../middlewares/queryValidation/paginationQueryValidationMiddleware';
+import validateRequest from '../../../shared/validateRequest';
+import auth from '../../../middlewares/auth';
 
 import multer from "multer";
 const storage = multer.memoryStorage();

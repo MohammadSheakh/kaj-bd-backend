@@ -1,17 +1,50 @@
 import { model, Schema } from 'mongoose';
-import { IReview, IReviewModel } from './Review.interface';
-import paginate from '../../common/plugins/paginate';
-
-
+import { IReview, IReviewModel } from './review.interface';
+import paginate from '../../../common/plugins/paginate';
+//----------------------------------
+// Since reviews are user-generated content, you typically don’t translate them 
+// automatically (because the reviewer wrote in their own language).  
+//---------------------------------
 const ReviewSchema = new Schema<IReview>(
   {
+    review: {
+      en: { 
+        type: String, 
+        required: [true, 'English review is required'], 
+        trim: true 
+      },
+      bn: { 
+        type: String, 
+        required: [true, 'Bangla review is required'], 
+        trim: true 
+      }
+    },
+    originalLanguage: { //
+      type: String,
+      enum: ['en', 'bn'],
+      required: true,
+      // e.g., 'bn' if user wrote in Bangla
+    },
+    rating: {
+      type: Number,
+      required: [true, 'rating is required'],
+      min: 0,
+      max: 5,
+    },
     userId: { //🔗
       type: Schema.Types.ObjectId,
       ref: 'User',
+      required: [true, 'userId is required'],
     },
-    message: {
-      type: String,
-      required: [true, 'dateOfBirth is required'],
+    serviceProviderId: { //🔗
+      type: Schema.Types.ObjectId,
+      ref: 'User', // reference ki ServiceProvider hobe naki User hobe .. chinta korte hobe 
+      required: [true, 'serviceProviderId is required'],
+    },
+    serviceBookingId: { //🔗
+      type: Schema.Types.ObjectId,
+      ref: 'ServiceBooking',
+      required: [true, 'serviceBookingId is required'],
     },
     isDeleted: {
       type: Boolean,
@@ -21,6 +54,43 @@ const ReviewSchema = new Schema<IReview>(
   },
   { timestamps: true }
 );
+/*
+const ReviewSchema = new Schema<IReview>(
+  {
+    review: {
+      type: String,
+      required: [true, 'review is required'],
+    },
+    rating: {
+      type: Number,
+      required: [true, 'rating is required'],
+      min: 0,
+      max: 5,
+    },
+    userId: { //🔗
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: [true, 'userId is required'],
+    },
+    serviceProviderId: { //🔗
+      type: Schema.Types.ObjectId,
+      ref: 'User', // reference ki ServiceProvider hobe naki User hobe .. chinta korte hobe 
+      required: [true, 'serviceProviderId is required'],
+    },
+    serviceBookingId: { //🔗
+      type: Schema.Types.ObjectId,
+      ref: 'ServiceBooking',
+      required: [true, 'serviceBookingId is required'],
+    },
+    isDeleted: {
+      type: Boolean,
+      required: [false, 'isDeleted is not required'],
+      default: false,
+    },
+  },
+  { timestamps: true }
+);
+*/
 
 ReviewSchema.plugin(paginate);
 

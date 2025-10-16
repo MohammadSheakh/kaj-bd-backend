@@ -1,12 +1,20 @@
 import { Model, Types } from 'mongoose';
 import { PaginateOptions, PaginateResult } from '../../../types/paginate';
 
-
 export interface IServiceProvider {
   // _taskId: undefined | Types.ObjectId;
   _id?: Types.ObjectId; // undefined |  Types.ObjectId |
-  userId: Types.ObjectId;
-  message : string;
+  
+  providerId: Types.ObjectId; // FK to User
+  serviceName: string;
+  serviceCategoryId: Types.ObjectId; // FK to ServiceCategory
+  starPrice: number;
+  rating: number;
+  introOrBio?: string;
+  description?: string;
+  attachmentsForGallery: Types.ObjectId[]; //🔗🖼️ 
+  attachmentsForCoverPhoto?: Types.ObjectId[]; //🔗🖼️  Optional: if you want to store the cover photo separately
+  yearsOfExperience: number;
 
   isDeleted? : boolean;  
   createdAt?: Date;

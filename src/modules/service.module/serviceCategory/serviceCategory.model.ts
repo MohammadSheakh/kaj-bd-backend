@@ -1,17 +1,39 @@
 import { model, Schema } from 'mongoose';
-import { IServiceCategory, IServiceCategoryModel } from './ServiceCategory.interface';
-import paginate from '../../common/plugins/paginate';
+import { IServiceCategory, IServiceCategoryModel } from './serviceCategory.interface';
+import paginate from '../../../common/plugins/paginate';
 
 
 const ServiceCategorySchema = new Schema<IServiceCategory>(
   {
-    userId: { //🔗
+    // userId: { //🔗
+    //   type: Schema.Types.ObjectId,
+    //   ref: 'User',
+    // },
+
+    attachments: [
+      {
+        type: String, // store file URLs or paths
+        required: false,
+      },
+    ],
+    name: {
+      type: String,
+      required: [true, 'name is required'],
+      trim: true,
+    },
+    createdBy: {
+      type: String,
+      enum: ['admin', 'user'],
+      required: [true, 'createdBy is required'],
+    },
+    createdByUserId: {
       type: Schema.Types.ObjectId,
       ref: 'User',
+      default: null,
     },
-    message: {
-      type: String,
-      required: [true, 'dateOfBirth is required'],
+    isVisible: {
+      type: Boolean,
+      default: true,
     },
     isDeleted: {
       type: Boolean,

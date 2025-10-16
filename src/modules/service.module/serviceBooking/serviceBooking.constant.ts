@@ -1,5 +1,8 @@
-export enum ServiceBookingType {
-  document = 'document',
-  image = 'image',
-  unknown = 'unknown',
+export enum TBookingStatus {
+  pending = 'pending',
+  accepted = 'accepted',
+  inProgress = 'inProgress',
+  cancelled = 'cancelled', 
+  paymentRequest = 'paymentRequest',
+  completed = 'completed'
 }

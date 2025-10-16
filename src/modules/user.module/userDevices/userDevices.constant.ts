@@ -1,5 +1,5 @@
 export enum UserDevicesType {
-  document = 'document',
-  image = 'image',
-  unknown = 'unknown',
+  ios = 'ios',
+  android = 'android',
+  web = 'web',
 }

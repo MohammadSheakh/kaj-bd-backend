@@ -1,5 +1,4 @@
-export enum TApprovalStatus{
-    pending = 'pending',
-    approved = 'approved',
-    rejected = 'rejected',
+export enum TGender{
+    male = 'male',
+    female = 'female',
 }

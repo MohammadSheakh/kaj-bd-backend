@@ -1,10 +1,10 @@
 import express from 'express';
-import * as validation from './UserRoleData.validation';
-import { UserRoleDataController} from './UserRoleData.controller';
-import { IUserRoleData } from './UserRoleData.interface';
-import { validateFiltersForQuery } from '../../middlewares/queryValidation/paginationQueryValidationMiddleware';
-import validateRequest from '../../shared/validateRequest';
-import auth from '../../middlewares/auth';
+import * as validation from './userRoleData.validation';
+import { UserRoleDataController} from './userRoleData.controller';
+import { IUserRoleData } from './userRoleData.interface';
+import { validateFiltersForQuery } from '../../../middlewares/queryValidation/paginationQueryValidationMiddleware';
+import validateRequest from '../../../shared/validateRequest';
+import auth from '../../../middlewares/auth';
 
 import multer from "multer";
 const storage = multer.memoryStorage();

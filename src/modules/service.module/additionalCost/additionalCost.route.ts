@@ -1,7 +1,7 @@
 import express from 'express';
-import * as validation from './serviceBooking.validation';
-import { ServiceBookingController} from './serviceBooking.controller';
-import { IServiceBooking } from './serviceBooking.interface';
+import * as validation from './additionalCost.validation';
+import { AdditionalCostController} from './additionalCost.controller';
+import { IAdditionalCost } from './additionalCost.interface';
 import { validateFiltersForQuery } from '../../../middlewares/queryValidation/paginationQueryValidationMiddleware';
 import validateRequest from '../../../shared/validateRequest';
 import auth from '../../../middlewares/auth';
@@ -12,7 +12,7 @@ const upload = multer({ storage: storage });
 
 const router = express.Router();
 
-export const optionValidationChecking = <T extends keyof IServiceBooking | 'sortBy' | 'page' | 'limit' | 'populate'>(
+export const optionValidationChecking = <T extends keyof IAdditionalCost | 'sortBy' | 'page' | 'limit' | 'populate'>(
   filters: T[]
 ) => {
   return filters;
@@ -26,7 +26,7 @@ const paginationOptions: Array<'sortBy' | 'page' | 'limit' | 'populate'> = [
 ];
 
 // const taskService = new TaskService();
-const controller = new ServiceBookingController();
+const controller = new AdditionalCostController();
 
 //
 router.route('/paginate').get(
@@ -78,4 +78,4 @@ router.route('/softDelete/:id').put(
 //[🚧][🧑‍💻✅][🧪] // 🆗
 
 
-export const ServiceBookingRoute = router;
+export const AdditionalCostRoute = router;

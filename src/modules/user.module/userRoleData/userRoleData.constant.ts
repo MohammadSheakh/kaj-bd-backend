@@ -1,5 +1,11 @@
-export enum UserRoleDataType {
-  document = 'document',
-  image = 'image',
-  unknown = 'unknown',
+export enum TAdminStatus {
+  active = 'active',
+  inactive = 'inactive',
+  // none = 'none',
+}
+
+export enum TProviderApprovalStatus {
+  accept = 'accept',
+  reject = 'reject',
+  pending = 'pending',
 }

@@ -1,12 +1,16 @@
 import { Model, Types } from 'mongoose';
 import { PaginateOptions, PaginateResult } from '../../../types/paginate';
-
+import { TAdminStatus, TProviderApprovalStatus } from './userRoleData.constant';
 
 export interface IUserRoleData {
   // _taskId: undefined | Types.ObjectId;
   _id?: Types.ObjectId; // undefined |  Types.ObjectId |
-  userId: Types.ObjectId;
-  message : string;
+  userRoleId: Types.ObjectId; // if needed as PK, otherwise remove
+  userId: Types.ObjectId; // FK to User (back reference)
+  roleType: string;
+  adminStatus: TAdminStatus; //🧩
+  providerApprovalStatus: TProviderApprovalStatus; //🧩
+  approvedAt?: Date;
 
   isDeleted? : boolean;  
   createdAt?: Date;
