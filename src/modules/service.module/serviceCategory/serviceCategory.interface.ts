@@ -1,3 +1,4 @@
+//@ts-ignore
 import { Model, Types } from 'mongoose';
 import { PaginateOptions, PaginateResult } from '../../../types/paginate';
 
@@ -6,7 +7,11 @@ export interface IServiceCategory {
   _id?: Types.ObjectId; // undefined |  Types.ObjectId |
   
   attachments?: string[]; //🔗🖼️ only 1 can be used for icon
-  name: string;
+  // name: string;
+  name: {
+    en: string;
+    bn: string;
+  };
   createdBy: 'admin' | 'user';
   createdByUserId?: Types.ObjectId | null;
   isVisible?: boolean;

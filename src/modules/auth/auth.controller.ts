@@ -10,6 +10,11 @@ import { TFolderName } from '../../enums/folderNames';
 import { WalletService } from '../wallet.module/wallet/wallet.service';
 //@ts-ignore
 import { Request, Response } from "express";
+import { User } from '../user/user.model';
+import { TAuthProvider } from './auth.constant';
+import { TokenService } from '../token/token.service';
+import { OAuthAccount } from '../user.module/oauthAccount/oauthAccount.model';
+import { IUser } from '../user/user.interface';
 
 
 //[🚧][🧑‍💻✅][🧪] // 🆗 
@@ -99,6 +104,141 @@ const login = catchAsync(async (req :Request, res:Response) => {
   });
 });
 
+// Google Login
+const googleLogin = async (req :Request, res:Response) => {
+  const { googleId, email, googleAccessToken } = req.body;
+
+  // // Check 1: Is there already a LOCAL account with this email?
+  // let localUser = await User.findOne({ email: "you@gmail.com", hashedPassword: { $ne: null }});
+
+  // Check 2: Is there already a GOOGLE account with this providerId?
+  const existingOAuth = await OAuthAccount.findOne({ 
+    authProvider: TAuthProvider.google, 
+    providerId: googleId 
+  });
+
+  //CASE-1 if google Account already exist -> no new acc.. login 
+  //CASE-2 local account exists with same email -> link or prompt
+  /*************
+  Option 1 (Recommended): Auto-link if email is verified
+  If Google says the email is verified (isVerified: true),
+  and your local account also has isEmailVerified: true, then: 
+  |-> do not create new user
+  |-> Link the Google OAuth account to the existing user
+  |-> Now user can log in with both password AND Google
+
+  **************/
+ // CASE-3 No existing account → create new user
+
+
+ if (existingOAuth) {
+    // Log in existing user
+    const tokens = await TokenService.accessAndRefreshToken(user);
+    const { password, ...userWithoutPassword } = user.toObject();
+
+    sendResponse(res, {
+      code: StatusCodes.OK,
+      message: 'User logged in via Google successfully',
+      data: { userWithoutPassword, tokens },
+      success: true,
+    });
+  } else {
+    // Check for existing user by email (if email is verified!)
+    // const existingUser = await User.findOne({ email: profile.email });
+    
+    // Check 1: Is there already a LOCAL account with this email?
+    let existingUser:IUser = await User.findOne({ email: "you@gmail.com"});
+
+    if (existingUser && existingUser.isEmailVerified) {
+
+    //@ts-ignore
+    ```
+    Never auto-link if:
+
+    The OAuth provider didn’t verify the email (e.g., Apple may hide
+    it) Your local account isn’t email-verified
+
+    “Sign up as ceo@yourcompany.com with password → not verified”
+    “Then log in via Google as themselves, but claim ceo@yourcompany.com”
+    → And take over the account! 
+
+    ```
+
+      // Link OAuth to existing user
+      await OAuthAccount.create({
+        userId: existingUser._id,
+        authProvider: TAuthProvider.google,
+        providerId: profile.sub,
+        email: profile.email,
+        isVerified: true
+      });
+      // Log in existingUser
+
+      const tokens = await TokenService.accessAndRefreshToken(existingUser);
+      const { password, ...userWithoutPassword } = existingUser.toObject();
+
+      sendResponse(res, {
+        code: StatusCodes.OK,
+        message: 'User logged in via Google successfully',
+        data: { userWithoutPassword, tokens },
+        success: true,
+      });
+
+
+    } else {
+      // Create new user
+      const newUser = new User({ email: profile.email });
+      await newUser.save();
+      // Create OAuthAccount linked to newUser
+    }
+  }
+
+  sendResponse(res, {
+    code: StatusCodes.OK,
+    message: 'User logged in via Google successfully',
+    data: { userWithoutPassword, tokens },
+    success: true,
+  });
+};
+
+// Apple Login
+const appleLogin = async (req :Request, res:Response) => {
+  const { appleId, email, appleAccessToken } = req.body;
+
+  let user = await User.findOne({ appleId });
+
+  if (!user) {
+    // New user, register them
+    const newUser = await AuthService.createUser({
+      email,
+      appleId,
+      authProvider: TAuthProvider.apple,
+      appleAccessToken,
+    });
+
+    return sendResponse(res, {
+      code: StatusCodes.CREATED,
+      message: 'User registered via Apple successfully',
+      data: newUser,
+      success: true,
+    });
+  }
+
+  // Existing user, update the access token and login
+  user.appleAccessToken = appleAccessToken;
+  await user.save();
+
+  const tokens = await TokenService.accessAndRefreshToken(user);
+  const { password, ...userWithoutPassword } = user.toObject();
+
+  sendResponse(res, {
+    code: StatusCodes.OK,
+    message: 'User logged in via Apple successfully',
+    data: { userWithoutPassword, tokens },
+    success: true,
+  });
+};
+
 //[🚧][🧑‍💻✅][🧪]  // 🆗
 const verifyEmail = catchAsync(async (req :Request, res:Response) => {
   console.log(req.body);
@@ -185,6 +325,8 @@ const refreshToken = catchAsync(async (req :Request, res:Response) => {
 export const AuthController = {
   register,
   login,
+  googleLogin,
+  appleLogin,
   verifyEmail,
   resendOtp,
   logout,

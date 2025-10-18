@@ -15,10 +15,22 @@ const ServiceProviderSchema = new Schema<IServiceProvider>(
       ref: 'User',
       required: [true, 'Provider ID is required'],
     },
+    // serviceName: {
+    //   type: String,
+    //   required: [true, 'Service name is required'],
+    //   trim: true,
+    // },
     serviceName: {
-      type: String,
-      required: [true, 'Service name is required'],
-      trim: true,
+      en: { 
+        type: String, 
+        required: [true, 'English serviceName is required'], 
+        trim: true 
+      },
+      bn: { 
+        type: String, 
+        required: [true, 'Bangla serviceName is required'], 
+        trim: true 
+      }
     },
     serviceCategoryId: { // 🔗 this is workType 
       type: Schema.Types.ObjectId,
@@ -37,12 +49,32 @@ const ServiceProviderSchema = new Schema<IServiceProvider>(
       max: [5, 'Rating cannot exceed 5'],
     },
     introOrBio: {
-      type: String,
-      maxlength: [500, 'Intro/Bio cannot exceed 500 characters'],
+      // type: String,
+      // maxlength: [500, 'Intro/Bio cannot exceed 500 characters'],
+      en: { 
+        type: String, 
+        required: [true, 'English Intro/Bio is required'], 
+        trim: true 
+      },
+      bn: { 
+        type: String, 
+        required: [true, 'Bangla Intro/Bio is required'], 
+        trim: true 
+      }
     },
     description: {
-      type: String,
-      maxlength: [2000, 'Description cannot exceed 2000 characters'],
+      // type: String,
+      // maxlength: [2000, 'Description cannot exceed 2000 characters'],
+      en: { 
+        type: String, 
+        required: [true, 'English description is required'], 
+        trim: true 
+      },
+      bn: {
+        type: String, 
+        required: [true, 'Bangla description is required'], 
+        trim: true 
+      }
     },
     attachmentsForGallery: [//🔗🖼️ first image is shown as coverPhoto .. rest of the images are for gallery
       {

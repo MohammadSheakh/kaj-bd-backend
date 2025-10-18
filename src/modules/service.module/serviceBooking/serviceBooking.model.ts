@@ -1,3 +1,4 @@
+//@ts-ignore
 import { model, Schema } from 'mongoose';
 import { IServiceBooking, IServiceBookingModel } from './serviceBooking.interface';
 import paginate from '../../../common/plugins/paginate';
@@ -10,11 +11,6 @@ import { TBookingStatus } from './serviceBooking.constant';
 //--------------------------
 const ServiceBookingSchema = new Schema<IServiceBooking>(
   {
-    // userId: { //🔗
-    //   type: Schema.Types.ObjectId,
-    //   ref: 'User',
-    // },
-    
     userId: { //🔗 who book this service
       type: Schema.Types.ObjectId,
       ref: 'User',
@@ -53,8 +49,18 @@ const ServiceBookingSchema = new Schema<IServiceBooking>(
       default: TBookingStatus.pending,
     },
     address: {
-      type: String,
-      required: [true, 'Address is required'],
+      // type: String,
+      // required: [true, 'Address is required'],
+      en: {
+        type: String,
+        required: [true, 'English address is required'],
+        trim: true,
+      },
+      bn: {
+        type: String,
+        required: [true, 'Bangla address is required'],
+        trim: true,
+      },
     },
     lat: {
       type: String,

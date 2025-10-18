@@ -1,6 +1,7 @@
 import { model, Schema } from 'mongoose';
 import { IReview, IReviewModel } from './review.interface';
 import paginate from '../../../common/plugins/paginate';
+import { TLanguage } from '../../../enums/language';
 //----------------------------------
 // Since reviews are user-generated content, you typically don’t translate them 
 // automatically (because the reviewer wrote in their own language).  
@@ -21,7 +22,7 @@ const ReviewSchema = new Schema<IReview>(
     },
     originalLanguage: { //
       type: String,
-      enum: ['en', 'bn'],
+      enum: [TLanguage.en, TLanguage.bn],
       required: true,
       // e.g., 'bn' if user wrote in Bangla
     },

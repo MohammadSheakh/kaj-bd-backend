@@ -21,15 +21,15 @@ const profileImageSchema = new Schema<TProfileImage>({
 // User Schema Definition
 const userSchema = new Schema<TUser, UserModal>(
   {
+    profileId: { //🔗 dob, gender, acceptTOC, 3 different image 
+      type: Types.ObjectId,
+      ref: 'UserProfile',
+      required: true,
+    },
     name: {
       type: String,
       required: [true, 'Name is required'],
       trim: true,
-    },
-    profileId: { //🔗 as doctor and specialist need to upload documents.. 
-      type: Types.ObjectId,
-      ref: 'UserProfile',
-      required: true,
     },
     email: {
       type: String,
@@ -40,6 +40,14 @@ const userSchema = new Schema<TUser, UserModal>(
         /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
         'Please provide a valid email address',
       ],
+    },
+    role: {
+      type: String,
+      enum: {
+        values: Roles,
+        message: '{VALUE} is not a valid role',
+      },
+      required: [true, 'Role is required'],
     },
     password: {
       type: String,
@@ -53,93 +61,36 @@ const userSchema = new Schema<TUser, UserModal>(
       default: { imageUrl: '/uploads/users/user.png' },
     },
 
-    fcmToken: { type: String, default: null }, // Store Firebase Token
+    // fcmToken: { type: String, default: null }, 
+    //-- now we Store Firebase Token into different table 
 
     //---------------------------------
-    // TODO: Add once gula kivabe manage korbo chinta korte hobe .. 
+    // INFO : we dont need subscriptionType in this kaj-bdi project this is from suplify 
     //---------------------------------
-    subscriptionType: {
-      type: String,
-      enum: TSubscription 
-      // [
-      //     TSubscription.none,
-      //     TSubscription.freeTrial,
-      //     TSubscription.standard,
-      //     TSubscription.standardPlus,
-      //     TSubscription.vise
-      // ]
-      ,
-      required: [
-        false,
-        `TSubscription is required it can be ${Object.values(
-          TSubscription
-        ).join(', ')}`,
-      ],
-      default: TSubscription.none, 
-    },
-
-    // 🆓 FREE TRIAL TRACKING
-    hasUsedFreeTrial: { //✅ TRIAL_USED (prevent multiple trials)
-      type: Boolean,
-      default: false,
-    },
-    /********
-     * for free trial .. we dont need to create 
-     * a USER_SUBSCRIPTION document .. we can just track this
-     * in USER model
-     * ****** */
-    trialStartDate: {
-      type: Date,
-      default: null,
-    },
-    trialEndDate : {
-      type: Date,
-      default: null,
-    },
-    trialPlanType:{/**** 
-      for which plan we start trial
-      because after trial end we need to create 
-      a userSubscription document ..
-      *****/
-      type: String,
-      enum: [
-        TSubscription.standard,
-      ],
-      default: null,
-    },
-
-    status : {
-      type: String,
-      enum:  [TStatusType.active, TStatusType.inactive],
-      required: [
-        false,
-        `Status is required it can be ${Object.values(
-          TStatusType
-        ).join(', ')}`,
-      ],
-      default: TStatusType.active,
-    },
-
-    role: {
-      type: String,
-      enum: {
-        values: Roles,
-        message: '{VALUE} is not a valid role',
-      },
-      required: [true, 'Role is required'],
-    },
     
+    
+    //------- we move this status to different table
+    //-------- as we have different status for different user
+    // status : {  
+    //   type: String,
+    //   enum:  [TStatusType.active, TStatusType.inactive],
+    //   required: [
+    //     false,
+    //     `Status is required it can be ${Object.values(
+    //       TStatusType
+    //     ).join(', ')}`,
+    //   ],
+    //   default: TStatusType.active,
+    // },
+
     isEmailVerified: {
       type: Boolean,
       default: false,
     },
-    phoneNumber : {
+    phoneNumber : { // TODO : add proper validation
       type: String,
     },
-    isDeleted: {
-      type: Boolean,
-      default: false,
-    },
+    
 
     lastPasswordChange: { type: Date },
     isResetPassword: {
@@ -152,40 +103,7 @@ const userSchema = new Schema<TUser, UserModal>(
     },
     lockUntil: { type: Date }, // 🔴 not sure 
 
-    //---------------------------------
-    // this is for Order Something .. Like Payment Related Thing .. 
-    //---------------------------------
-
-    stripe_customer_id: {
-      // > stripe er customer id ...
-      type: String,
-      required: [
-        false,
-        'stripe_customer_id is not required',
-      ],
-      default: null,
-    },
-
-    stripe_subscription_id : { /*********
-                                This is important .. 
-                                ****** */
-      type: String,
-      required: [
-        false,
-        'stripe_subscription_id is not required',
-      ],
-      default: null,
-    },
-
-    //---------------------------------
-    // From Kappes Backend .. 
-    // For Sending and Receiving Money Via Stripe .. 
-    //---------------------------------
-    stripeConnectedAccount: {
-      type: String,
-      default: '',
-    },
-
+    
     //---------------------------------
     // Wallet Related Info
     //---------------------------------
@@ -193,6 +111,15 @@ const userSchema = new Schema<TUser, UserModal>(
       type: Types.ObjectId,
       ref: 'Wallet',
       required: false, // patient dont need any wallet .. only doctor and specialist need wallet 
+      default: null,
+    },
+
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
+    deletedAt: {
+      type: Date,
       default: null,
     }
   },

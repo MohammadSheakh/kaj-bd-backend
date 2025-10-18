@@ -6,12 +6,21 @@ export interface IServiceProvider {
   _id?: Types.ObjectId; // undefined |  Types.ObjectId |
   
   providerId: Types.ObjectId; // FK to User
-  serviceName: string;
+  serviceName: {
+    en: string;
+    bn: string;
+  };
   serviceCategoryId: Types.ObjectId; // FK to ServiceCategory
   starPrice: number;
   rating: number;
-  introOrBio?: string;
-  description?: string;
+  introOrBio?: {
+    en: string;
+    bn: string;
+  };
+  description?: {
+    en: string;
+    bn: string;
+  };
   attachmentsForGallery: Types.ObjectId[]; //🔗🖼️ 
   attachmentsForCoverPhoto?: Types.ObjectId[]; //🔗🖼️  Optional: if you want to store the cover photo separately
   yearsOfExperience: number;

@@ -1,18 +1,20 @@
-export type Role = 'patient' | 'admin' | 'specialist' | 'doctor';	
+export type Role = 'provider' | 'user' | 'admin' | 'subAdmin';	
 
 export enum TRole {
-  patient = 'patient',
+  provider = 'provider',
+  user = 'user',
   admin = 'admin',
-  specialist = 'specialist',
-  doctor = 'doctor',
-  common = 'common' // its not a role but a common access level
+  subAdmin = 'subAdmin',
+  common = 'common', // its not a role but a common access level
+  commonUser = 'commonUser', // its not a role but a common access level
+  commonAdmin = 'commonAdmin'
 }
 
 const allRoles: Record<Role, string[]> = {
-  patient: ['patient', 'common'], 
-  admin: ['admin', 'common'],
-  specialist: ['specialist', 'common'],
-  doctor: ['doctor', 'common'],
+  provider: ['provider', 'common', 'commonUser' ], 
+  user: ['user', 'common' , 'commonUser'],
+  admin: ['admin', 'common', 'commonAdmin'],
+  subAdmin: ['subAdmin', 'common', 'commonAdmin'],
 };
 
 const Roles = Object.keys(allRoles) as Array<keyof typeof allRoles>;

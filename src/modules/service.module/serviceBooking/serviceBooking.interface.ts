@@ -1,3 +1,4 @@
+//@ts-ignore
 import { Model, Types } from 'mongoose';
 import { PaginateOptions, PaginateResult } from '../../../types/paginate';
 import { TBookingStatus } from './serviceBooking.constant';
@@ -14,7 +15,10 @@ export interface IServiceBooking {
   bookingTime: string;
   bookingMonth: string;
   status: TBookingStatus; //🧩
-  address: string;
+  address: {
+    en: string;
+    bn: string;
+  };
   lat: string;
   long: string;
   duration: string;

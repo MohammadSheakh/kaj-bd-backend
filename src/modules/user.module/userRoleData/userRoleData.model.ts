@@ -1,3 +1,4 @@
+//@ts-ignore
 import { model, Schema } from 'mongoose';
 import { IUserRoleData, IUserRoleDataModel } from './userRoleData.interface';
 import paginate from '../../../common/plugins/paginate';

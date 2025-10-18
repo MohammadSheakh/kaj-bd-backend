@@ -16,10 +16,22 @@ const ServiceCategorySchema = new Schema<IServiceCategory>(
         required: false,
       },
     ],
+    // name: {
+    //   type: String,
+    //   required: [true, 'name is required'],
+    //   trim: true,
+    // },
     name: {
-      type: String,
-      required: [true, 'name is required'],
-      trim: true,
+      en: {
+        type: String,
+        required: [true, 'English name is required'],
+        trim: true
+      },
+      bn: {
+        type: String,
+        required: [true, 'Bangla name is required'],
+        trim: true
+      }
     },
     createdBy: {
       type: String,

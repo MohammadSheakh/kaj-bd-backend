@@ -1,3 +1,4 @@
+//@ts-ignore
 import { model, Schema } from 'mongoose';
 import {  TGender } from './userProfile.constant';
 import { IUserProfile, IUserProfileModel } from './userProfile.interface';
@@ -36,6 +37,24 @@ const userProfileSchema = new Schema<IUserProfile>({
     acceptTOC:{ // for specialist
         type: Boolean,
         required: [true, 'acceptTOC is required'],
+    },
+    location: {
+        bn: {
+            type: String,
+            required: false,
+        },
+        en: {
+            type: String,
+            required: false,
+        }
+    },
+    lat: {
+        type: Number,
+        required: false,
+    },
+    lng: {
+        type: Number,
+        required: false,
     },
     userId: { //🔗 for back reference .. 
         type: Schema.Types.ObjectId,

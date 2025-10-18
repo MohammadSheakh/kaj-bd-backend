@@ -6,11 +6,7 @@ import { UserDevicesType } from './userDevices.constant';
 
 const UserDevicesSchema = new Schema<IUserDevices>(
   {
-    // deviceId: { // this is just id of this schema
-    //   type: String,
-    //   required: [true, 'Device ID is required'],
-    //   unique: true,
-    // },
+    
     userId: { //🔗
       type: Schema.Types.ObjectId,
       ref: 'User',
