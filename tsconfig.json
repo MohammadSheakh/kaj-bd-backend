@@ -1,5 +1,5 @@
 {
-  "include": ["src", "src/modules/order.module/order/order.controller.ts"], // which files to compile
+  "include": ["src", "src/types"], // which files to compile src/modules/order.module/order/order.controller.ts
   "exclude": ["node_modules"], // which files to skip
   "compilerOptions": {
     "moduleResolution": "node",

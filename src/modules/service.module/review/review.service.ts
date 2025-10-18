@@ -10,4 +10,10 @@ export class ReviewService extends GenericService<
   constructor() {
     super(Review);
   }
+
+  async create(data:InterfaceType) : Promise<InterfaceType> {
+    // console.log('req.body from generic create 🧪🧪', data);
+    return await this.model.create(data);
+  }
+
 }

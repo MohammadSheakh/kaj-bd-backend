@@ -71,7 +71,111 @@ const validateUserStatus = (user: TUser) => {
     );
   }
 };
-const createUser = async (userData: TUser, userProfileId:string) => {
+const createUserWithProfileInfo = async (userData: TUser, userProfileId:string) => {
+
+  
+  const existingUser = await User.findOne({ email: userData.email });
+  
+  if (existingUser) {
+    if (existingUser.isEmailVerified) {
+      throw new ApiError(StatusCodes.BAD_REQUEST, 'Email already taken');
+    } else {
+      await User.findOneAndUpdate({ email: userData.email }, userData);
+
+      //create verification email token
+      const verificationToken =
+        await TokenService.createVerifyEmailToken(existingUser);
+      //create verification email otp
+      await OtpService.createVerificationEmailOtp(existingUser.email);
+      return { verificationToken };
+    }
+  }
+
+  const user = await User.create(userData);
+
+  // ⚠️ bad code .. 
+  // await UserProfile.findByIdAndUpdate(userProfileId, { userId: user._id });
+
+  // 📈⚙️ OPTIMIZATION: with event emmiter 
+  eventEmitterForUpdateUserProfile.emit('eventEmitterForUpdateUserProfile', { 
+    userProfileId,
+    userId : user._id
+   });
+
+  /************
+  
+  //create verification email token
+  const verificationToken = await TokenService.createVerifyEmailToken(user);
+  //create verification email otp
+  const {otp} = await OtpService.createVerificationEmailOtp(user.email);
+  
+  *********** */
+
+  /************
+  // Run token and OTP creation in parallel
+  const [verificationToken, { otp }] = await Promise.all([
+    TokenService.createVerifyEmailToken(user),
+    OtpService.createVerificationEmailOtp(user.email)
+  ]);
+
+  *********** */
+
+  if(userData.role == TRole.provider) {
+
+  /***********
+   * 
+   * For first time registation .. for provider.. we dont want to 
+   * send otp to them .. 
+   * we automatically verify their email from admin panel .. 
+   * 
+   * TODO : we will do this .. in admin panel
+   * 
+   * ********* */
+
+    // 📈⚙️ OPTIMIZATION: with event emmiter 
+    eventEmitterForCreateWallet.emit('eventEmitterForCreateWallet', { 
+      userId : user._id
+    });
+
+    /********
+     * 
+     * Lets send notification to admin that new doctor or specialist registered
+     * 
+     * ***** */
+    await enqueueWebNotification(
+      `A ${userData.role} registered successfully . verify document to activate account`,
+      null, // senderId
+      null, // receiverId 
+      TRole.admin, // receiverRole
+      TNotificationType.newUser, // type
+      /**********
+       * In UI there is no details page for specialist's schedule
+       * **** */
+      // '', // linkFor
+      // existingWorkoutClass._id // linkId
+      // TTransactionFor.TrainingProgramPurchase, // referenceFor
+      // purchaseTrainingProgram._id // referenceId
+    );
+    
+    return { user };
+  }
+
+  // , { otp }
+  // Run token and OTP creation in parallel
+  const [verificationToken] = await Promise.all([
+    TokenService.createVerifyEmailToken(user),
+    // OtpService.createVerificationEmailOtp(user.email)
+  ]);
+
+  
+  eventEmitterForOTPCreateAndSendMail.emit('eventEmitterForOTPCreateAndSendMail', { email: user.email });
+
+  // , otp
+  return { user, verificationToken  }; // FIXME  : otp remove korte hobe ekhan theke .. 
+};
+
+/********
+const createUserWithoutProfileInfo = async (userData: TUser) => {
 
   // Check if the user is registering via Google or Apple
    if (userData.authProvider === 'google') {
@@ -133,7 +237,7 @@ const createUser = async (userData: TUser, userProfileId:string) => {
     OtpService.createVerificationEmailOtp(user.email)
   ]);
 
-  *********** */
+  *********** 
 
   if(userData.role !== 'patient'){
 
@@ -145,7 +249,7 @@ const createUser = async (userData: TUser, userProfileId:string) => {
    * 
    * TODO : we will do this .. in admin panel
    * 
-   * ********* */
+   * ********* 
 
     // 📈⚙️ OPTIMIZATION: with event emmiter 
     eventEmitterForCreateWallet.emit('eventEmitterForCreateWallet', { 
@@ -156,7 +260,7 @@ const createUser = async (userData: TUser, userProfileId:string) => {
      * 
      * Lets send notification to admin that new doctor or specialist registered
      * 
-     * ***** */
+     * ***** 
     await enqueueWebNotification(
       `A ${userData.role} registered successfully . verify document to activate account`,
       null, // senderId
@@ -165,7 +269,7 @@ const createUser = async (userData: TUser, userProfileId:string) => {
       TNotificationType.newUser, // type
       /**********
        * In UI there is no details page for specialist's schedule
-       * **** */
+       * **** 
       // '', // linkFor
       // existingWorkoutClass._id // linkId
       // TTransactionFor.TrainingProgramPurchase, // referenceFor
@@ -174,6 +278,7 @@ const createUser = async (userData: TUser, userProfileId:string) => {
     
     return { user };
   }
+
 
   // , { otp }
   // Run token and OTP creation in parallel
@@ -188,6 +293,9 @@ const createUser = async (userData: TUser, userProfileId:string) => {
   // , otp
   return { user, verificationToken  }; // FIXME  : otp remove korte hobe ekhan theke .. 
 };
+
+****************/
+
 
 const login = async (email: string, reqpassword: string, fcmToken : string) => {
   const user = await User.findOne({ email }).select('+password');
@@ -361,7 +469,8 @@ const logout = async (refreshToken: string) => {};
 const refreshAuth = async (refreshToken: string) => {};
 
 export const AuthService = {
-  createUser,
+  createUserWithProfileInfo,
+  createUserWithoutProfileInfo,
   login,
   verifyEmail,
   resetPassword,

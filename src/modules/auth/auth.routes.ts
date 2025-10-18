@@ -18,11 +18,6 @@ const router = Router();
 //---------------------------------
 router.post(
   '/register',
-  [
-    upload.fields([
-      { name: 'attachments', maxCount: 15 }, // Allow up to 5 cover photos
-    ]),
-  ],
   // validateRequest(AuthValidation.createHelpMessageValidationSchema),
   AuthController.register,
 );

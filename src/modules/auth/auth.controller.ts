@@ -16,42 +16,17 @@ import { TokenService } from '../token/token.service';
 import { OAuthAccount } from '../user.module/oauthAccount/oauthAccount.model';
 import { IUser } from '../user/user.interface';
 
+interface IAuth {
+  acceptTOC : boolean
+}
 
 //[🚧][🧑‍💻✅][🧪] // 🆗 
 const register = catchAsync(async (req :Request, res:Response) => {
 
-  //---------------------------------
-  // Role jodi Doctor / Specialist hoy .. taile doctor er jonno document upload korar bebostha 
-  // korte hobe .. 
-  //---------------------------------
-
-  let attachments = [];
+  const data:IAuth = req.body;
   
-  if (req.files && req.files.attachments) {
-  attachments.push(
-      ...(await Promise.all(
-      req.files.attachments.map(async file => {
-          const attachmenId = await new AttachmentService().uploadSingleAttachment(
-              file, // file to upload 
-              TFolderName.user, // folderName
-          );
-          return attachmenId;
-      })
-      ))
-  );
-  }
-
-  req.body.attachments =  [...attachments];
-
-  /****
-   * 
-   * if attachments are provided .. then we have to create profile and .. get that profile id
-   * to save that into User model ... 
-   * 
-   * *** */
   const userProfile = await UserProfile.create({
-    attachments: req.body.attachments,
-    approvalStatus : req.body.role == TRole.patient ? 'approved' : 'pending'
+    acceptTOC: data.acceptTOC,
   });
 
   req.body.profileId = userProfile._id;
@@ -60,7 +35,7 @@ const register = catchAsync(async (req :Request, res:Response) => {
   // lets create wallet for  doctor and specialist but we do this in AuthService.createUser function 
   //---------------------------------
 
-  const result = await AuthService.createUser(req.body, userProfile._id);
+  const result = await AuthService.createUserWithProfileInfo(req.body, userProfile._id);
 
   if(req.body.role == 'doctor' || req.body.role == 'specialist') {
 
