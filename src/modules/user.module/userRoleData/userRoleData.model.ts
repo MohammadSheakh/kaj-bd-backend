@@ -22,7 +22,6 @@ const UserRoleDataSchema = new Schema<IUserRoleData>(
         TAdminStatus.inactive,
         // TAdminStatus.none // i dont this we need this
       ],
-      default: TAdminStatus.inactive,
     },
     providerApprovalStatus: {
       type: String,
@@ -31,7 +30,6 @@ const UserRoleDataSchema = new Schema<IUserRoleData>(
         TProviderApprovalStatus.reject,
         TProviderApprovalStatus.pending
       ],
-      default: TProviderApprovalStatus.pending,
     },
     approvedAt: {
       type: Date,

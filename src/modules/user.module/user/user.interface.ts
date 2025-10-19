@@ -47,7 +47,7 @@ export interface IUser extends Document {
   trialEndDate: Date | undefined;
   trialPlanType: TSubscription | undefined;
 
-  walletId: Types.ObjectId;
+  walletId?: Types.ObjectId;
 
   createdAt: Date;
   updatedAt: Date;
@@ -73,7 +73,7 @@ export type TUser = {
   stripe_customer_id: string;
   stripeConnectedAccount: string; // from kappes backend 
   role: Role;
-
+  walletId?: Types.ObjectId;
   trialStartDate: Date | undefined;
   trialEndDate: Date | undefined;
   trialPlanType: TSubscription | undefined;
@@ -90,6 +90,7 @@ export type TUser = {
   isResetPassword: boolean;
   failedLoginAttempts: number;
   lockUntil: Date | undefined;
+  deletedAt?: Date | undefined;
   createdAt: Date;
   updatedAt: Date;
 };

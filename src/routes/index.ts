@@ -8,10 +8,8 @@ import { ConversationRoute } from '../modules/chatting.module/conversation/conve
 import { MessageRoute } from '../modules/chatting.module/message/message.route';
 import { PaymentTransactionRoute } from '../modules/payment.module/paymentTransaction/paymentTransaction.route';
 import stripeAccountRoutes from '../modules/payment.module/stripeAccount/stripeAccount.route';
-import { DoctorAppointmentScheduleRoute } from '../modules/scheduleAndAppointmentBooking.module/doctorAppointmentSchedule/doctorAppointmentSchedule.route';
 import { informationVideoRoute } from '../modules/extra.module/informationVideo/informationVideo.route';
 import { UserRoutes } from '../modules/user.module/user/user.route';
-import { DoctorPatientScheduleBookingRoute } from '../modules/scheduleAndAppointmentBooking.module/doctorPatientScheduleBooking/doctorPatientScheduleBooking.route';
 import { WalletTransactionHistoryRoute } from '../modules/wallet.module/walletTransactionHistory/walletTransactionHistory.route';
 import { BankInfoRoute } from '../modules/wallet.module/bankInfo/bankInfo.route';
 import { WithdrawalRequstRoute } from '../modules/wallet.module/withdrawalRequst/withdrawalRequst.route';
@@ -45,10 +43,10 @@ const apiRoutes = [
   
 
   ///////////////////////////////////////// Payment Transaction
-  { // 🟢
-    path: '/payment-transactions',
-    route: PaymentTransactionRoute,
-  },
+  // { // 🟢
+  //   path: '/payment-transactions',
+  //   route: PaymentTransactionRoute,
+  // },
 
   ///////////////////////////////////////// Chatting 
   { // 🟢
@@ -60,15 +58,15 @@ const apiRoutes = [
     route: informationVideoRoute,
   },
   ////////////////////////////////////////////  Person Relationship
-  { // 🟢
-    path: '/doctor-appointments',
-    route: DoctorAppointmentScheduleRoute,
-  },
+  // { // 🟢
+  //   path: '/doctor-appointments',
+  //   route: DoctorAppointmentScheduleRoute,
+  // },
   
-  { // 🟢
-    path: '/doctor-appointments/bookings',
-    route: DoctorPatientScheduleBookingRoute,
-  },
+  // { // 🟢
+  //   path: '/doctor-appointments/bookings',
+  //   route: DoctorPatientScheduleBookingRoute,
+  // },
 
   ///////////////////////////////////////////// Person Relationships
   
@@ -86,16 +84,16 @@ const apiRoutes = [
     path: '/messages',
     route: MessageRoute,
   },
-  {
-    path: '/payments',
-    route: PaymentTransactionRoute,
-  },
+  // {
+  //   path: '/payments',
+  //   route: PaymentTransactionRoute,
+  // },
 
   //////////////////////////////////////// Subscription
-  {  // 🟢 from kappes
-    path: '/stripe',
-    route: stripeAccountRoutes,
-  },
+  // {  // 🟢 from kappes
+  //   path: '/stripe',
+  //   route: stripeAccountRoutes,
+  // },
   ///////////////////////////////////////////// Wallet
   { // 🟢
     path: '/wallet-transactions',

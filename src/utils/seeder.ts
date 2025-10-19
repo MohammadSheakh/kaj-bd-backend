@@ -14,22 +14,11 @@ const usersData = [
     name: 'Admin',
     email: 'a@gmail.com',
     password: '$2b$12$cxPF29g99duEaWshhIjW6.TXTEzCccwZaL8jil3gFvhMjogg4HxiW', // Hashed password asdfasdf
-    // profileImage: {
-    // imageUrl: "/uploads/users/user.png",
-    //   _id: {
-    //     $oid: "68982eb2d5f4042c5c0bbb94"
-    //   }
-    // },
-    subscriptionType: TSubscription.vise,
-    fcmToken: null,
-    status: 'active',
     role: 'admin',
     isEmailVerified: true,
     isDeleted: false,
     isResetPassword:false,
     failedLoginAttempts : 0,
-    stripe_customer_id : null,
-    stripeConnectedAccount : "",
   },
 ];
 
@@ -46,28 +35,25 @@ const dropDatabase = async () => {
 // Function to seed users
 const seedUsers = async () => {
   try {
-    await User.deleteMany();
-    // await User.insertMany(usersData);
+    await User.deleteMany({});
+    await UserProfile.deleteMany({});
 
-    // Create UserProfiles
-    const userProfiles = await UserProfile.insertMany(
-      usersData.map((_, index) => ({
-        approvalStatus: 'pending',
-        description: `${usersData[index].name}'s profile`,
-        attachments: [],
-        protocolNames: [],
-        howManyPrograms: 0,
-      }))
-    );
+    for (const userData of usersData) {
+      // 1. Create UserProfile
+      const userProfile = await UserProfile.create({
+        acceptTOC: true,
+        // Note: if your schema requires userId, you'll need to update it later
+      });
 
-    // Create Users with hashed passwords and linked profileId
-    const usersWithProfileIds = usersData.map((userData, index) => ({
-      ...userData,
-      // password: hashedPasswords[index], // ✅ Hashed
-      profileId: userProfiles[index]._id,
-    }));
-    
-    await User.insertMany(usersWithProfileIds);
+      // 2. Create User with profileId
+      await User.create({
+        ...userData, 
+        profileId: userProfile._id,
+      });
+
+      // 3. If UserProfile requires userId, update it now:
+      // await UserProfile.findByIdAndUpdate(userProfile._id, { userId: user._id });
+    }
 
     console.log('Users seeded successfully!');
   } catch (err) {

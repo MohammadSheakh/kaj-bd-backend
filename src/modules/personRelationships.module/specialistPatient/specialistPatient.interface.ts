@@ -1,7 +1,6 @@
 //@ts-ignore
 import { Model, Types } from 'mongoose';
 import { PaginateOptions, PaginateResult } from '../../../types/paginate';
-import { TRelationCreatedBy } from '../doctorSpecialistPatient/doctorSpecialistPatient.constant';
 
 
 export interface ISpecialistPatient {
@@ -9,7 +8,7 @@ export interface ISpecialistPatient {
   _id?: Types.ObjectId; // undefined |  Types.ObjectId |
   patientId: Types.ObjectId;
   specialistId : Types.ObjectId;
-  relationCreatedBy : TRelationCreatedBy;
+  relationCreatedBy : any;
 
   isDeleted? : Boolean;  
   createdAt?: Date;

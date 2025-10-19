@@ -37,13 +37,6 @@ router.post(
   AuthController.googleLogin,
 );
 
-// Route for Apple login
-router.post(
-  '/apple-login',
-  validateRequest(AuthValidation.appleLoginValidationSchema),
-  AuthController.appleLogin,
-);
-
 
 //[🚧][🧑‍💻✅][🧪] // 🆗 
 router.post(

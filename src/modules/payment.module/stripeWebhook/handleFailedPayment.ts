@@ -1,6 +1,5 @@
 //@ts-ignore
 import mongoose from "mongoose";
-import { TDoctorAppointmentScheduleStatus } from "../../scheduleAndAppointmentBooking.module/doctorAppointmentSchedule/doctorAppointmentSchedule.constant";
 import { TUser } from "../../user.module/user/user.interface";
 import { TTransactionFor } from "../paymentTransaction/paymentTransaction.constant";
 //@ts-ignore
@@ -65,15 +64,15 @@ async function updateDoctorPatientScheduleBooking(
     doctorAppointmentScheduleIdReferenceFor: string
 ){
 
-    let updatedDoctorPatientScheduleBooking = await 
-      mongoose.model(doctorAppointmentScheduleIdReferenceFor).findByIdAndUpdate(
-          doctorAppointmentScheduleId, 
-          {
-               /* update fields */
-              scheduleStatus: TDoctorAppointmentScheduleStatus.available, // this is patientId
-          },
-          { new: true }
-     );
+    // let updatedDoctorPatientScheduleBooking = await 
+    //   mongoose.model(doctorAppointmentScheduleIdReferenceFor).findByIdAndUpdate(
+    //       doctorAppointmentScheduleId, 
+    //       {
+    //            /* update fields */
+    //           scheduleStatus: TDoctorAppointmentScheduleStatus.available, // this is patientId
+    //       },
+    //       { new: true }
+    //  );
 
      return updatedDoctorPatientScheduleBooking;
 }

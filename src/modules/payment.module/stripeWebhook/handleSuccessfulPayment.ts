@@ -1,6 +1,4 @@
 import stripe from "../../../config/stripe.config";
-import { UserSubscriptionStatusType } from "../../subscription.module/userSubscription/userSubscription.constant";
-import { UserSubscription } from "../../subscription.module/userSubscription/userSubscription.model";
 import { TUser } from "../../user.module/user/user.interface";
 import { User } from "../../user.module/user/user.model";
 import { TPaymentGateway, TPaymentStatus } from "../paymentTransaction/paymentTransaction.constant";
@@ -146,6 +144,7 @@ export const handleSuccessfulPayment = async (invoice) => {
           gatewayResponse: invoiceInfo,
         });
 
+        /*********
         // 1. Update UserSubscription with Stripe IDs
         await UserSubscription.findByIdAndUpdate(metadata.referenceId, {
           $set: {
@@ -170,6 +169,8 @@ export const handleSuccessfulPayment = async (invoice) => {
             subscriptionType: metadata.subscriptionType 
            }
         });
+
+        *********** */
 
 
     }else if(invoice.billing_reason === 'subscription_cycle'){
@@ -209,6 +210,9 @@ export const handleSuccessfulPayment = async (invoice) => {
           gatewayResponse: invoiceInfo,
         });
 
+
+        /***********
+
         // TODO : referenceFor theke Model ta select korte hobe Best practice
         // 1. Update UserSubscription with Stripe IDs
         await UserSubscription.findByIdAndUpdate(metadata.referenceId, {
@@ -234,6 +238,8 @@ export const handleSuccessfulPayment = async (invoice) => {
             subscriptionType: metadata.subscriptionType 
            }
         });
+
+        ********* */
 
     }else if(invoice.billing_reason === 'subscription_update'){
         console.log("⚡ This is subscription update payment (plan change, proration, etc.)");

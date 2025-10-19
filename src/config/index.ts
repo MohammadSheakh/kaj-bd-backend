@@ -11,11 +11,11 @@ export const config = {
     port: process.env.REDIS_PORT, // || 6380
   },
 
-  openRouterOrChatGPT: {
-    openai: {
-      apiKey: process.env.OPENAI_API_KEY,
-    },
-  },
+  // openRouterOrChatGPT: {
+  //   openai: {
+  //     apiKey: process.env.OPENAI_API_KEY,
+  //   },
+  // },
 
   database: {
     mongoUrl:
@@ -80,12 +80,8 @@ export const config = {
     shobhoyUrl : process.env.SHOBHOY_URL,
   },
 
-  stripe: {
-    secretKey: process.env.STRIPE_SECRET_KEY,
-    webhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
-    stripe_webhook_url: process.env.STRIPE_WEBHOOK_URL,
-    success_url: process.env.STRIPE_SUCCESS_URL, // http://10.10.7.79:7000/api/v1/payments/success
-    cancel_url: process.env.STRIPE_CANCEL_URL, // http://10.10.7.79:7000/api/v1/payments/cancel
-    standard_plan_price_id: process.env.STRIPE_STANDARD_PLAN_PRICE_ID,
-  },
+  // stripe: {
+  //   success_url: process.env.STRIPE_SUCCESS_URL, // http://10.10.7.79:7000/api/v1/payments/success
+  //   cancel_url: process.env.STRIPE_CANCEL_URL, // http://10.10.7.79:7000/api/v1/payments/cancel
+  // },
 };

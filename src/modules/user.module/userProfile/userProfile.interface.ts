@@ -1,7 +1,7 @@
+//@ts-ignore
 import { Model, Types } from 'mongoose';
 import { PaginateOptions, PaginateResult } from '../../../types/paginate';
 import { TGender } from './userProfile.constant';
-
 
 export interface IUserProfile {
   // _taskId: undefined | Types.ObjectId;
@@ -14,7 +14,13 @@ export interface IUserProfile {
 
   acceptTOC : boolean;
   userId: Types.ObjectId; // for back reference ..
-  
+  location: {
+    en: string;
+    bn: string;
+  };
+  lat: number;
+  lng: number;
+  dob : Date;
   isDeleted? : boolean;  
   createdAt?: Date;
   updatedAt?: Date;

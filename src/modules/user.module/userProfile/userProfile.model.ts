@@ -25,6 +25,10 @@ const userProfileSchema = new Schema<IUserProfile>({
             required: [true, 'Attachments is not required'],
         }
     ],
+    dob: {
+        type: Date,
+        required: [true, 'Dob is required'],
+    },
     gender: {
         type: String,
         enum: [

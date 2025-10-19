@@ -20,7 +20,7 @@ const OAuthAccountSchema = new Schema<IOAuthAccount>(
       ],
       required: true,
     },
-    providerId: {
+    providerId: {  // e.g., Google's 'sub' or Apple's 'sub'
       type: String,
       required: true,
       // Ensure uniqueness per provider to prevent duplicate links

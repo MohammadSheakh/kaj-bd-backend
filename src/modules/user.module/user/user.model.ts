@@ -110,7 +110,7 @@ const userSchema = new Schema<TUser, UserModal>(
     walletId : {
       type: Types.ObjectId,
       ref: 'Wallet',
-      required: false, // patient dont need any wallet .. only doctor and specialist need wallet 
+      required: false, // user and admin dont need any wallet .. only provider need wallet 
       default: null,
     },
 
@@ -153,6 +153,7 @@ userSchema.statics.isMatchPassword = async function (
 // Middleware to hash password before saving
 userSchema.pre('save', async function (next) {
 
+  // INFO : while running seeder .. comment this out 
   if (this.isModified('password')) {
     this.password = await bcryptjs.hash(
       this.password,

@@ -1,6 +1,30 @@
 //@ts-ignore
 import { z } from 'zod';
 
+const loginValidationSchema = z.object({
+  body: z.object({
+    email: z
+      .string({
+        required_error: 'Email is required.',
+        invalid_type_error: 'Email must be a string.',
+      })
+      .email('Invalid email address.'),
+
+    password: z
+      .string({
+        required_error: 'Password is required.',
+        invalid_type_error: 'Password must be a string.',
+      })
+      .min(8, 'Password must be at least 8 characters long.'),
+
+    fcmToken: z.string({
+      required_error: 'Fcm token is required.',
+      invalid_type_error: 'Fcm token must be a string.',
+    }).optional(),
+  }),
+});
+
+
 const googleLoginValidationSchema = z.object({
   googleId: z.string({
     required_error: 'Google ID is required.',
@@ -35,29 +59,6 @@ const appleLoginValidationSchema = z.object({
   }),
 });
 
-
-const loginValidationSchema = z.object({
-  body: z.object({
-    email: z
-      .string({
-        required_error: 'Email is required.',
-        invalid_type_error: 'Email must be a string.',
-      })
-      .email('Invalid email address.'),
-
-    password: z
-      .string({
-        required_error: 'Password is required.',
-        invalid_type_error: 'Password must be a string.',
-      })
-      .min(8, 'Password must be at least 8 characters long.'),
-
-    fcmToken: z.string({
-      required_error: 'Fcm token is required.',
-      invalid_type_error: 'Fcm token must be a string.',
-    }).optional(),
-  }),
-});
 
 const verifyEmailValidationSchema = z.object({
   body: z.object({
@@ -129,10 +130,10 @@ const changePasswordValidationSchema = z.object({
 
 export const AuthValidation = {
   loginValidationSchema,
+  appleLoginValidationSchema,
+  googleLoginValidationSchema,
   verifyEmailValidationSchema,
   forgotPasswordValidationSchema,
   resetPasswordValidationSchema,
   changePasswordValidationSchema,
-  appleLoginValidationSchema,
-  googleLoginValidationSchema
 };
