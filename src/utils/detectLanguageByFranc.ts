@@ -9,7 +9,7 @@
 import translate from '@google-cloud/translate';
 const client = new translate.v2.Translate();
 
-export async function detectLanguage(text: string): Promise<'en' | 'bn' | 'unknown'> {
+export async function detectLanguage(text: string): Promise<'en' | 'bn'> {
   // const franc = await getFranc();
   // const code = franc(text);
 

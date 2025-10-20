@@ -13,6 +13,8 @@ import { UserRoutes } from '../modules/user.module/user/user.route';
 import { WalletTransactionHistoryRoute } from '../modules/wallet.module/walletTransactionHistory/walletTransactionHistory.route';
 import { BankInfoRoute } from '../modules/wallet.module/bankInfo/bankInfo.route';
 import { WithdrawalRequstRoute } from '../modules/wallet.module/withdrawalRequst/withdrawalRequst.route';
+import { ServiceProvider } from '../modules/service.module/serviceProvider/serviceProvider.model';
+import { ServiceProviderRoute } from '../modules/service.module/serviceProvider/serviceProvider.route';
 
 // import { ChatRoutes } from '../modules/chat/chat.routes';
 // import { MessageRoutes } from '../modules/message/message.routes';
@@ -70,8 +72,12 @@ const apiRoutes = [
 
   ///////////////////////////////////////////// Person Relationships
   
-  
-  
+
+  ///////////////////////////////////////////// Service Provider
+  {
+    path: '/service-providers',
+    route: ServiceProviderRoute,
+  },
   {
     path: '/attachments',
     route: AttachmentRoutes,

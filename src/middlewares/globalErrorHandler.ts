@@ -6,6 +6,7 @@ import handleZodError from '../errors/handleZodError';
 import { errorLogger } from '../shared/logger';
 import { IErrorMessage } from '../types/errors.types';
 import { config } from '../config';
+import handleCastError from '../errors/handleCastError';
 
 const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
   // Log error
@@ -28,16 +29,18 @@ const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
   }
   /**********
    * 
-   * We have to handle Mongoose bad Objectid
-   * error.name = 'CastError' 
-   * message should be Resource not found  404
-   * ---------------------
-   * 
    * Mongoose duplicate key ..
    * if(error.code === 11000)
    * duplicate field value entered
    * 
    * ********** */
+  // Handle CastError (Invalid MongoDB ObjectId)
+  else if (error.name === 'CastError') {
+    const simplifiedError = handleCastError(error);
+    code = simplifiedError.code;
+    message = simplifiedError.message;
+    errorMessages = simplifiedError.errorMessages;
+  }
   // Handle ValidationError (e.g., Mongoose)
   else if (error.name === 'ValidationError') {
     const simplifiedError = handleValidationError(error);

@@ -1,3 +1,4 @@
+//@ts-ignore
 import express from 'express';
 import * as validation from './serviceProvider.validation';
 import { ServiceProviderController} from './serviceProvider.controller';
@@ -5,11 +6,12 @@ import { IServiceProvider } from './serviceProvider.interface';
 import { validateFiltersForQuery } from '../../../middlewares/queryValidation/paginationQueryValidationMiddleware';
 import validateRequest from '../../../shared/validateRequest';
 import auth from '../../../middlewares/auth';
-
+//@ts-ignore
 import multer from "multer";
+import { TRole } from '../../../middlewares/roles';
+import { imageUploadPipelineForCreateServiceProviderInformation } from './serviceProvider.middleware';
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
-
 const router = express.Router();
 
 export const optionValidationChecking = <T extends keyof IServiceProvider | 'sortBy' | 'page' | 'limit' | 'populate'>(
@@ -52,14 +54,13 @@ router.route('/').get(
   controller.getAll
 );
 
-//[🚧][🧑‍💻✅][🧪] // 🆗
+//----------------------------------------
+// Service Provider | After Registration 
+// This Information must need for provider to be visible to users 
+//----------------------------------------
 router.route('/create').post(
-  // [
-  //   upload.fields([
-  //     { name: 'attachments', maxCount: 15 }, // Allow up to 5 cover photos
-  //   ]),
-  // ],
-  auth('common'),
+  auth(TRole.provider),
+  ...imageUploadPipelineForCreateServiceProviderInformation, //🥇
   validateRequest(validation.createHelpMessageValidationSchema),
   controller.create
 );

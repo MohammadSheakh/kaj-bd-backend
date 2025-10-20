@@ -1,3 +1,4 @@
+//@ts-ignore
 import { Model, Types } from 'mongoose';
 import { PaginateOptions, PaginateResult } from '../../../types/paginate';
 
@@ -28,6 +29,18 @@ export interface IServiceProvider {
   isDeleted? : boolean;  
   createdAt?: Date;
   updatedAt?: Date;
+}
+
+
+export interface ICreateServiceProvider{
+  serviceCategoryId:Types.ObjectId  
+  serviceName : string | IServiceProvider['serviceName']
+  yearsOfExperience : number
+  starPrice : number
+  frontSideCertificateImage : string // from processUploadedFilesForCreate middleware
+  backSideCertificateImage : string // from processUploadedFilesForCreate middleware
+
+  providerId : Types.ObjectId // logged in userId
 }
 
 export interface IServiceProviderModel extends Model<IServiceProvider> {
