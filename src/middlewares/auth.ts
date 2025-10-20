@@ -33,6 +33,8 @@ const auth = (...roles: TRole[]/******** Previously it was string[] */) =>
 
       // Step 4: Check if the user exists and is active
       const user:IUser = await User.findById(verifyUser.userId);
+      // TODO : MUST :: now userProfile does not contain information about approvalStatus and status 
+      // SO ... FIx this .. 
       const userProfile : IUserProfile = await UserProfile.findById(user.profileId);
 
       if (!user) {
@@ -43,17 +45,18 @@ const auth = (...roles: TRole[]/******** Previously it was string[] */) =>
           StatusCodes.BAD_REQUEST,
           'Your account is not email verified. please verify your email'
         );
-      }else if (user.role !== 'patient' && userProfile.approvalStatus == TApprovalStatus.pending){
-          throw new ApiError(
-          StatusCodes.BAD_REQUEST,
-          'Your account is not approved by admin. please wait for admin approval or contact support'
-        );
-      }else if (user.role !== 'patient' && userProfile.approvalStatus == TApprovalStatus.rejected){
-          throw new ApiError(
-          StatusCodes.BAD_REQUEST,
-          'Your account is rejected by admin. please contact support'
-        );
-      }
+      } // TODO : MUST FIX for Kaj Bd 
+      // else if (user.role !== 'patient' && userProfile.approvalStatus == TApprovalStatus.pending){
+      //     throw new ApiError(
+      //     StatusCodes.BAD_REQUEST,
+      //     'Your account is not approved by admin. please wait for admin approval or contact support'
+      //   );
+      // }else if (user.role !== 'patient' && userProfile.approvalStatus == TApprovalStatus.rejected){
+      //     throw new ApiError(
+      //     StatusCodes.BAD_REQUEST,
+      //     'Your account is rejected by admin. please contact support'
+      //   );
+      // }
 
       // Step 5: Role-based Authorization
       if (roles.length) {

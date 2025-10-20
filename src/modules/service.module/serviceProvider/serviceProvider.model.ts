@@ -53,12 +53,12 @@ const ServiceProviderSchema = new Schema<IServiceProvider>(
       // maxlength: [500, 'Intro/Bio cannot exceed 500 characters'],
       en: { 
         type: String, 
-        required: [true, 'English Intro/Bio is required'], 
+        required: [false, 'English Intro/Bio is not required'], 
         trim: true 
       },
       bn: { 
         type: String, 
-        required: [true, 'Bangla Intro/Bio is required'], 
+        required: [false, 'Bangla Intro/Bio is not required'], 
         trim: true 
       }
     },
@@ -67,12 +67,12 @@ const ServiceProviderSchema = new Schema<IServiceProvider>(
       // maxlength: [2000, 'Description cannot exceed 2000 characters'],
       en: { 
         type: String, 
-        required: [true, 'English description is required'], 
+        required: [false, 'English description is not required'], 
         trim: true 
       },
       bn: {
         type: String, 
-        required: [true, 'Bangla description is required'], 
+        required: [false, 'Bangla description is not required'], 
         trim: true 
       }
     },

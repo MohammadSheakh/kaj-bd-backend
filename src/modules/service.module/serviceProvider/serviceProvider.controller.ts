@@ -64,7 +64,6 @@ export class ServiceProviderController extends GenericController<
       otherLang
     );
 
-
     // 5. Save to DB
     const newReview = new ServiceCategory({
       name: nameObj,
@@ -72,9 +71,7 @@ export class ServiceProviderController extends GenericController<
       createdByUserId : req.body.userId,
     });
     
-
     await newReview.save();
-
     */
 
     const result = await this.service.create(data as Partial<IServiceProvider>);
@@ -86,7 +83,6 @@ export class ServiceProviderController extends GenericController<
       success: true,
     });
   });
-
 
   // add more methods here if needed or override the existing ones 
 }

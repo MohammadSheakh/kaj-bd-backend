@@ -1,6 +1,7 @@
 import { model, Schema } from 'mongoose';
 import { IServiceCategory, IServiceCategoryModel } from './serviceCategory.interface';
 import paginate from '../../../common/plugins/paginate';
+import { TRole } from '../../../middlewares/roles';
 
 
 const ServiceCategorySchema = new Schema<IServiceCategory>(
@@ -35,7 +36,7 @@ const ServiceCategorySchema = new Schema<IServiceCategory>(
     },
     createdBy: {
       type: String,
-      enum: ['admin', 'user'],
+      enum: [TRole.admin, TRole.provider],
       required: [true, 'createdBy is required'],
     },
     createdByUserId: {

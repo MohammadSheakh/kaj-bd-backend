@@ -58,10 +58,10 @@ router.route('/').get(
 // Service Provider | After Registration 
 // This Information must need for provider to be visible to users 
 //----------------------------------------
-router.route('/create').post(
+router.route('/').post(
   auth(TRole.provider),
   ...imageUploadPipelineForCreateServiceProviderInformation, //🥇
-  validateRequest(validation.createHelpMessageValidationSchema),
+  // validateRequest(validation.createHelpMessageValidationSchema), // TODO add validation
   controller.create
 );
 

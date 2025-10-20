@@ -1,3 +1,4 @@
+//@ts-ignore
 import express from 'express';
 import * as validation from './serviceBooking.validation';
 import { ServiceBookingController} from './serviceBooking.controller';
@@ -5,7 +6,7 @@ import { IServiceBooking } from './serviceBooking.interface';
 import { validateFiltersForQuery } from '../../../middlewares/queryValidation/paginationQueryValidationMiddleware';
 import validateRequest from '../../../shared/validateRequest';
 import auth from '../../../middlewares/auth';
-
+//@ts-ignore
 import multer from "multer";
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });

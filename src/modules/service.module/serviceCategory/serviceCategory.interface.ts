@@ -1,6 +1,7 @@
 //@ts-ignore
 import { Model, Types } from 'mongoose';
 import { PaginateOptions, PaginateResult } from '../../../types/paginate';
+import { TRole } from '../../../middlewares/roles';
 
 export interface IServiceCategory {
   // _taskId: undefined | Types.ObjectId;
@@ -12,13 +13,18 @@ export interface IServiceCategory {
     en: string;
     bn: string;
   };
-  createdBy: 'admin' | 'user';
+  createdBy:  TRole.admin | TRole.provider;
   createdByUserId?: Types.ObjectId | null;
   isVisible?: boolean;
 
-  isDeleted? : boolean;  
+  isDeleted? : boolean;
   createdAt?: Date;
   updatedAt?: Date;
+}
+
+export interface ICreateServiceCategory{
+  name: string | IServiceCategory['name'] // TODO : add more fields ..
+  createdBy : IServiceCategory['createdBy'] 
 }
 
 export interface IServiceCategoryModel extends Model<IServiceCategory> {
