@@ -139,10 +139,10 @@ const createUser = async (userData: ICreateUser, userProfileId:string) => {
       // existingWorkoutClass._id // linkId
     );
 
-    //--------- Lets create UserRole Data
+    //--------- Lets create UserRole Data 
     await userRoleDataService.create({
       userId: user._id,
-      providerApprovalStatus : TProviderApprovalStatus.pending,
+      // providerApprovalStatus : TProviderApprovalStatus.pending, // we make this pending  later in serviceProvider Data Create part
     })
     
     return { user };

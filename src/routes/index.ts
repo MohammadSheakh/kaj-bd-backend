@@ -15,6 +15,7 @@ import { BankInfoRoute } from '../modules/wallet.module/bankInfo/bankInfo.route'
 import { WithdrawalRequstRoute } from '../modules/wallet.module/withdrawalRequst/withdrawalRequst.route';
 import { ServiceProvider } from '../modules/service.module/serviceProvider/serviceProvider.model';
 import { ServiceProviderRoute } from '../modules/service.module/serviceProvider/serviceProvider.route';
+import { ServiceCategoryRoute } from '../modules/service.module/serviceCategory/serviceCategory.route';
 
 // import { ChatRoutes } from '../modules/chat/chat.routes';
 // import { MessageRoutes } from '../modules/message/message.routes';
@@ -78,6 +79,12 @@ const apiRoutes = [
     path: '/service-providers',
     route: ServiceProviderRoute,
   },
+  ///////////////////////////////////////////// Service Categories
+  {
+    path: '/service-categories',
+    route: ServiceCategoryRoute,
+  },
+
   {
     path: '/attachments',
     route: AttachmentRoutes,

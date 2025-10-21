@@ -1,6 +1,7 @@
 //@ts-ignore
 import { Model, Types } from 'mongoose';
 import { PaginateOptions, PaginateResult } from '../../../types/paginate';
+import { TProviderApprovalStatus } from '../../user.module/userRoleData/userRoleData.constant';
 
 export interface IServiceProvider {
   // _taskId: undefined | Types.ObjectId;
@@ -25,6 +26,7 @@ export interface IServiceProvider {
   attachmentsForGallery: Types.ObjectId[]; //🔗🖼️ 
   attachmentsForCoverPhoto?: Types.ObjectId[]; //🔗🖼️  Optional: if you want to store the cover photo separately
   yearsOfExperience: number;
+  providerApprovalStatus?: TProviderApprovalStatus; //🧩
 
   isDeleted? : boolean;  
   createdAt?: Date;
@@ -36,11 +38,24 @@ export interface ICreateServiceProvider{
   serviceCategoryId:Types.ObjectId  
   serviceName : string | IServiceProvider['serviceName']
   yearsOfExperience : number
-  starPrice : number
+  startPrice : number
   frontSideCertificateImage : string // from processUploadedFilesForCreate middleware
   backSideCertificateImage : string // from processUploadedFilesForCreate middleware
 
   providerId : Types.ObjectId // logged in userId
+}
+
+export interface ICreateServiceProviderDTO{
+  serviceCategoryId:Types.ObjectId  
+  serviceName : string | IServiceProvider['serviceName']
+  yearsOfExperience : number
+  startPrice : number
+  providerId : Types.ObjectId // logged in userId
+}
+
+export interface IUpdateProfileDTO{
+  frontSideCertificateImage : string // from processUploadedFilesForCreate middleware
+  backSideCertificateImage : string // from processUploadedFilesForCreate middleware
 }
 
 export interface IServiceProviderModel extends Model<IServiceProvider> {

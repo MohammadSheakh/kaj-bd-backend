@@ -34,7 +34,7 @@ export const buildTranslatedField = async (
 
   ---------------------------------*/
 
-  const result: TranslatedField = { en: '', bn: '' }; // 🧪 FOR_TESTING 
+  const result: TranslatedField = {  en: 'TEST_EN', bn: 'TEST_BN' }; // 🧪 FOR_TESTING 
 
   return result;
 };

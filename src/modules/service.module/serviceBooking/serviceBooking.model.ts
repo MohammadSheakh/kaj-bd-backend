@@ -81,9 +81,9 @@ const ServiceBookingSchema = new Schema<IServiceBooking>(
         required: [false, 'attachments is not required'],
       }
     ],
-    starPrice: {
+    startPrice: {
       type: Number,
-      required: [true, 'Star price is required'],
+      required: [true, 'Start price is required'],
       min: 0,
     },
     // otherPartsPrice: { // need to think about this

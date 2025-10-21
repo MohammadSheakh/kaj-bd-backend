@@ -30,7 +30,7 @@ const router = express.Router();
 // const taskService = new TaskService();
 const controller = new UserController();
 
-//---------------------------------
+//--------------------------------- suplify
 // Admin : User Management With Statistics
 //---------------------------------
 //
@@ -46,7 +46,7 @@ router.route('/paginate').get(
   controller.getAllWithPaginationV2
 );
 
-//---------------------------------
+//--------------------------------- suplify
 // Specialist | Get Profile Information as logged in user 
 //---------------------------------
 router.route('/profile').get(
@@ -55,7 +55,7 @@ router.route('/profile').get(
 );
 
 
-//---------------------------------
+//--------------------------------- suplify
 // Admin | Get Profile Information by Id  to approve doctor / specialist 
 //---------------------------------
 router.route('/profile/for-admin').get(
@@ -65,7 +65,7 @@ router.route('/profile/for-admin').get(
   controller.getAllWithPagination
 );
 
-//---------------------------------
+//--------------------------------- suplify
 // Admin | change approvalStatus of a doctor / specialist profile
 //---------------------------------
 router.route('/change-approval-status').put(
@@ -73,6 +73,15 @@ router.route('/change-approval-status').put(
   validateRequest(validation.changeApprovalStatusValidationSchema),
   controller.changeApprovalStatusByUserId
 )
+
+//--------------------------------- kaj bd
+// User | Home Page | 03-01 | get category and popular providers also banners 
+//---------------------------------
+router.route('/home-page').get(
+  auth(TRole.user),
+  controller.getCategoriesAndPopularProvidersForUser
+)
+
 
 router.route('/update/:id').put(
   //auth('common'),

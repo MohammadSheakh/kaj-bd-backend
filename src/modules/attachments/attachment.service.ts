@@ -45,10 +45,12 @@ export class AttachmentService extends GenericService<typeof Attachment, IAttach
     }
 
     // ekhon amader ke ekta attachment create korte hobe ..
-    return await this.create({
+    const { _id } =  await this.create({
       attachment: uploadedFileUrl,
       attachmentType: fileType,
     });
+
+    return _id;
   }
 
   // INFO : multiple file upload korar case e .. controller thekei korte hobe .. loop chalate hobe

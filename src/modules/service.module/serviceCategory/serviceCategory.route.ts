@@ -9,7 +9,8 @@ import auth from '../../../middlewares/auth';
 //@ts-ignore
 import multer from "multer";
 import { TRole } from '../../../middlewares/roles';
-import { imageUploadPipelineForCreateServiceCategory } from './serviceCategory.middleware';
+import { imageUploadPipelineForCreateServiceCategory, imageUploadPipelineForUpdateServiceCategory } from './serviceCategory.middleware';
+import { setQueryOptions } from '../../../middlewares/setQueryOptions';
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
@@ -31,11 +32,18 @@ const paginationOptions: Array<'sortBy' | 'page' | 'limit' | 'populate'> = [
 // const taskService = new TaskService();
 const controller = new ServiceCategoryController();
 
-//
+//---------------------------------
+// Admin / SubAdmin / User | 05-01 Get all service with isVisible flag
+//---------------------------------
 router.route('/paginate').get(
-  //auth('common'),
   validateFiltersForQuery(optionValidationChecking(['_id', ...paginationOptions])),
-  controller.getAllWithPagination
+  setQueryOptions({
+    populate: [
+      { path: 'attachments', select: 'attachment' },
+    ],
+    select: '-isDeleted -createdAt -updatedAt'
+  }),
+  controller.getAllWithPaginationV2
 );
 
 router.route('/:id').get(
@@ -43,8 +51,12 @@ router.route('/:id').get(
   controller.getById
 );
 
-router.route('/update/:id').put(
-  //auth('common'),
+//---------------------------------
+// Admin / SubAdmin | 05-03 Update New Service
+//---------------------------------
+router.route('/:id').put(
+  auth(TRole.commonAdmin),
+  ...imageUploadPipelineForUpdateServiceCategory,
   // validateRequest(validation.createHelpMessageValidationSchema),
   controller.updateById
 );
@@ -56,7 +68,7 @@ router.route('/').get(
 );
 
 //---------------------------------
-// Admin / SubAdmin | 05 Create New Service
+// Admin / SubAdmin | 05-02 Create New Service
 //---------------------------------
 router.route('/').post(
   auth(TRole.commonAdmin),

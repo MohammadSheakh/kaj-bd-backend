@@ -57,6 +57,9 @@ export const processUploadedFilesForCreate = (configs: FileFieldConfig[]) => {
         // so that we can pass this to controller to pass to service to save in DB
         // and in controller we dont have to do these upload things
         //--------------------------------
+
+        // console.log("uploadedFiles[config.name] -> ", uploadedFiles[config.name])
+
         req.body[config.name] = uploadedFiles[config.name];
       }
 

@@ -10,6 +10,9 @@ import auth from '../../../middlewares/auth';
 import multer from "multer";
 import { TRole } from '../../../middlewares/roles';
 import { imageUploadPipelineForCreateServiceProviderInformation } from './serviceProvider.middleware';
+import { setRequestFiltersV2 } from '../../../middlewares/setRequstFilterAndValue';
+import { TProviderApprovalStatus } from '../../user.module/userRoleData/userRoleData.constant';
+import { setQueryOptions } from '../../../middlewares/setQueryOptions';
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 const router = express.Router();
@@ -30,16 +33,37 @@ const paginationOptions: Array<'sortBy' | 'page' | 'limit' | 'populate'> = [
 // const taskService = new TaskService();
 const controller = new ServiceProviderController();
 
-//
+//---------------------------------
+// User | 03-05 Get all service provider for a serviceCategoryId
+//---------------------------------
 router.route('/paginate').get(
   //auth('common'),
-  validateFiltersForQuery(optionValidationChecking(['_id', ...paginationOptions])),
-  controller.getAllWithPagination
+  validateFiltersForQuery(optionValidationChecking(['_id', 'serviceCategoryId', ...paginationOptions])),
+  setRequestFiltersV2({
+    isDeleted: false,
+    providerApprovalStatus: TProviderApprovalStatus.accept,
+  }),
+  setQueryOptions({
+    populate: [
+      { path: 'attachmentsForGallery', select: 'attachment' },
+    ],
+    select: '-isDeleted -createdAt -updatedAt'
+  }),
+  controller.getAllWithPaginationV2
 );
 
+//--------------------------------- TODO : reviews get kore dekhate hobe 
+// User | 03-05 get a service provider's details with reviews
+//---------------------------------
 router.route('/:id').get(
   // auth('common'),
   controller.getById
+);
+//--------------------------------- TODO : reviews get kore dekhate hobe 
+// User | 03-09 get a service provider's profile details 
+//---------------------------------
+router.route('/profile/:id').get(
+  controller.getProfileDetails
 );
 
 router.route('/update/:id').put(

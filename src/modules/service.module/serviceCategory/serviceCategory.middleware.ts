@@ -23,3 +23,20 @@ export const imageUploadPipelineForCreateServiceCategory = [
     },
   ]),
 ];
+
+
+export const imageUploadPipelineForUpdateServiceCategory = [
+  [
+    upload.fields([
+      { name: 'attachments', maxCount: 1 }, // Allow up to 1 cover photo
+    ]),
+  ],
+  processUploadedFilesForUpdate([
+    {
+      name: 'attachments',
+      folder: TFolderName.trainingProgram,
+      required: true, // optional
+      allowedMimeTypes: ['image/jpeg', 'image/png'], // , 'application/pdf'
+    },
+  ]),
+];

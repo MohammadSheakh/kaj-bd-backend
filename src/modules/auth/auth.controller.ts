@@ -14,7 +14,7 @@ import ApiError from '../../errors/ApiError';
 import { OAuth2Client } from 'google-auth-library';
 import { UserDevices } from '../user.module/userDevices/userDevices.model';
 import { IUserDevices } from '../user.module/userDevices/userDevices.interface';
-import { ICreateUser, IRegisterData } from './auth.constants';
+import { ICreateUser, IRegisterData } from './auth.interface';
 import { IUserProfile } from '../user.module/userProfile/userProfile.interface';
 import { detectLanguage } from '../../utils/detectLanguageByFranc';
 import { translateTextToTargetLang } from '../../utils/translateTextToTargetLang';

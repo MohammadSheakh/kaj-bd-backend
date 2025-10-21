@@ -19,8 +19,6 @@ const s3 = new S3Client({
   //endpoint: `https://${process.env.AWS_REGION}.digitaloceanspaces.com`,
 });
 
-
-
 /////////// From Rakib Vai .. 
 // Upload file to DigitalOcean Space
 export const uploadFileToSpace = async (

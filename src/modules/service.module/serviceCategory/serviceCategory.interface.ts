@@ -23,8 +23,14 @@ export interface IServiceCategory {
 }
 
 export interface ICreateServiceCategory{
+  attachments?: string[];
   name: string | IServiceCategory['name'] // TODO : add more fields ..
   createdBy : IServiceCategory['createdBy'] 
+}
+
+export interface IUpdateServiceCategory{
+  attachments?: string[];
+  name: string | IServiceCategory['name'] // TODO : add more fields .. 
 }
 
 export interface IServiceCategoryModel extends Model<IServiceCategory> {

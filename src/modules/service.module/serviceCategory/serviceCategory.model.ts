@@ -3,25 +3,15 @@ import { IServiceCategory, IServiceCategoryModel } from './serviceCategory.inter
 import paginate from '../../../common/plugins/paginate';
 import { TRole } from '../../../middlewares/roles';
 
-
 const ServiceCategorySchema = new Schema<IServiceCategory>(
   {
-    // userId: { //🔗
-    //   type: Schema.Types.ObjectId,
-    //   ref: 'User',
-    // },
-
     attachments: [
       {
-        type: String, // store file URLs or paths
-        required: false,
-      },
+        type: Schema.Types.ObjectId,
+        ref: 'Attachment',
+        required: [false, 'attachments is not required'],
+      }
     ],
-    // name: {
-    //   type: String,
-    //   required: [true, 'name is required'],
-    //   trim: true,
-    // },
     name: {
       en: {
         type: String,
@@ -34,6 +24,11 @@ const ServiceCategorySchema = new Schema<IServiceCategory>(
         trim: true
       }
     },
+    // name: {
+    //   type: String,
+    //   required: [true, 'name is required'],
+    //   trim: true,
+    // },
     createdBy: {
       type: String,
       enum: [TRole.admin, TRole.provider],

@@ -1,20 +1,27 @@
+//@ts-ignore
 import { Request, Response } from 'express';
+//@ts-ignore
 import { StatusCodes } from 'http-status-codes';
-
 import { GenericController } from '../../_generic-module/generic.controller';
 import { ServiceProvider } from './serviceProvider.model';
-import { ICreateServiceProvider, IServiceProvider } from './serviceProvider.interface';
+import { ICreateServiceProvider, ICreateServiceProviderDTO, IServiceProvider, IUpdateProfileDTO } from './serviceProvider.interface';
 import { ServiceProviderService } from './serviceProvider.service';
 import catchAsync from '../../../shared/catchAsync';
 import sendResponse from '../../../shared/sendResponse';
 import { IUser } from '../../token/token.interface';
 import { buildTranslatedField } from '../../../utils/buildTranslatedField';
+import { UserProfile } from '../../user.module/userProfile/userProfile.model';
+import { UserRoleData } from '../../user.module/userRoleData/userRoleData.model';
+import { TProviderApprovalStatus } from '../../user.module/userRoleData/userRoleData.constant';
+import { User } from '../../user.module/user/user.model';
+import { defaultExcludes } from '../../../constants/queryOptions';
+
 
 export class ServiceProviderController extends GenericController<
   typeof ServiceProvider,
   IServiceProvider
 > {
-  ServiceProviderService = new ServiceProviderService();
+  serviceProviderService = new ServiceProviderService();
 
   constructor() {
     super(new ServiceProviderService(), 'ServiceProvider');
@@ -22,15 +29,12 @@ export class ServiceProviderController extends GenericController<
 
   create = catchAsync(async (req: Request, res: Response) => {
     const data:ICreateServiceProvider = req.body;
-    data.providerId = (req.user as IUser).userId;
 
     // 🥇
     // Translate multiple properties dynamically
     const [nameObj] : [IServiceProvider['serviceName']]  = await Promise.all([
       buildTranslatedField(data.serviceName as string)
     ]);
-
-    data.serviceName = nameObj;
 
     /*------------------- We move all these code to function for DRY Principal
     const cleanText = data.name.trim();
@@ -72,9 +76,38 @@ export class ServiceProviderController extends GenericController<
     });
     
     await newReview.save();
-    */
+    ---------------------------------*/
 
-    const result = await this.service.create(data as Partial<IServiceProvider>);
+    const createServiceProvider : ICreateServiceProviderDTO = {
+      serviceCategoryId : data.serviceCategoryId,
+      serviceName : nameObj,
+      yearsOfExperience : data.yearsOfExperience,
+      startPrice : data.startPrice,
+      providerId : (req.user as IUser).userId,
+    }
+
+    const updatedServiceProvidersProfile : IUpdateProfileDTO= {
+      backSideCertificateImage :  req.body.backSideCertificateImage,
+      frontSideCertificateImage : req.body.frontSideCertificateImage
+    }
+
+    const [result, updatedProfile, updateServiceProviderRoleData] = await Promise.all([
+       this.service.create(createServiceProvider as Partial<IServiceProvider>),
+       
+       UserProfile.findOneAndUpdate(
+        { userId: (req.user as IUser).userId },
+        updatedServiceProvidersProfile,
+        { new: true }
+      ),
+      
+      UserRoleData.findOneAndUpdate(
+        { userId: (req.user as IUser).userId },
+        {
+          providerApprovalStatus : TProviderApprovalStatus.pending
+        },
+        { new: true }
+      )
+    ])
 
     sendResponse(res, {
       code: StatusCodes.OK,
@@ -83,6 +116,39 @@ export class ServiceProviderController extends GenericController<
       success: true,
     });
   });
+
+
+  getProfileDetails = catchAsync(async(req: Request, res: Response) => {
+    const id = req.params.id;
+
+    const result : IServiceProvider = await ServiceProvider
+    .findById(id).select(defaultExcludes).populate({
+      path: 'serviceCategoryId',
+      select: 'name'
+    }).lean();
+  
+    const [ userProfileInfo, userInfo ] = await Promise.all([
+      
+      UserProfile.findOne({
+        userId: result.providerId
+      }).select('gender dob location').lean(),
+
+      User.findById(result.providerId).select('name phoneNumber profileImage').lean()
+    ])
+
+    const resp = {
+      ...result,
+      ...userProfileInfo,
+      ...userInfo
+    }
+
+    sendResponse(res, {
+      code: StatusCodes.OK,
+      data: resp,
+      message: `Profile Details retrieved successfully`,
+      success: true,
+    });
+  })
 
   // add more methods here if needed or override the existing ones 
 }

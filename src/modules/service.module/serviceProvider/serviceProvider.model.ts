@@ -1,14 +1,10 @@
 import { model, Schema } from 'mongoose';
 import { IServiceProvider, IServiceProviderModel } from './serviceProvider.interface';
 import paginate from '../../../common/plugins/paginate';
-
+import { TProviderApprovalStatus } from '../../user.module/userRoleData/userRoleData.constant';
 
 const ServiceProviderSchema = new Schema<IServiceProvider>(
   {
-    // userId: { //🔗
-    //   type: Schema.Types.ObjectId,
-    //   ref: 'User',
-    // },
     
     providerId: { //🔗 who provide this service
       type: Schema.Types.ObjectId,
@@ -37,9 +33,9 @@ const ServiceProviderSchema = new Schema<IServiceProvider>(
       ref: 'ServiceCategory',
       required: [true, 'Service category is required'],
     },
-    starPrice: {
+    startPrice: {
       type: Number,
-      required: [true, 'Star price is required'],
+      required: [true, 'Start price is required'],
       min: [0, 'Star price cannot be negative'],
     },
     rating: {
@@ -54,11 +50,13 @@ const ServiceProviderSchema = new Schema<IServiceProvider>(
       en: { 
         type: String, 
         required: [false, 'English Intro/Bio is not required'], 
+        default : "",
         trim: true 
       },
       bn: { 
         type: String, 
         required: [false, 'Bangla Intro/Bio is not required'], 
+        default : "",
         trim: true 
       }
     },
@@ -68,11 +66,13 @@ const ServiceProviderSchema = new Schema<IServiceProvider>(
       en: { 
         type: String, 
         required: [false, 'English description is not required'], 
+        default : "",
         trim: true 
       },
       bn: {
         type: String, 
         required: [false, 'Bangla description is not required'], 
+        default : "",
         trim: true 
       }
     },
@@ -94,6 +94,19 @@ const ServiceProviderSchema = new Schema<IServiceProvider>(
       type: Number,
       required: [true, 'Years of experience is required'],
       min: [0, 'Years of experience cannot be negative'],
+    },
+
+    //--------------------------------
+    // actually its from userRoleData .. but for better query we keep this here also
+    //---------------------------------
+    providerApprovalStatus: {
+      type: String,
+      enum: [
+        TProviderApprovalStatus.accept,
+        TProviderApprovalStatus.reject,
+        TProviderApprovalStatus.pending,
+      ],
+      default: TProviderApprovalStatus.pending,
     },
 
     isDeleted: {

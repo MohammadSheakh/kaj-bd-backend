@@ -10,6 +10,8 @@ import PaginationService from '../../../common/service/paginationService';
 import omit from '../../../shared/omit';
 import pick from '../../../shared/pick';
 import { UserProfile } from '../userProfile/userProfile.model';
+import { ServiceCategory } from '../../service.module/serviceCategory/serviceCategory.model';
+import { ServiceProvider } from '../../service.module/serviceProvider/serviceProvider.model';
 
 interface IAdminOrSuperAdminPayload {
   email: string;
@@ -62,9 +64,9 @@ export class UserService extends GenericService<typeof User, IUser> {
     return result;
   }
 
-//---------------------------------
-//  Admin | User Management With Statistics
-//---------------------------------
+  //---------------------------------suplify
+  //  Admin | User Management With Statistics
+  //---------------------------------
   async getAllWithAggregation(
       filters: any, // Partial<INotification> // FixMe : fix type
       options: PaginateOptions,
@@ -214,6 +216,38 @@ export class UserService extends GenericService<typeof User, IUser> {
     return user//updatedProfile;
   }
 
+
+  async getCategoriesAndPopularProvidersForUser() {
+    const [categories, providers] = await Promise.all([
+      ServiceCategory.find({ isDeleted: false, isVisible: true })
+        .limit(9)
+        .select('name attachments').populate({
+          path: 'attachments',
+          select: 'attachment attachmentType',
+        }),
+
+      ServiceProvider.find({
+        providerApprovalStatus: 'accept',
+        rating: { $lt: 3.5 },
+        isDeleted: false,
+      })
+        .limit(10)
+        .select('-__v -updatedAt -createdAt -isDeleted -attachmentsForCoverPhoto')
+        .populate({
+          path: 'attachmentsForGallery attachmentsForCoverPhoto',
+          select: 'attachment attachmentType',
+        }),
+    ]);
+
+
+    // for specific language 🔁
+    // const result = categories.map(cat => ({
+    //   ...cat,
+    //   name: lang ? cat.name[lang] : cat.name
+    // }));
+
+    return { categories, providers };
+  }
 }
 
 /*********
