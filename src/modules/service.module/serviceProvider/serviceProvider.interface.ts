@@ -13,7 +13,7 @@ export interface IServiceProvider {
     bn: string;
   };
   serviceCategoryId: Types.ObjectId; // FK to ServiceCategory
-  starPrice: number;
+  startPrice: number;
   rating: number;
   introOrBio?: {
     en: string;

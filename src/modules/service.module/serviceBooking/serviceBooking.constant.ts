@@ -6,3 +6,10 @@ export enum TBookingStatus {
   paymentRequest = 'paymentRequest',
   completed = 'completed'
 }
+
+export enum TPaymentStatus {
+     unpaid = 'unpaid',
+     paid = 'paid',
+     refunded = 'refunded',
+     failed = 'failed',
+}

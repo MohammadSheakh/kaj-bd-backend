@@ -16,6 +16,7 @@ import {
   subMonths,
   subDays,
 } from 'date-fns';
+import { TCurrency } from '../../../enums/payment';
 
 export class WalletTransactionHistoryService extends GenericService<
   typeof WalletTransactionHistory,
@@ -68,7 +69,7 @@ export class WalletTransactionHistoryService extends GenericService<
             _id: null,
             usd: {
               $sum: {
-                $cond: [{ $eq: ['$currency', TCurrency.usd] }, '$amount', 0],
+                $cond: [{ $eq: ['$currency', TCurrency.bdt] }, '$amount', 0],
               },
             },
             token: {
@@ -88,7 +89,7 @@ export class WalletTransactionHistoryService extends GenericService<
             _id: null,
             usd: {
               $sum: {
-                $cond: [{ $eq: ['$currency', TCurrency.usd] }, '$amount', 0],
+                $cond: [{ $eq: ['$currency', TCurrency.bdt] }, '$amount', 0],
               },
             },
             token: {
@@ -109,7 +110,7 @@ export class WalletTransactionHistoryService extends GenericService<
             _id: null,
             usd: {
               $sum: {
-                $cond: [{ $eq: ['$currency', TCurrency.usd] }, '$amount', 0],
+                $cond: [{ $eq: ['$currency', TCurrency.bdt] }, '$amount', 0],
               },
             },
             token: {
@@ -130,7 +131,7 @@ export class WalletTransactionHistoryService extends GenericService<
             _id: null,
             usd: {
               $sum: {
-                $cond: [{ $eq: ['$currency', TCurrency.usd] }, '$amount', 0],
+                $cond: [{ $eq: ['$currency', TCurrency.bdt] }, '$amount', 0],
               },
             },
             token: {
@@ -156,7 +157,7 @@ export class WalletTransactionHistoryService extends GenericService<
             _id: null,
             usd: {
               $sum: {
-                $cond: [{ $eq: ['$currency', TCurrency.usd] }, '$amount', 0],
+                $cond: [{ $eq: ['$currency', TCurrency.bdt] }, '$amount', 0],
               },
             },
             token: {
@@ -182,7 +183,7 @@ export class WalletTransactionHistoryService extends GenericService<
             _id: null,
             usd: {
               $sum: {
-                $cond: [{ $eq: ['$currency', TCurrency.usd] }, '$amount', 0],
+                $cond: [{ $eq: ['$currency', TCurrency.bdt] }, '$amount', 0],
               },
             },
             token: {
@@ -203,7 +204,7 @@ export class WalletTransactionHistoryService extends GenericService<
             _id: null,
             usd: {
               $sum: {
-                $cond: [{ $eq: ['$currency', TCurrency.usd] }, '$amount', 0],
+                $cond: [{ $eq: ['$currency', TCurrency.bdt] }, '$amount', 0],
               },
             },
             token: {
@@ -224,7 +225,7 @@ export class WalletTransactionHistoryService extends GenericService<
             _id: null,
             usd: {
               $sum: {
-                $cond: [{ $eq: ['$currency', TCurrency.usd] }, '$amount', 0],
+                $cond: [{ $eq: ['$currency', TCurrency.bdt] }, '$amount', 0],
               },
             },
             token: {
@@ -255,7 +256,7 @@ export class WalletTransactionHistoryService extends GenericService<
             _id: null,
             usd: {
               $sum: {
-                $cond: [{ $eq: ['$currency', TCurrency.usd] }, '$amount', 0],
+                $cond: [{ $eq: ['$currency', TCurrency.bdt] }, '$amount', 0],
               },
             },
             token: {
@@ -283,7 +284,7 @@ export class WalletTransactionHistoryService extends GenericService<
             _id: null,
             usd: {
               $sum: {
-                $cond: [{ $eq: ['$currency', TCurrency.usd] }, '$amount', 0],
+                $cond: [{ $eq: ['$currency', TCurrency.bdt] }, '$amount', 0],
               },
             },
             token: {

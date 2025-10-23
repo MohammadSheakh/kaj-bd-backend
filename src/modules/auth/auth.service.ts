@@ -55,7 +55,7 @@ eventEmitterForCreateWallet.on('eventEmitterForCreateWallet', async (valueFromRe
       const wallet =  await walletService.create({
         userId: userId,
         amount: 0, // default 0
-        currency: TCurrency.usd,
+        currency: TCurrency.bdt,
       });
 
       await User.findByIdAndUpdate(

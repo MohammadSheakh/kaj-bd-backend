@@ -1,10 +1,6 @@
 //@ts-ignore
-import { Queue, Worker, QueueScheduler, Job } from "bullmq"; 
-import { TDoctorAppointmentScheduleStatus } from "../../modules/scheduleAndAppointmentBooking.module/doctorAppointmentSchedule/doctorAppointmentSchedule.constant";
+import { Queue, Worker, QueueScheduler, Job } from "bullmq";
 import { errorLogger, logger } from "../../shared/logger";
-import { DoctorPatientScheduleBooking } from "../../modules/scheduleAndAppointmentBooking.module/doctorPatientScheduleBooking/doctorPatientScheduleBooking.model";
-import { TAppointmentStatus } from "../../modules/scheduleAndAppointmentBooking.module/doctorPatientScheduleBooking/doctorPatientScheduleBooking.constant";
-import { IDoctorAppointmentSchedule } from "../../modules/scheduleAndAppointmentBooking.module/doctorAppointmentSchedule/doctorAppointmentSchedule.interface";
 import { Notification } from "../../modules/notification/notification.model";
 import { INotification } from "../../modules/notification/notification.interface";
 import { redisPubClient } from "../redis/redis";
@@ -163,10 +159,9 @@ export const startNotificationWorker = () => {
           receiverId: data.receiverId,
           receiverRole: data.receiverRole,
           type: data.type,
+          idOfType: data.idOfType,
           linkFor: data.linkFor,
           linkId: data.linkId,
-          referenceFor: data.referenceFor,
-          referenceId: data.referenceId,
         });
 
         // logger.info(`✅ Notification created for ${data.receiverRole} :: `, notif);
@@ -190,10 +185,9 @@ export const startNotificationWorker = () => {
               receiverId: null,
               receiverRole: data.receiverRole,
               type: data.type,
+              idOfType: data.idOfType,
               linkFor: data.linkFor,
               linkId: data.linkId,
-              referenceFor: data.referenceFor,
-              referenceId: data.referenceId,
             }            
           );
 
@@ -219,10 +213,9 @@ export const startNotificationWorker = () => {
               receiverId: data.receiverId,
               receiverRole: data.receiverRole,
               type: data.type,
+              idOfType: data.idOfType,
               linkFor: data.linkFor,
               linkId: data.linkId,
-              referenceFor: data.referenceFor,
-              referenceId: data.referenceId,
             }
           );
 

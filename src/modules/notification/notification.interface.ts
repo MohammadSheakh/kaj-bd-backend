@@ -1,7 +1,6 @@
 //@ts-ignore
 import { Model, Types } from 'mongoose';
 import { PaginateOptions, PaginateResult } from '../../types/paginate';
-import { TTransactionFor } from '../payment.module/paymentTransaction/paymentTransaction.constant';
 import { TNotificationType } from './notification.constants';
 import { TRole } from '../../middlewares/roles';
 
@@ -19,12 +18,12 @@ export interface INotification {
   //---------------------------------
   receiverRole: TRole;  //🧩         
 
-  type : TNotificationType; //🧩 
+  type : TNotificationType; //🧩
+
+  idOfType : Types.ObjectId;  
+  
   linkFor : string;
   linkId : string;
-
-  referenceFor : TTransactionFor; //🧩  // no need 
-  referenceId?: Types.ObjectId; // refPath to referenceFor // // no need 
 
   viewStatus?: boolean;
   readAt?: Date;

@@ -2,7 +2,8 @@
 import { model, Schema } from 'mongoose';
 import { IServiceBooking, IServiceBookingModel } from './serviceBooking.interface';
 import paginate from '../../../common/plugins/paginate';
-import { TBookingStatus } from './serviceBooking.constant';
+import { TBookingStatus, TPaymentStatus } from './serviceBooking.constant';
+import { PaymentMethod } from '../../payment.module/paymentTransaction/paymentTransaction.constant';
 
 //--------------------------
 // this serviceBooking 
@@ -21,17 +22,22 @@ const ServiceBookingSchema = new Schema<IServiceBooking>(
       ref: 'User', //ServiceProvider
       required: [true, 'Provider ID is required'],
     },
-    bookingDate: { // dont provide Z at the end .. We need UTC Time to Save Database
+    bookingDateTime: { // dont provide Z at the end .. We need UTC Time to Save Database
       type: Date,
       required: [true, 'Booking date is required'],
     },
+    expectedEndDate: {
+      type: Date,
+      required: [true, 'Expected end date is required'],
+    },
+    // completionDate is actual End Date .. 
     completionDate: { // dont provide Z at the end .. We need UTC Time to Save Database
       type: Date,
     },
-    bookingTime: { // need to think about this 
-      type: String,
-      required: [true, 'Booking time is required'],
-    },
+    // bookingTime: { // need to think about this 
+    //   type: String,
+    //   required: [true, 'Booking time is required'],
+    // },
     bookingMonth: {
       type: String,
       required: [true, 'Booking month is required'],
@@ -95,6 +101,34 @@ const ServiceBookingSchema = new Schema<IServiceBooking>(
       required: [true, 'Total cost is required'],
       min: 0,
     },
+    //--------------------
+    paymentTransactionId: { //🔗 Same as PaymentId of kappes
+      type: Schema.Types.ObjectId,
+      ref: 'PaymentTransaction',
+      default: null,
+    },
+    paymentMethod: {
+      type: String,
+      enum: PaymentMethod,
+      required: [false, `paymentMethod is required .. it can be  ${Object.values(PaymentMethod).join(
+        ', '
+      )}`],
+      // default: PaymentMethod.online,
+    },
+    paymentStatus : {
+      type: String,
+      enum: [
+        TPaymentStatus.unpaid,
+        TPaymentStatus.paid,
+        TPaymentStatus.refunded,
+        TPaymentStatus.failed
+      ],
+      default: TPaymentStatus.unpaid,
+      required: [true, `paymentStatus is required .. it can be  ${Object.values(TPaymentStatus).join(
+        ', '
+      )}`],
+    },
+    //--------------------
     isDeleted: {
       type: Boolean,
       required: [false, 'isDeleted is not required'],

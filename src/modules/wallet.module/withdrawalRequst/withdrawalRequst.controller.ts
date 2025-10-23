@@ -241,7 +241,7 @@ export class WithdrawalRequstController extends GenericController<
       withdrawalRequestId : withdrawalRequst._id,
       type : TWalletTransactionHistory.withdrawal,
       amount : withdrawalRequst.requestedAmount,
-      currency : TCurrency.usd,
+      currency : TCurrency.bdt,
       balanceBefore : balanceBeforeTransaction,
       balanceAfter : balanceAfterTransaction,
       description : 'withdrawal requst approved by admin',

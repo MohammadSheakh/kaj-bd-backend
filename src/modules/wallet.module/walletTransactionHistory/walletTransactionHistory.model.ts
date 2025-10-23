@@ -43,7 +43,7 @@ const WalletTransactionHistorySchema = new Schema<IWalletTransactionHistory>(
 
     currency: {
       type: String,
-      enum: [TCurrency.usd, TCurrency.token],
+      enum: [TCurrency.bdt, TCurrency.token],
       required: [true, 'currency is required'],
     },
 

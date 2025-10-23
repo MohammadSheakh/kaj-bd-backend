@@ -41,24 +41,18 @@ const notificationModel = new Schema<INotification>(
       required: true,
     },
 
+    idOfType: {
+      type: String,
+      required: false,
+    },
+
     linkFor: {
       type: String,
     },
     linkId: {
       type: String,
     },
-    referenceFor: {
-      type: String,
-      enum: [
-        TTransactionFor
-      ],
-    },
-
-    referenceId: {
-      type: Schema.Types.ObjectId,
-      refPath: "referenceFor",
-    },
-
+    
     viewStatus: {
       type: Boolean,
       default: false,

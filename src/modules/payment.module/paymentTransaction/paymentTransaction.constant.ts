@@ -32,3 +32,9 @@ export enum TPaymentStatus {
     partially_refunded = 'partially_refunded',
     disputed = 'disputed'
 }
+
+export enum PaymentMethod {
+    //  COD = 'Cod',
+    //  CARD = 'Card',
+     online = 'online',
+}

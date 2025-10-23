@@ -21,7 +21,7 @@ export interface IPaymentTransaction {
   paymentIntent : string; // from kappes
 
   amount: number;
-  currency : TCurrency.eur | TCurrency.usd
+  currency : TCurrency.bdt
   paymentStatus :  
   
   TPaymentStatus.pending | 

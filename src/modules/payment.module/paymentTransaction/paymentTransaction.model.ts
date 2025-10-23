@@ -72,7 +72,7 @@ const paymentTransactionSchema = new Schema<IPaymentTransaction>(
     },
     currency: {
       type: String,
-      enum: [TCurrency.usd , TCurrency.eur],
+      enum: [TCurrency.bdt],
       required: true
     },
     paymentStatus: {

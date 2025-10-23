@@ -1,6 +1,8 @@
 import { notificationQueue } from "../helpers/bullmq/bullmq";
 import { TNotificationType } from "../modules/notification/notification.constants";
 import { TTransactionFor } from "../modules/payment.module/paymentTransaction/paymentTransaction.constant";
+//@ts-ignore
+import { Types } from "mongoose";
 
 //---------------------------------
 //  global method to send notification through bull queue
@@ -15,13 +17,13 @@ export async function enqueueWebNotification(
    * ** */
   receiverRole: string | null, // for admin .. we must need role .. otherwise we dont need role 
   type: TNotificationType,
+  idOfType: Types.ObjectId,
   /****
-   * this linkFor is for navigation in front-end 
-   * so that in query we can pass linkFor=linkId
+   * so that in query we can pass queryParamKey=queryParamValue
    * **** */
   linkFor?: string | null,
   //---------------------------------
-  // value for linkFor query
+  // queryParamValue 
   //---------------------------------
   linkId?: string | null,
   referenceFor?: TTransactionFor,

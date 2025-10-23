@@ -1,7 +1,8 @@
 //@ts-ignore
 import { Model, Types } from 'mongoose';
 import { PaginateOptions, PaginateResult } from '../../../types/paginate';
-import { TBookingStatus } from './serviceBooking.constant';
+import { TBookingStatus, TPaymentStatus } from './serviceBooking.constant';
+import { PaymentMethod } from '../../payment.module/paymentTransaction/paymentTransaction.constant';
 
 
 export interface IServiceBooking {
@@ -10,9 +11,9 @@ export interface IServiceBooking {
   
   userId: Types.ObjectId; //🔗
   providerId: Types.ObjectId;//🔗
-  bookingDate: Date;
+  bookingDateTime: Date;
   completionDate?: Date;
-  bookingTime: string;
+  // bookingTime: string;
   bookingMonth: string;
   status: TBookingStatus; //🧩
   address: {
@@ -23,13 +24,28 @@ export interface IServiceBooking {
   long: string;
   duration: string;
   attachments: Types.ObjectId[]; //🔗
-  starPrice: number;
+  startPrice: number;
   // otherPartsPrice: number;
   totalCost: number;
+
+  paymentTransactionId?: Types.ObjectId;
+  paymentMethod? : PaymentMethod; //🧩
+  paymentStatus : TPaymentStatus; //🧩
 
   isDeleted? : boolean;  
   createdAt?: Date;
   updatedAt?: Date;
+}
+
+export interface ICreateServiceBooking{
+  bookingDateTime?: IServiceBooking['bookingDateTime'];
+  /**
+   * we need to translate this to bn and en 
+   * * */
+  address: string;  
+  lat : IServiceBooking['lat']; 
+  long : IServiceBooking['long'];
+  providerId : IServiceBooking['providerId'];
 }
 
 export interface IServiceBookingModel extends Model<IServiceBooking> {

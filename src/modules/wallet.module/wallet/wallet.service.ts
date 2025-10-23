@@ -53,7 +53,7 @@ export class WalletService extends GenericService<
       withdrawalRequestId : null, // as this is not withdrawal request
       type : TWalletTransactionHistory.credit,
       amount : amount,
-      currency : TCurrency.usd,
+      currency : TCurrency.bdt,
       balanceBefore : balanceBeforeTransaction,
       balanceAfter : balanceAfterTransaction,
       description : description,

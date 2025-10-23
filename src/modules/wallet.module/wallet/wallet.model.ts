@@ -21,9 +21,9 @@ const WalletSchema = new Schema<IWallet>(
     currency:{
       type: String,
       enum:[
-        TCurrency.usd,
+        TCurrency.bdt,
       ],
-      default: TCurrency.usd,
+      default: TCurrency.bdt,
       required: [false, 'currency is not required'],
     },
     status:{

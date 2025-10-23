@@ -16,6 +16,7 @@ import { WithdrawalRequstRoute } from '../modules/wallet.module/withdrawalRequst
 import { ServiceProvider } from '../modules/service.module/serviceProvider/serviceProvider.model';
 import { ServiceProviderRoute } from '../modules/service.module/serviceProvider/serviceProvider.route';
 import { ServiceCategoryRoute } from '../modules/service.module/serviceCategory/serviceCategory.route';
+import { ServiceBookingRoute } from '../modules/service.module/serviceBooking/serviceBooking.route';
 
 // import { ChatRoutes } from '../modules/chat/chat.routes';
 // import { MessageRoutes } from '../modules/message/message.routes';
@@ -73,6 +74,11 @@ const apiRoutes = [
 
   ///////////////////////////////////////////// Person Relationships
   
+  ///////////////////////////////////////////// Service Booking
+  {
+    path: '/service-bookings',
+    route: ServiceBookingRoute,
+  },
 
   ///////////////////////////////////////////// Service Provider
   {

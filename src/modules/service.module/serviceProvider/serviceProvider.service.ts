@@ -1,3 +1,4 @@
+//@ts-ignore
 import { StatusCodes } from 'http-status-codes';
 import { ServiceProvider } from './serviceProvider.model';
 import { IServiceProvider } from './serviceProvider.interface';
