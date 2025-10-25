@@ -14,8 +14,12 @@ import { ServiceProviderService } from '../serviceProvider/serviceProvider.servi
 import { enqueueWebNotification } from '../../../services/notification.service';
 import { TRole } from '../../../middlewares/roles';
 import { TNotificationType } from '../../notification/notification.constants';
+import { toUTCTime } from '../../../utils/timezone';
+import PaginationService from '../../../common/service/paginationService';
+//@ts-ignore
+import mongoose from 'mongoose';
 
-const serviceProviderService = new ServiceProviderService();
+// const serviceProviderService = new ServiceProviderService();
 
 export class ServiceBookingService extends GenericService<
   typeof ServiceBooking,
@@ -25,17 +29,107 @@ export class ServiceBookingService extends GenericService<
     super(ServiceBooking);
   }
 
+  async getAllCompletedBookings(userId: string,
+    filters : any,
+    options :any
+  ) {
+
+    //📈⚙️ OPTIMIZATION: 
+    const pipeline = [
+
+    ]
+
+    const res = await PaginationService.aggregationPaginate(
+      ServiceBooking,
+      pipeline, {
+        limit: options.limit,
+        page: options.page
+      }
+    );
+
+    console.log('res: ', res);
+
+    return res
+
+    /*
+    const bookingsWithReviewFlag = await ServiceBooking.aggregate([
+      {
+        $match: {
+          userId: userId,
+          isDeleted: { $ne: true }, // optional: exclude soft-deleted
+        },
+      },
+      {
+        $lookup: {
+          from: 'reviews', // collection name for Review model
+          localField: '_id',
+          foreignField: 'serviceBookingId',
+          as: 'reviews',
+        },
+      },
+      {
+        $addFields: {
+          hasReview: {
+            $gt: [{ $size: '$reviews' }, 0],
+          },
+        },
+      },
+      {
+        $project: {
+          reviews: 0, // exclude the actual reviews array (we only need the flag)
+        },
+      },
+      {
+        $sort: { createdAt: -1 }, // optional: sort by newest first
+      },
+    ]);
+    */
+
+    // return bookingsWithReviewFlag;
+  }
+  
+
   //---------------------------------------
   // User | Book A Service
   //---------------------------------------
   async createV3(data:ICreateServiceBooking , user: IUser, userTimeZone:string) : Promise<IServiceBooking> {
     
-
     // check For Provider .. ServiceProvider details exist or not
-    const serviceProviderData = await serviceProviderService.getById(data.providerId);
+    const serviceProviderData = await ServiceProvider.findOne({
+      providerId: data.providerId
+    });
 
     if (!serviceProviderData) {
       throw new ApiError(StatusCodes.BAD_REQUEST, 'No service provider details found for selected service');
+    }
+
+    /********
+     * 📝
+     * 
+     * ****** */
+    if(data.bookingDateTime) {
+        const scheduleDate = new Date(data.bookingDateTime);
+        
+        data.bookingDateTime = toUTCTime(data.bookingDateTime, userTimeZone);
+
+        if(isNaN(scheduleDate.getTime())) {
+            throw new Error('Invalid date or time format');
+        }
+
+        const now = new Date();
+        if(data.bookingDateTime < now) {
+            throw new Error('Booking Date Time must be in the future');
+        }
+
+        // Check for overlapping schedules for the same providers schedule
+        const overlappingSchedule = await ServiceBooking.findOne({
+            providerId: data.providerId,
+            bookingDateTime: scheduleDate,
+        });
+
+        if(overlappingSchedule) {
+            throw new Error('Overlapping schedule exists for the provider. ');
+        }
     }
 
     // Translate multiple properties dynamically
@@ -47,6 +141,7 @@ export class ServiceBookingService extends GenericService<
     // check in this booking time is available or not .. 
     //------------------------------------  we create another endpoint for that 
 
+    //⚠️ TODO : need Interface Segregation Principle (ISP)
     const serviceBookingDTO:IServiceBooking = {
       address: addressObj,
       bookingDateTime: new Date(data.bookingDateTime),
@@ -54,14 +149,20 @@ export class ServiceBookingService extends GenericService<
       lat: data.lat,
       long: data.long,
       providerId: data.providerId,
+      userId : user.userId,
+      providerDetailsId : serviceProviderData._id,
       status : TBookingStatus.pending,
-      starPrice: serviceProviderData.startPrice,
+      startPrice: serviceProviderData.startPrice,
       paymentTransactionId : null,
       paymentStatus: TPaymentStatus.unpaid,
       paymentMethod: null,
     }
 
-    const createdServiceBooking : IServiceBooking = await this.model.create(data)
+    console.log('serviceBookingDTO', serviceBookingDTO);
+
+    const createdServiceBooking : IServiceBooking = await ServiceBooking.create(serviceBookingDTO); 
+
+    console.log("created Service Booking :: ", createdServiceBooking);
 
     /**********
      * 🥇
@@ -79,7 +180,7 @@ export class ServiceBookingService extends GenericService<
     );
 
 
-    return await this.model.create(data);
+    return createdServiceBooking;
   }
 
   //----------------------------------------

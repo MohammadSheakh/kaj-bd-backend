@@ -1,6 +1,11 @@
+//@ts-ignore
 import mongoose from 'mongoose';
+//@ts-ignore
 import { z } from 'zod';
 
+//-----------------------------
+// ServiceProvider means Service Provider Details
+//-----------------------------
 export const createHelpMessageValidationSchema = z.object({
   body: z.object({
     ServiceProvider: z  
@@ -29,9 +34,4 @@ export const createHelpMessageValidationSchema = z.object({
   // }),
    
 });
-
-
-
-
-
 

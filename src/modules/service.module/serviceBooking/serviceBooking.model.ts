@@ -12,7 +12,7 @@ import { PaymentMethod } from '../../payment.module/paymentTransaction/paymentTr
 //--------------------------
 const ServiceBookingSchema = new Schema<IServiceBooking>(
   {
-    userId: { //🔗 who book this service
+    userId: { //🔗 who book this service /// 🧲 it shows User ID is required but we provide this
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: [true, 'User ID is required'],
@@ -22,13 +22,18 @@ const ServiceBookingSchema = new Schema<IServiceBooking>(
       ref: 'User', //ServiceProvider
       required: [true, 'Provider ID is required'],
     },
+    providerDetailsId: { //🔗 details of service provider
+      type: Schema.Types.ObjectId,
+      ref: 'ServiceProvider', //Service Provider Details
+      required: [true, 'Provider ID is required'],
+    },
     bookingDateTime: { // dont provide Z at the end .. We need UTC Time to Save Database
       type: Date,
       required: [true, 'Booking date is required'],
     },
     expectedEndDate: {
       type: Date,
-      required: [true, 'Expected end date is required'],
+      required: [false, 'Expected end date is not required'],
     },
     // completionDate is actual End Date .. 
     completionDate: { // dont provide Z at the end .. We need UTC Time to Save Database
@@ -40,12 +45,12 @@ const ServiceBookingSchema = new Schema<IServiceBooking>(
     // },
     bookingMonth: {
       type: String,
-      required: [true, 'Booking month is required'],
+      required: [false, 'Booking month is not required'],
     },
     status: {
       type: String,
-      enum: [ 
-        TBookingStatus.pending ,
+      enum: [
+        TBookingStatus.pending, // get all requested booked service [status = pending]
         TBookingStatus.accepted, 
         TBookingStatus.inProgress,
         TBookingStatus.cancelled,
@@ -58,12 +63,12 @@ const ServiceBookingSchema = new Schema<IServiceBooking>(
       // type: String,
       // required: [true, 'Address is required'],
       en: {
-        type: String,
+        type: String, // 🧲 it shows it is required .. but we provide this
         required: [true, 'English address is required'],
         trim: true,
       },
       bn: {
-        type: String,
+        type: String, // 🧲 it shows it is required .. but we provide this
         required: [true, 'Bangla address is required'],
         trim: true,
       },
@@ -78,7 +83,7 @@ const ServiceBookingSchema = new Schema<IServiceBooking>(
     },
     duration: {
       type: String,
-      required: [true, 'Duration is required'],
+      required: [false, 'Duration is required'],
     },
     attachments: [//🔗🖼️
       {
@@ -89,7 +94,7 @@ const ServiceBookingSchema = new Schema<IServiceBooking>(
     ],
     startPrice: {
       type: Number,
-      required: [true, 'Start price is required'],
+      required: [true, 'Start price is required'], // 🧲 serious issue .. Start price is required .. but i provide that  
       min: 0,
     },
     // otherPartsPrice: { // need to think about this
@@ -98,7 +103,7 @@ const ServiceBookingSchema = new Schema<IServiceBooking>(
     // },
     totalCost: { // need to think about this 
       type: Number,
-      required: [true, 'Total cost is required'],
+      required: [false, 'Total cost is not required'],
       min: 0,
     },
     //--------------------
@@ -128,6 +133,13 @@ const ServiceBookingSchema = new Schema<IServiceBooking>(
         ', '
       )}`],
     },
+
+    hasReview: {
+      type: Boolean,
+      required: [false, 'hasReview is not required'],
+      default: false,
+    },
+
     //--------------------
     isDeleted: {
       type: Boolean,

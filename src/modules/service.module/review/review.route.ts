@@ -7,6 +7,7 @@ import validateRequest from '../../../shared/validateRequest';
 import auth from '../../../middlewares/auth';
 
 import multer from "multer";
+import { TRole } from '../../../middlewares/roles';
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
@@ -52,15 +53,12 @@ router.route('/').get(
   controller.getAll
 );
 
-//[🚧][🧑‍💻✅][🧪] // 🆗
-router.route('/create').post(
-  // [
-  //   upload.fields([
-  //     { name: 'attachments', maxCount: 15 }, // Allow up to 5 cover photos
-  //   ]),
-  // ],
-  auth('common'),
-  validateRequest(validation.createHelpMessageValidationSchema),
+//------------------------------------
+// User | Submit Review for serviceProviderDetailsId and serviceBookingId
+//------------------------------------
+router.route('/').post(
+  auth(TRole.user),
+  // validateRequest(validation.createHelpMessageValidationSchema), // TODO : MUST add validation
   controller.create
 );
 

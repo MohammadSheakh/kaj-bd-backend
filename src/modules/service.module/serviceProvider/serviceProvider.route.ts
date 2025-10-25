@@ -1,3 +1,6 @@
+//-----------------------------
+// ServiceProvider means Service Provider Details
+//-----------------------------
 //@ts-ignore
 import express from 'express';
 import * as validation from './serviceProvider.validation';
@@ -52,15 +55,18 @@ router.route('/paginate').get(
   controller.getAllWithPaginationV2
 );
 
-//--------------------------------- TODO : reviews get kore dekhate hobe 
-// User | 03-05 get a service provider's details with reviews
+//---------------------------------  
+// User | 03-06 get a service provider's details with reviews
+// for  (FIG : User | 03-06) book service now button for providerId pass --> "providerId._userId"
 //---------------------------------
 router.route('/:id').get(
-  // auth('common'),
-  controller.getById
+  auth(TRole.user),
+  controller.getByIdWithReviews
 );
-//--------------------------------- TODO : reviews get kore dekhate hobe 
-// User | 03-09 get a service provider's profile details 
+
+
+//---------------------------------  
+// User | 03-08 get a service provider's profile details 
 //---------------------------------
 router.route('/profile/:id').get(
   controller.getProfileDetails

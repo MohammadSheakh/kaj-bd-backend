@@ -4,6 +4,9 @@ import multer from "multer";
 import { processUploadedFilesForCreate, processUploadedFilesForUpdate } from "../../../middlewares/processUploadedFiles";
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
+//-----------------------------
+// ServiceProvider means Service Provider Details
+//-----------------------------
 
 //---------------------------
 // 🥇 we move image upload thing to controller to middleware level

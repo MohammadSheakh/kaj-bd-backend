@@ -1,3 +1,4 @@
+//@ts-ignore
 import { model, Schema } from 'mongoose';
 import { IReview, IReviewModel } from './review.interface';
 import paginate from '../../../common/plugins/paginate';
@@ -14,7 +15,7 @@ const ReviewSchema = new Schema<IReview>(
         required: [true, 'English review is required'], 
         trim: true 
       },
-      bn: { 
+      bn: {
         type: String, 
         required: [true, 'Bangla review is required'], 
         trim: true 
@@ -37,10 +38,10 @@ const ReviewSchema = new Schema<IReview>(
       ref: 'User',
       required: [true, 'userId is required'],
     },
-    serviceProviderId: { //🔗
+    serviceProviderDetailsId: { //🔗
       type: Schema.Types.ObjectId,
-      ref: 'User', // reference ki ServiceProvider hobe naki User hobe .. chinta korte hobe 
-      required: [true, 'serviceProviderId is required'],
+      ref: 'ServiceProvider',
+      required: [true, 'serviceProviderDetailsId is required'],
     },
     serviceBookingId: { //🔗
       type: Schema.Types.ObjectId,

@@ -1,3 +1,4 @@
+//@ts-ignore
 import { Model, Types } from 'mongoose';
 import { PaginateOptions, PaginateResult } from '../../../types/paginate';
 import { TLanguage } from '../../../enums/language';
@@ -17,12 +18,18 @@ export interface IReview {
   rating: number;
 
   userId: Types.ObjectId;               // FK → User
-  serviceProviderId: Types.ObjectId;    // FK → User // need to think about this 
+  serviceProviderDetailsId: Types.ObjectId;    // FK → ServiceProvider
   serviceBookingId: Types.ObjectId;     // FK → ServiceBooking
 
   isDeleted? : boolean;  
   createdAt?: Date;
   updatedAt?: Date;
+}
+
+export interface ICreateReview{
+  review: string, // TODO : add more fields .. 
+  rating: number;
+  serviceBookingId: Types.ObjectId;
 }
 
 export interface IReviewModel extends Model<IReview> {

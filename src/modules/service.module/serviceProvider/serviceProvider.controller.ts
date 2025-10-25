@@ -15,8 +15,12 @@ import { UserRoleData } from '../../user.module/userRoleData/userRoleData.model'
 import { TProviderApprovalStatus } from '../../user.module/userRoleData/userRoleData.constant';
 import { User } from '../../user.module/user/user.model';
 import { defaultExcludes } from '../../../constants/queryOptions';
+import ApiError from '../../../errors/ApiError';
+import { Review } from '../review/review.model';
 
-
+//-----------------------------
+// ServiceProvider means Service Provider Details
+//-----------------------------
 export class ServiceProviderController extends GenericController<
   typeof ServiceProvider,
   IServiceProvider
@@ -149,6 +153,50 @@ export class ServiceProviderController extends GenericController<
       success: true,
     });
   })
+
+  getByIdWithReviews = catchAsync(async (req: Request, res: Response) => {
+    const id = req.params.id;
+
+    // INFO: is it possible to optimize this more ?
+    const populateOptions = [
+      // 'providerId',
+      // {
+      //   path: 'profileId',
+      //   select: '-attachments -__v', // TODO MUST : when create profile .. must initiate address and description
+      //   // populate: {
+      //   //   path: 'profileId',
+      //   // }
+      // },
+      {
+        path: 'providerId',
+        select: 'name profileImage',
+      }
+    ];
+    
+    const select =  defaultExcludes;
+
+    const result = await this.service.getById(id, populateOptions, select);
+
+    const reviews = await Review.find({ serviceProviderDetailsId: id }); // TODO : MUST : 
+    
+    if (!result) {
+      throw new ApiError(
+        StatusCodes.NOT_FOUND,
+        `Object with ID ${id} not found`
+      );
+    }
+
+    sendResponse(res, {
+      code: StatusCodes.OK,
+      data: {
+        result,
+        reviews
+      },
+      message: `${this.modelName} retrieved successfully`,
+    });
+  });
+
+
 
   // add more methods here if needed or override the existing ones 
 }

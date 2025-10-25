@@ -3,6 +3,9 @@ import { Model, Types } from 'mongoose';
 import { PaginateOptions, PaginateResult } from '../../../types/paginate';
 import { TProviderApprovalStatus } from '../../user.module/userRoleData/userRoleData.constant';
 
+//-----------------------------
+// ServiceProvider means Service Provider Details
+//-----------------------------
 export interface IServiceProvider {
   // _taskId: undefined | Types.ObjectId;
   _id?: Types.ObjectId; // undefined |  Types.ObjectId |

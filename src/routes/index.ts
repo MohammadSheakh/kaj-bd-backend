@@ -17,6 +17,7 @@ import { ServiceProvider } from '../modules/service.module/serviceProvider/servi
 import { ServiceProviderRoute } from '../modules/service.module/serviceProvider/serviceProvider.route';
 import { ServiceCategoryRoute } from '../modules/service.module/serviceCategory/serviceCategory.route';
 import { ServiceBookingRoute } from '../modules/service.module/serviceBooking/serviceBooking.route';
+import { ReviewRoute } from '../modules/service.module/review/review.route';
 
 // import { ChatRoutes } from '../modules/chat/chat.routes';
 // import { MessageRoutes } from '../modules/message/message.routes';
@@ -90,7 +91,11 @@ const apiRoutes = [
     path: '/service-categories',
     route: ServiceCategoryRoute,
   },
-
+  ///////////////////////////////////////////// Reviews
+  {
+    path: '/reviews',
+    route: ReviewRoute,
+  },
   {
     path: '/attachments',
     route: AttachmentRoutes,

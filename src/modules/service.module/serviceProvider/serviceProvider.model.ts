@@ -1,8 +1,12 @@
+//@ts-ignore
 import { model, Schema } from 'mongoose';
 import { IServiceProvider, IServiceProviderModel } from './serviceProvider.interface';
 import paginate from '../../../common/plugins/paginate';
 import { TProviderApprovalStatus } from '../../user.module/userRoleData/userRoleData.constant';
 
+//-----------------------------
+// ServiceProvider means Service Provider Details
+//-----------------------------
 const ServiceProviderSchema = new Schema<IServiceProvider>(
   {
     
@@ -138,6 +142,9 @@ ServiceProviderSchema.set('toJSON', {
   },
 });
 
+//-----------------------------
+// ServiceProvider means Service Provider Details
+//-----------------------------
 export const ServiceProvider = model<
   IServiceProvider,
   IServiceProviderModel

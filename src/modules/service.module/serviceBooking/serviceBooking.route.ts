@@ -9,6 +9,9 @@ import auth from '../../../middlewares/auth';
 //@ts-ignore
 import multer from "multer";
 import { TRole } from '../../../middlewares/roles';
+import { setQueryOptions } from '../../../middlewares/setQueryOptions';
+import { defaultExcludes } from '../../../constants/queryOptions';
+import { getLoggedInUserAndSetReferenceToUser } from '../../../middlewares/getLoggedInUserAndSetReferenceToUser';
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
@@ -30,15 +33,36 @@ const paginationOptions: Array<'sortBy' | 'page' | 'limit' | 'populate'> = [
 // const taskService = new TaskService();
 const controller = new ServiceBookingController();
 
-//
+//-------------------------------------------
+// User 
+// User | 04-01 | Get all pending Bookings 
+// User | 04-03 | Get all accepted Bookings 
+//-------------------------------------------
 router.route('/paginate').get(
-  //auth('common'),
-  validateFiltersForQuery(optionValidationChecking(['_id', ...paginationOptions])),
-  controller.getAllWithPagination
+  auth(TRole.user),
+  validateFiltersForQuery(optionValidationChecking(['_id','status', ...paginationOptions])),
+  getLoggedInUserAndSetReferenceToUser('userId'),
+  setQueryOptions({
+    populate: [
+      { path: 'providerDetailsId', select: 'serviceName' },
+      { path: 'providerId', select: 'name profileImage role' },
+    ],
+    select: `address bookingDateTime startPrice hasReview`// address bookingDateTime startPrice
+    // ${defaultExcludes}
+  }),
+  controller.getAllWithPaginationV2
 );
 
+
+//-------------------------------------------
+// User | 04-01 bookings | TODO :::: Cancel Booking
+//-------------------------------------------
+
+//-------------------------------------------
+// User | 04-10 bookings | show details of service booking With Cost Summary
+//-------------------------------------------
 router.route('/:id').get(
-  // auth('common'),
+  auth(TRole.user),
   controller.getById
 );
 

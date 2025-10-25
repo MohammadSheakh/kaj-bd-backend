@@ -11,6 +11,7 @@ export interface IServiceBooking {
   
   userId: Types.ObjectId; //🔗
   providerId: Types.ObjectId;//🔗
+  providerDetailsId : Types.ObjectId;//🔗
   bookingDateTime: Date;
   completionDate?: Date;
   // bookingTime: string;

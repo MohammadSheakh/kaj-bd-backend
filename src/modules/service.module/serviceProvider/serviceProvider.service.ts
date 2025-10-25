@@ -4,6 +4,9 @@ import { ServiceProvider } from './serviceProvider.model';
 import { IServiceProvider } from './serviceProvider.interface';
 import { GenericService } from '../../_generic-module/generic.services';
 
+//-----------------------------
+// ServiceProvider means Service Provider Details
+//-----------------------------
 export class ServiceProviderService extends GenericService<
   typeof ServiceProvider,
   IServiceProvider
