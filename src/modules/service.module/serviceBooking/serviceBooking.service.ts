@@ -18,6 +18,7 @@ import { toUTCTime } from '../../../utils/timezone';
 import PaginationService from '../../../common/service/paginationService';
 //@ts-ignore
 import mongoose from 'mongoose';
+import { UserProvider } from '../../userProvider/userProvider.model';
 
 // const serviceProviderService = new ServiceProviderService();
 
@@ -162,7 +163,22 @@ export class ServiceBookingService extends GenericService<
 
     const createdServiceBooking : IServiceBooking = await ServiceBooking.create(serviceBookingDTO); 
 
-    console.log("created Service Booking :: ", createdServiceBooking);
+    /**
+     * Lets create userProviderRelationships .. 
+     * later we need to create this relationship with bull mq or event emitter
+     * for better performance
+     */
+    const relationshipExists = await UserProvider.findOne({
+      userId: user.userId,
+      providerId: data.providerId
+    });
+
+    if(!relationshipExists) {
+      await UserProvider.create({
+        userId: user.userId,
+        providerId: data.providerId
+      });
+    }
 
     /**********
      * 🥇

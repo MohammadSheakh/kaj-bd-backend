@@ -82,6 +82,28 @@ router.route('/home-page').get(
   controller.getCategoriesAndPopularProvidersForUser
 )
 
+//--------------------------------- kaj bd
+// User | Profile | 06-01 | get profile information of a user 
+//---------------------------------
+router.route('/profile-info').get(
+  auth(TRole.user),
+  controller.getProfileInformationOfAUser
+)
+
+/** ----------------------------------------------
+   * @role User
+   * @Section Profile
+   * @module User|UserProfile
+   * @figmaIndex 06-02
+   * @desc Update profile information of a user
+   * 
+   *----------------------------------------------*/
+router.route('/profile-info').put(
+  auth(TRole.user),
+  // validateRequest(validation.updateProfileInfoValidationSchema), // TODO : MUST : add validation
+  controller.updateProfileInformationOfAUser
+)
+
 
 router.route('/update/:id').put(
   //auth('common'),

@@ -52,6 +52,50 @@ export class UserService extends GenericService<typeof User, IUser> {
     return result;
   };
 
+  //--------------------------------- kaj bd
+  // User | Profile | 06-01 | get profile information of a user 
+  //---------------------------------
+  getProfileInformationOfAUser = async (id: string) => {
+    //-- name, email, phoneNumber from User table ..
+    //-- location, dob and gender from UserProfile table
+    const user = await User.findById(id).select('name email phoneNumber').lean();
+    const userProfile =  await UserProfile.findOne({
+      userId: id
+    }).select('location dob gender').lean();
+
+    return {
+      ...user,
+      ...userProfile
+    };
+  };
+
+  //--------------------------------- kaj bd
+  // User | Profile | 06-02 | update profile information of a user 
+  //---------------------------------
+
+
+  /** ----------------------------------------------
+   * @role User
+   * @Section Profile
+   * @module User|UserProfile
+   * @figmaIndex 06-02
+   * @desc Update profile information of a user
+   * 
+   *----------------------------------------------*/
+  updateProfileInformationOfAUser = async (id: string) => {
+    //-- name, email, phoneNumber from User table ..
+    //-- location, dob and gender from UserProfile table
+    const user = await User.findById(id).select('name email phoneNumber').lean();
+    const userProfile =  await UserProfile.findOne({
+      userId: id
+    }).select('location dob gender').lean();
+
+    return {
+      ...user,
+      ...userProfile
+    };
+  };
+
 
   async getAllWithPagination(
     filters: any, // Partial<INotification> // FixMe : fix type
