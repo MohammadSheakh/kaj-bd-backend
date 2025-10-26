@@ -12,6 +12,7 @@ import { TRole } from '../../../middlewares/roles';
 import { setQueryOptions } from '../../../middlewares/setQueryOptions';
 import { defaultExcludes } from '../../../constants/queryOptions';
 import { getLoggedInUserAndSetReferenceToUser } from '../../../middlewares/getLoggedInUserAndSetReferenceToUser';
+import { checkLoggedInUsersPermissionToManipulateModel } from '../../../middlewares/checkPermissionToManipulateModel';
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
@@ -124,10 +125,21 @@ router.route('/user-details/:id').get(
 
 
 router.route('/update/:id').put(
-  //auth('common'),
+  auth(TRole.provider),
+  checkLoggedInUsersPermissionToManipulateModel(
+    'ServiceBooking', 
+    'providerId',
+    true,
+    "_id"
+  ),
   // validateRequest(validation.createHelpMessageValidationSchema),
   controller.updateById
 );
+
+// additional register general 
+// mahfujur rahman khan  
+
+
 
 //[🚧][🧑‍💻✅][🧪] // 🆗
 router.route('/').get(
