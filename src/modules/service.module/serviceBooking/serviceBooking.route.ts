@@ -55,6 +55,22 @@ router.route('/paginate').get(
 
 
 //-------------------------------------------
+// User | 06-05 | Get a booking history details with transaction details 
+//-------------------------------------------
+router.route('/withTxnHistory/:id').get(
+  auth(TRole.user),
+  setQueryOptions({
+    populate: [
+      { path: 'providerId', select: 'name profileImage role' },
+    ],
+    select: `${defaultExcludes}`
+  }),
+  // controller.getByIdWithTxnHistory
+  controller.getByIdV2
+);
+
+
+//-------------------------------------------
 // User | 04-01 bookings | TODO :::: Cancel Booking
 //-------------------------------------------
 
@@ -63,7 +79,13 @@ router.route('/paginate').get(
 //-------------------------------------------
 router.route('/:id').get(
   auth(TRole.user),
-  controller.getById
+  setQueryOptions({
+    populate: [],
+    select: `startPrice address bookingDateTime status paymentTransactionId`
+    // ${defaultExcludes}
+  }),
+  // controller.getById
+  controller.getByIdV2
 );
 
 router.route('/update/:id').put(

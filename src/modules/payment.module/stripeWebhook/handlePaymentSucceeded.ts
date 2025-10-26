@@ -3,8 +3,6 @@ import { TRole } from "../../../middlewares/roles";
 import { enqueueWebNotification } from "../../../services/notification.service";
 import { TNotificationType } from "../../notification/notification.constants";
 import { IUser } from "../../token/token.interface";
-
-import { TUser } from "../../user.module/user/user.interface";
 import { User } from "../../user.module/user/user.model";
 import { WalletService } from "../../wallet.module/wallet/wallet.service";
 import { TPaymentGateway, TPaymentStatus, TTransactionFor } from "../paymentTransaction/paymentTransaction.constant";

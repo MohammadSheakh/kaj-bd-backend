@@ -22,12 +22,12 @@ import { TRole } from '../../middlewares/roles';
 import { TNotificationType } from '../notification/notification.constants';
 import { UserProfile } from '../user.module/userProfile/userProfile.model';
 import { User } from '../user.module/user/user.model';
-import { TUser } from '../user.module/user/user.interface';
 import { UserDevices } from '../user.module/userDevices/userDevices.model';
 import { IUserDevices } from '../user.module/userDevices/userDevices.interface';
 import { ICreateUser } from './auth.constants';
 import { UserRoleDataService } from '../user.module/userRoleData/userRoleData.service';
 import { TProviderApprovalStatus } from '../user.module/userRoleData/userRoleData.constant';
+import { IUser } from '../user.module/user/user.interface';
 const eventEmitterForUpdateUserProfile = new EventEmitter(); // functional way
 const eventEmitterForCreateWallet = new EventEmitter();
 
@@ -71,7 +71,7 @@ eventEmitterForCreateWallet.on('eventEmitterForCreateWallet', async (valueFromRe
 
 
 
-const validateUserStatus = (user: TUser) => {
+const validateUserStatus = (user: IUser) => {
   if (user.isDeleted) {
     throw new ApiError(
       StatusCodes.BAD_REQUEST,
@@ -122,7 +122,7 @@ const createUser = async (userData: ICreateUser, userProfileId:string) => {
     });
 
     /********
-     * 
+     * TODO : MUST
      * Lets send notification to admin that new Provider registered
      * 
      * ***** */

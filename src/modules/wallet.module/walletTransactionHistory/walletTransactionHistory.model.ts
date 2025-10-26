@@ -4,8 +4,7 @@ import { IWalletTransactionHistory, IWalletTransactionHistoryModel } from './wal
 import paginate from '../../../common/plugins/paginate';
 import { TWalletTransactionHistory, TWalletTransactionStatus } from './walletTransactionHistory.constant';
 import { TCurrency } from '../../../enums/payment';
-import { TTransactionFor } from '../../payment.module/paymentTransaction/paymentTransaction.constant';
-
+import { TTransactionFor } from '../../../constants/TTransactionFor';
 
 const WalletTransactionHistorySchema = new Schema<IWalletTransactionHistory>(
   {
@@ -43,7 +42,7 @@ const WalletTransactionHistorySchema = new Schema<IWalletTransactionHistory>(
 
     currency: {
       type: String,
-      enum: [TCurrency.bdt, TCurrency.token],
+      enum: [TCurrency.bdt],
       required: [true, 'currency is required'],
     },
 
@@ -88,11 +87,7 @@ const WalletTransactionHistorySchema = new Schema<IWalletTransactionHistory>(
       type: String,
       enum: [
         TTransactionFor.UserSubscription, // previously it was SubscriptionPlan
-        TTransactionFor.Order,  // for paymentTransactionId
-        TTransactionFor.DoctorPatientScheduleBooking, // for paymentTransactionId 
-        TTransactionFor.SpecialistPatientScheduleBooking, // for paymentTransactionId
-        TTransactionFor.TrainingProgramPurchase, // for paymentTransactionId
-        TTransactionFor.LabTestBooking,   // for paymentTransactionId 
+        TTransactionFor.ServiceBooking,  // for paymentTransactionId
         TTransactionFor.WithdrawalRequst,  // for creating WalletTransactionHistory | admin end
       ],
       required: [true, `referenceFor is not required .. it can be  ${Object.values(TTransactionFor).join(

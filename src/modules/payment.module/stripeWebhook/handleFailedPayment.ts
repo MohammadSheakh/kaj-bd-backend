@@ -1,6 +1,5 @@
 //@ts-ignore
 import mongoose from "mongoose";
-import { TUser } from "../../user.module/user/user.interface";
 import { TTransactionFor } from "../paymentTransaction/paymentTransaction.constant";
 //@ts-ignore
 import Stripe from "stripe";
@@ -59,7 +58,7 @@ export const handleFailedPayment = async (session: Stripe.Checkout.Session | any
 //  const isExistRefference = await refModel.findById(result.refferenceId).session(session);
 //---------------------------------
 async function updateDoctorPatientScheduleBooking(
-    thisCustomer: TUser,
+    thisCustomer: IUser,
     doctorAppointmentScheduleId : string,
     doctorAppointmentScheduleIdReferenceFor: string
 ){

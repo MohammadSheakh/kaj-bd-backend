@@ -15,12 +15,16 @@ import { defaultExcludes } from '../../../constants/queryOptions';
 import { AdditionalCost } from '../additionalCost/additionalCost.model';
 import omit from '../../../shared/omit';
 import pick from '../../../shared/pick';
+import { PaymentTransactionService } from '../../payment.module/paymentTransaction/paymentTransaction.service';
+import { PaymentTransaction } from '../../payment.module/paymentTransaction/paymentTransaction.model';
+import { TTransactionFor } from '../../../constants/TTransactionFor';
 
 export class ServiceBookingController extends GenericController<
   typeof ServiceBooking,
   IServiceBooking
 > {
   serviceBookingService = new ServiceBookingService();
+  paymentTransactionService = new PaymentTransactionService();
 
   constructor() {
     super(new ServiceBookingService(), 'ServiceBooking');
@@ -41,6 +45,7 @@ export class ServiceBookingController extends GenericController<
   });
 
 
+  //show details of service booking With Cost Summary
   getById = catchAsync(async (req: Request, res: Response) => {
     const id = req.params.id;
 
@@ -59,7 +64,7 @@ export class ServiceBookingController extends GenericController<
       // }
     ];
     
-    const select =  "startPrice address bookingDateTime status";
+    const select =  "startPrice address bookingDateTime status paymentTransactionId";
     //defaultExcludes
 
     const result = await this.service.getById(id, populateOptions, select);
@@ -75,6 +80,75 @@ export class ServiceBookingController extends GenericController<
         `Object with ID ${id} not found`
       );
     }
+
+    sendResponse(res, {
+      code: StatusCodes.OK,
+      data: { 
+        result, 
+        additionalCost
+      },
+      message: `${this.modelName} retrieved successfully`,
+    });
+  });
+
+  // 🔥 we dont need this .. because getById can have transactionHistory
+  //show details of service booking With Cost Summary and Txn History
+  getByIdWithTxnHistory = catchAsync(async (req: Request, res: Response) => {
+    const id = req.params.id;
+
+    const populateOptions = [
+      // 'providerId',
+      // {
+      //   path: 'profileId',
+      //   select: '-attachments -__v', // TODO MUST : when create profile .. must initiate address and description
+      //   // populate: {
+      //   //   path: 'profileId',
+      //   // }
+      // },
+      {
+        path: 'providerId',
+        select: 'name profileImage role',
+      }
+    ];
+    
+
+    const select =  defaultExcludes;
+    //defaultExcludes
+
+    const result = await this.service.getById(id, populateOptions, select);
+
+    // get all cost for this booking 
+    const additionalCost = await AdditionalCost.find({
+      serviceBookingId: id
+    })
+
+    const txnHistory = await PaymentTransaction.findOne({
+      referenceFor: TTransactionFor.ServiceBooking,
+      referenceId : id
+    })
+
+    if (!result) {
+      throw new ApiError(
+        StatusCodes.NOT_FOUND,
+        `Object with ID ${id} not found`
+      );
+    }
+
+    if(txnHistory){
+
+      console.log('txnHistory Found >>>>>>>>>',txnHistory)
+      sendResponse(res, {
+        code: StatusCodes.OK,
+        data: { 
+          result, 
+          additionalCost,
+          txnHistory
+        },
+        message: `${this.modelName} retrieved successfully`,
+      });
+    }
+
+    console.log('txnHistory not Found  >>>>>>>>>')
 
     sendResponse(res, {
       code: StatusCodes.OK,

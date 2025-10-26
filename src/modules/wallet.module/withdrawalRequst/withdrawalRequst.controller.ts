@@ -25,9 +25,9 @@ import { TNotificationType } from '../../notification/notification.constants';
 import { WalletTransactionHistory } from '../walletTransactionHistory/walletTransactionHistory.model';
 import { TWalletTransactionHistory, TWalletTransactionStatus } from '../walletTransactionHistory/walletTransactionHistory.constant';
 import { TCurrency } from '../../../enums/payment';
-import { TTransactionFor } from '../../payment.module/paymentTransaction/paymentTransaction.constant';
 import omit from '../../../shared/omit';
 import pick from '../../../shared/pick';
+import { TTransactionFor } from '../../../constants/TTransactionFor';
 
 export class WithdrawalRequstController extends GenericController<
   typeof WithdrawalRequst,

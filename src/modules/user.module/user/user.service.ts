@@ -2,7 +2,7 @@
 import { StatusCodes } from 'http-status-codes';
 import ApiError from '../../../errors/ApiError';
 import { PaginateOptions, PaginateResult } from '../../../types/paginate';
-import { IUser, TUser } from './user.interface';
+import { IUpdateUserInfo, IUser } from './user.interface';
 import { User } from './user.model';
 import { sendAdminOrSuperAdminCreationEmail } from '../../../helpers/emailService';
 import { GenericService } from '../../_generic-module/generic.services';
@@ -12,6 +12,8 @@ import pick from '../../../shared/pick';
 import { UserProfile } from '../userProfile/userProfile.model';
 import { ServiceCategory } from '../../service.module/serviceCategory/serviceCategory.model';
 import { ServiceProvider } from '../../service.module/serviceProvider/serviceProvider.model';
+import { IUserProfile } from '../userProfile/userProfile.interface';
+import { buildTranslatedField } from '../../../utils/buildTranslatedField';
 
 interface IAdminOrSuperAdminPayload {
   email: string;
@@ -25,7 +27,7 @@ export class UserService extends GenericService<typeof User, IUser> {
     super(User);
   }
 
-  createAdminOrSuperAdmin = async (payload: IAdminOrSuperAdminPayload): Promise<TUser> => {
+  createAdminOrSuperAdmin = async (payload: IAdminOrSuperAdminPayload): Promise<IUser> => {
 
     const existingUser = await User.findOne({ email: payload.email });
     if (existingUser) {
@@ -69,30 +71,40 @@ export class UserService extends GenericService<typeof User, IUser> {
     };
   };
 
-  //--------------------------------- kaj bd
-  // User | Profile | 06-02 | update profile information of a user 
-  //---------------------------------
-
-
-  /** ----------------------------------------------
-   * @role User
-   * @Section Profile
-   * @module User|UserProfile
-   * @figmaIndex 06-02
-   * @desc Update profile information of a user
-   * 
-   *----------------------------------------------*/
-  updateProfileInformationOfAUser = async (id: string) => {
+  
+  updateProfileInformationOfAUser = async (id: string, data:IUpdateUserInfo) => {
     //-- name, email, phoneNumber from User table ..
     //-- location, dob and gender from UserProfile table
-    const user = await User.findById(id).select('name email phoneNumber').lean();
-    const userProfile =  await UserProfile.findOne({
-      userId: id
-    }).select('location dob gender').lean();
+
+    const updateUser:IUser  = await User.findByIdAndUpdate(id, {
+      name: data.name,
+      email: data.email,
+      phoneNumber: data.phoneNumber
+    })
+
+    const updateUserProfile:IUserProfile = await UserProfile.find(
+      {
+        userId: id
+      }
+    );
+    
+    if(data.location){
+      // Translate multiple properties dynamically
+      const [locationObj] : [IUserProfile['location']]  = await Promise.all([
+        buildTranslatedField(data.location as string)
+      ]);
+
+      updateUserProfile.location = locationObj;
+    }
+
+    updateUserProfile.dob = data.dob;
+    updateUserProfile.gender = data.gender;
+
+    const res =  await updateUserProfile.save();
 
     return {
-      ...user,
-      ...userProfile
+      ...updateUser,
+      ...res
     };
   };
 
@@ -298,7 +310,7 @@ export class UserService extends GenericService<typeof User, IUser> {
 const getAllUsers = async (
   filters: Record<string, any>,
   options: PaginateOptions
-): Promise<PaginateResult<TUser>> => {
+): Promise<PaginateResult<IUser>> => {
   const query: Record<string, any> = {};
   if (filters.userName) {
     query['first_name'] = { $regex: filters.userName, $options: 'i' };

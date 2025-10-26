@@ -4,7 +4,6 @@ import { INotification, INotificationModal } from './notification.interface';
 import paginate from '../../common/plugins/paginate';
 import { Roles } from '../../middlewares/roles';
 import { TNotificationType } from './notification.constants';
-import { TTransactionFor } from '../payment.module/paymentTransaction/paymentTransaction.constant';
 
 const notificationModel = new Schema<INotification>(
   {

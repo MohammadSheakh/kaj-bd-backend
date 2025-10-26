@@ -3,7 +3,7 @@ import { Model, Types } from 'mongoose';
 import { PaginateOptions, PaginateResult } from '../../../types/paginate';
 import { TWalletTransactionHistory, TWalletTransactionStatus } from './walletTransactionHistory.constant';
 import { TCurrency } from '../../../enums/payment';
-import { TTransactionFor } from '../../payment.module/paymentTransaction/paymentTransaction.constant';
+import { TTransactionFor } from '../../../constants/TTransactionFor';
 
 
 export interface IWalletTransactionHistory {

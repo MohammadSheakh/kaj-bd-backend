@@ -1,6 +1,6 @@
 //@ts-ignore
 import { model, Schema, Types } from 'mongoose';
-import { TProfileImage, TUser, UserModal } from './user.interface';
+import { TProfileImage, IUser, UserModal } from './user.interface';
 import paginate from '../../../common/plugins/paginate';
 //@ts-ignore
 import bcryptjs from 'bcryptjs';
@@ -19,7 +19,7 @@ const profileImageSchema = new Schema<TProfileImage>({
 });
 
 // User Schema Definition
-const userSchema = new Schema<TUser, UserModal>(
+const userSchema = new Schema<IUser, UserModal>(
   {
     profileId: { //🔗 dob, gender, acceptTOC, 3 different image 
       type: Types.ObjectId,
@@ -174,4 +174,4 @@ userSchema.set('toJSON', {
 });
 
 // Export the User model
-export const User = model<TUser, UserModal>('User', userSchema);
+export const User = model<IUser, UserModal>('User', userSchema);

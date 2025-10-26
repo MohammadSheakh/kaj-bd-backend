@@ -8,7 +8,6 @@ import { ConversationRoute } from '../modules/chatting.module/conversation/conve
 import { MessageRoute } from '../modules/chatting.module/message/message.route';
 import { PaymentTransactionRoute } from '../modules/payment.module/paymentTransaction/paymentTransaction.route';
 import stripeAccountRoutes from '../modules/payment.module/stripeAccount/stripeAccount.route';
-import { informationVideoRoute } from '../modules/extra.module/informationVideo/informationVideo.route';
 import { UserRoutes } from '../modules/user.module/user/user.route';
 import { WalletTransactionHistoryRoute } from '../modules/wallet.module/walletTransactionHistory/walletTransactionHistory.route';
 import { BankInfoRoute } from '../modules/wallet.module/bankInfo/bankInfo.route';
@@ -58,10 +57,10 @@ const apiRoutes = [
     path: '/conversations',
     route: ConversationRoute,
   },
-  { // 🟢
-    path: '/information-videos',
-    route: informationVideoRoute,
-  },
+  // { // 🟢
+  //   path: '/information-videos',
+  //   route: informationVideoRoute,
+  // },
   ////////////////////////////////////////////  Person Relationship
   // { // 🟢
   //   path: '/doctor-appointments',

@@ -2,12 +2,13 @@
 import { model, Schema } from 'mongoose';
 import paginate from '../../../common/plugins/paginate';
 import { IPaymentTransaction, IPaymentTransactionModel } from './paymentTransaction.interface';
-import { TPaymentGateway, TPaymentStatus, TTransactionFor } from './paymentTransaction.constant';
+import { TPaymentGateway, TPaymentStatus } from './paymentTransaction.constant';
 import { TCurrency } from '../../../enums/payment';
+import { TTransactionFor } from '../../../constants/TTransactionFor';
 
 const paymentTransactionSchema = new Schema<IPaymentTransaction>(
   {
-    userId: {//🔗
+    userId: {//🔗 who create this transaction // who send money
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: true
@@ -25,11 +26,7 @@ const paymentTransactionSchema = new Schema<IPaymentTransaction>(
       type: String,
       enum: [
         TTransactionFor.UserSubscription, // previously it was SubscriptionPlan
-        TTransactionFor.Order,
-        TTransactionFor.DoctorPatientScheduleBooking,
-        TTransactionFor.SpecialistPatientScheduleBooking,
-        TTransactionFor.TrainingProgramPurchase,
-        TTransactionFor.LabTestBooking
+        TTransactionFor.ServiceBooking,
       ],
       required: [true, `referenceFor is required .. it can be  ${Object.values(TTransactionFor).join(
         ', '

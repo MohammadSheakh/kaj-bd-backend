@@ -91,13 +91,12 @@ router.route('/profile-info').get(
 )
 
 /** ----------------------------------------------
-   * @role User
-   * @Section Profile
-   * @module User|UserProfile
-   * @figmaIndex 06-02
-   * @desc Update profile information of a user
-   * 
-   *----------------------------------------------*/
+ * @role User
+ * @Section Profile
+ * @module User|UserProfile
+ * @figmaIndex 06-02
+ * @desc Update profile information of a user
+ *----------------------------------------------*/
 router.route('/profile-info').put(
   auth(TRole.user),
   // validateRequest(validation.updateProfileInfoValidationSchema), // TODO : MUST : add validation

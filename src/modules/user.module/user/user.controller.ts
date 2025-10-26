@@ -247,17 +247,9 @@ export class UserController extends GenericController<
     });
   })
   
-  /** ----------------------------------------------
-   * @role User
-   * @Section Profile
-   * @module User|UserProfile
-   * @figmaIndex 06-02
-   * @desc Update profile information of a user
-   * 
-   *----------------------------------------------*/
+
   updateProfileInformationOfAUser = catchAsync(async (req: Request, res: Response) => {
-    
-    const result = await this.userService.updateProfileInformationOfAUser((req.user as IUser).userId  as string);
+    const result = await this.userService.updateProfileInformationOfAUser((req.user as IUser).userId  as string, req.body);
     sendResponse(res, {
       code: StatusCodes.OK,
       data: result,

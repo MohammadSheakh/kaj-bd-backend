@@ -14,93 +14,44 @@ export interface IUser extends Document {
   _userId: undefined | Types.ObjectId;
   _id:  undefined; // Types.ObjectId |
   profileId : Types.ObjectId | undefined; 
-  // fullName: string;
   name: string;
   email: string;
-  password: string;
-  status: TStatusType.active | TStatusType.inactive;
-  subscriptionType : TSubscription;
-  // TSubscription.standard |
-  // TSubscription.standardPlus | TSubscription.vise 
-  hasUsedFreeTrial: boolean;
-  // freeTrialStartDate: Date;
-  // freeTrialEndDate: Date;
-  profileImage?: TProfileImage;
-  fcmToken : string;
-  stripe_customer_id: string;
-  stripeConnectedAccount: string; // from kappes backend 
   role: Role;
-
+  password: string;
+  profileImage?: TProfileImage;
   isEmailVerified: boolean;
-  isVip  : Boolean,
-  isStandard  : Boolean,
-  isPremium :  Boolean
-
   phoneNumber : string;
-  isDeleted: boolean;
   lastPasswordChange: Date;
   isResetPassword: boolean;
   failedLoginAttempts: number;
   lockUntil: Date | undefined;
-  stripe_subscription_id : string | null;
-  trialStartDate: Date | undefined;
-  trialEndDate: Date | undefined;
-  trialPlanType: TSubscription | undefined;
+
 
   walletId?: Types.ObjectId;
+
+  isDeleted: boolean;
+  deletedAt: Date | null;
 
   createdAt: Date;
   updatedAt: Date;
 }
 
-export type TUser = {
-  _userId: undefined | Types.ObjectId;
-  _id:  undefined; // Types.ObjectId |
-  profileId : Types.ObjectId | undefined;
-  // fullName: string;
-  name: string;
-  email: string;
-  password: string;
-  status: TStatusType.active | TStatusType.inactive;
-  subscriptionType : TSubscription; 
-  // TSubscription.standard |
-  // TSubscription.standardPlus | TSubscription.vise 
-  hasUsedFreeTrial: boolean;
-  // freeTrialStartDate: Date;
-  // freeTrialEndDate: Date;
-  profileImage?: TProfileImage;
-  fcmToken : string;
-  stripe_customer_id: string;
-  stripeConnectedAccount: string; // from kappes backend 
-  role: Role;
-  walletId?: Types.ObjectId;
-  trialStartDate: Date | undefined;
-  trialEndDate: Date | undefined;
-  trialPlanType: TSubscription | undefined;
+export interface IUpdateUserInfo{
+  name?: string;
+  email?: string;
+  phoneNumber?: string;
 
-  isEmailVerified: boolean;
-  isVip  : Boolean,
-  isStandard  : Boolean,
-  isPremium :  Boolean
+  location: string;
+  dob: Date;
+  gender: string;
+}
 
-  stripe_subscription_id : string | null;
-  phoneNumber : string;
-  isDeleted: boolean;
-  lastPasswordChange: Date;
-  isResetPassword: boolean;
-  failedLoginAttempts: number;
-  lockUntil: Date | undefined;
-  deletedAt?: Date | undefined;
-  createdAt: Date;
-  updatedAt: Date;
-};
-
-export interface UserModal extends Model<TUser> {
+export interface UserModal extends Model<IUser> {
   paginate: (
     filter: object,
     options: PaginateOptions,
-  ) => Promise<PaginateResult<TUser>>;
-  isExistUserById(id: string): Promise<Partial<TUser> | null>;
-  isExistUserByEmail(email: string): Promise<Partial<TUser> | null>;
+  ) => Promise<PaginateResult<IUser>>;
+  isExistUserById(id: string): Promise<Partial<IUser> | null>;
+  isExistUserByEmail(email: string): Promise<Partial<IUser> | null>;
   isMatchPassword(password: string, hashPassword: string): Promise<boolean>;
 }

@@ -1,13 +1,16 @@
+//@ts-ignore
 import jwt, { JwtPayload, Secret } from 'jsonwebtoken';
-import { TUser } from '../user.module/user/user.interface';
 import { config } from '../../config';
+//@ts-ignore
 import { addMinutes, addDays } from 'date-fns';
 import ApiError from '../../errors/ApiError';
+//@ts-ignore
 import { StatusCodes } from 'http-status-codes';
-import { IUser, TokenType } from './token.interface';
+import {  TokenType } from './token.interface';
 import { Token } from './token.model';
-
+//@ts-ignore
 import EventEmitter from 'events';
+import { IUser as IUserMain } from '../user.module/user/user.interface';
 const eventEmitterForTokenDeleteAndCreate = new EventEmitter(); // functional way
 
 
@@ -68,7 +71,7 @@ const verifyToken = async (
   return decoded;
 };
 
-const createVerifyEmailToken = async (user: TUser) => {
+const createVerifyEmailToken = async (user: IUserMain) => {
   const payload = { userId: user._id, email: user.email, role: user.role };
  const verifyEmailToken = createToken(
     payload,
@@ -115,7 +118,7 @@ const createVerifyEmailToken = async (user: TUser) => {
   return verifyEmailToken;
 };
 
-const createResetPasswordToken = async (user: TUser) => {
+const createResetPasswordToken = async (user: IUserMain) => {
   const payload = { userId: user._id, email: user.email, role: user.role };
   await Token.deleteMany({ user: user._id });
   const resetPasswordToken = createToken(
@@ -136,7 +139,7 @@ const createResetPasswordToken = async (user: TUser) => {
   return resetPasswordToken;
 };
 
-const accessAndRefreshToken = async (user: TUser) => {
+const accessAndRefreshToken = async (user: IUserMain) => {
   let userFullname;
   if(user.fname && user.lname){
     userFullname = user.fname + ' ' + user.lname;
@@ -144,7 +147,7 @@ const accessAndRefreshToken = async (user: TUser) => {
     userFullname = user.name;
   }
 
-  const payload:IUser = { 
+  const payload:IUserMain = { 
     userId: user?._id,
     userName: userFullname ,
     email: user.email,

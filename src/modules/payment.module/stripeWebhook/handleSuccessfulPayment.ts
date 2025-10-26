@@ -1,5 +1,6 @@
+//@ts-ignore
 import stripe from "../../../config/stripe.config";
-import { TUser } from "../../user.module/user/user.interface";
+import { IUser } from "../../user.module/user/user.interface";
 import { User } from "../../user.module/user/user.model";
 import { TPaymentGateway, TPaymentStatus } from "../paymentTransaction/paymentTransaction.constant";
 import { PaymentTransaction } from "../paymentTransaction/paymentTransaction.model";
@@ -110,7 +111,7 @@ export const handleSuccessfulPayment = async (invoice) => {
 
 
     // Find user by Stripe customer ID
-    const user:TUser = await User.findOne({ 
+    const user:IUser = await User.findOne({ 
       stripe_customer_id: subscription.customer 
     });
 

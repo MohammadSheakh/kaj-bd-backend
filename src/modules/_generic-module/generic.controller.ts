@@ -159,6 +159,38 @@ export class GenericController<ModelType, InterfaceType> {
     });
   });
 
+  getByIdV2 = catchAsync(async (req: Request, res: Response) => {
+    const id = req.params.id;
+
+    // ✅ Default values
+    let populateOptions: (string | { path: string; select: string }[]) = [];
+    let select = '-isDeleted -createdAt -updatedAt -__v';
+
+    // ✅ If middleware provided overrides → use them
+    if (req.queryOptions) {
+      if (req.queryOptions.populate) {
+        populateOptions = req.queryOptions.populate;
+      }
+      if (req.queryOptions.select) {
+        select = req.queryOptions.select;
+      }
+    }
+
+    const result = await this.service.getById(id, populateOptions, select);
+    if (!result) {
+      throw new ApiError(
+        StatusCodes.NOT_FOUND,
+        `Object with ID ${id} not found`
+      );
+    }
+
+    sendResponse(res, {
+      code: StatusCodes.OK,
+      data: result,
+      message: `${this.modelName} retrieved successfully`,
+    });
+  });
+
   // Update by ID
   updateById = catchAsync(async (req: Request, res: Response) => {
     if (!req.params.id) {
