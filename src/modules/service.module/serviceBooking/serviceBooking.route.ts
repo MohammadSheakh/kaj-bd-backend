@@ -34,7 +34,6 @@ const paginationOptions: Array<'sortBy' | 'page' | 'limit' | 'populate'> = [
 const controller = new ServiceBookingController();
 
 //-------------------------------------------
-// User 
 // User | 04-01 | Get all pending Bookings 
 // User | 04-03 | Get all accepted Bookings 
 //-------------------------------------------
@@ -48,6 +47,23 @@ router.route('/paginate').get(
       { path: 'providerId', select: 'name profileImage role' },
     ],
     select: `address bookingDateTime startPrice hasReview`// address bookingDateTime startPrice
+    // ${defaultExcludes}
+  }),
+  controller.getAllWithPaginationV2
+);
+
+//-------------------------------------------
+// Provider | 03-04 | Get all Job Request
+//-------------------------------------------
+router.route('/paginate/for-provider').get(
+  auth(TRole.provider),
+  validateFiltersForQuery(optionValidationChecking(['_id','status', ...paginationOptions])),
+  getLoggedInUserAndSetReferenceToUser('providerId'),
+  setQueryOptions({
+    populate: [
+      { path: 'userId', select: 'name profileImage role' },
+    ],
+    select: `address bookingDateTime `//startPrice hasReview
     // ${defaultExcludes}
   }),
   controller.getAllWithPaginationV2
@@ -87,6 +103,25 @@ router.route('/:id').get(
   // controller.getById
   controller.getByIdV2
 );
+
+//-------------------------------------------
+// Provider | 03-05 Home | get booking details with user  information
+//-------------------------------------------
+router.route('/user-details/:id').get(
+  auth(TRole.provider),
+  setQueryOptions({
+    populate: [ { 
+      path: 'userId', 
+      select: 'name profileImage role',
+      populate: { path: 'profileId', select: 'gender location' }
+    }],
+    select: `startPrice address bookingDateTime status`
+    // ${defaultExcludes}
+  }),
+  // controller.getById
+  controller.getByIdV2
+);
+
 
 router.route('/update/:id').put(
   //auth('common'),
