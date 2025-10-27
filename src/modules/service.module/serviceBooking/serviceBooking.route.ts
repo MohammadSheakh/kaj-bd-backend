@@ -123,8 +123,10 @@ router.route('/user-details/:id').get(
   controller.getByIdV2
 );
 
-
-router.route('/update/:id').put(
+//-------------------------------------------
+// Provider | 03-04 Home | accept job request
+//-------------------------------------------
+router.route('/update-status/:id').put(
   auth(TRole.provider),
   checkLoggedInUsersPermissionToManipulateModel(
     'ServiceBooking', 
