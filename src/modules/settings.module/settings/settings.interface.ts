@@ -1,21 +1,15 @@
-import { Model, Types } from 'mongoose';
-import { PaginateOptions, PaginateResult } from '../../../types/paginate';
+import { settingsType } from './settings.constant';
 
-
-export interface IDemo {
-  // _taskId: undefined | Types.ObjectId;
-  _id?: Types.ObjectId; // undefined |  Types.ObjectId |
-  userId: Types.ObjectId;
-  message : string;
-
-  isDeleted? : boolean;  
-  createdAt?: Date;
-  updatedAt?: Date;
-}
-
-export interface IDemoModel extends Model<IDemo> {
-  paginate: (
-    query: Record<string, any>,
-    options: PaginateOptions
-  ) => Promise<PaginateResult<IDemo>>;
+export interface ISettings {
+  _id: string;
+  type:
+    | settingsType.aboutUs
+    | settingsType.contactUs
+    | settingsType.privacyPolicy
+    | settingsType.termsAndConditions
+    | settingsType.introductionVideo;
+  details: string;
+  introductionVideo: Object; 
+  createdAt: Date;
+  updatedAt: Date;
 }

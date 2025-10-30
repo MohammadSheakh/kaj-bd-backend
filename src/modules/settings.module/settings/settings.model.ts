@@ -1,48 +1,30 @@
+//@ts-ignore
 import { model, Schema } from 'mongoose';
-import { IDemo, IDemoModel } from './demo.interface';
-import paginate from '../../common/plugins/paginate';
+import { ISettings } from './settings.interface';
+import { settingsType } from './settings.constant';
 
-
-const demoSchema = new Schema<IDemo>(
+const settingsSchema = new Schema<ISettings>(
   {
-    userId: { //🔗
-      type: Schema.Types.ObjectId,
-      ref: 'User',
-    },
-    message: {
+    type: {
       type: String,
-      required: [true, 'dateOfBirth is required'],
+      enum: [
+        settingsType.aboutUs,
+        settingsType.contactUs,
+        settingsType.privacyPolicy,
+        settingsType.termsAndConditions,
+      ],
+      required: [true, `type is required .. it can be  ${Object.values(settingsType).join(
+              ', '
+            )}`],
     },
-    isDeleted: {
-      type: Boolean,
-      required: [false, 'isDeleted is not required'],
-      default: false,
+    details: {
+      type: String,
+      required: false,
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
 
-demoSchema.plugin(paginate);
-
-demoSchema.pre('save', function (next) {
-  // Rename _id to _projectId
-  // this._taskId = this._id;
-  // this._id = undefined;  // Remove the default _id field
-  //this.renewalFee = this.initialFee
-
-  next();
-});
-
-// Use transform to rename _id to _projectId
-demoSchema.set('toJSON', {
-  transform: function (doc, ret, options) {
-    ret._demoId = ret._id; // Rename _id to _subscriptionId
-    delete ret._id; // Remove the original _id field
-    return ret;
-  },
-});
-
-export const Demo = model<
-  IDemo,
-  IDemoModel
->('Demo', demoSchema);
+export const Settings = model<ISettings>('Settings', settingsSchema);

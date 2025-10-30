@@ -1,21 +1,22 @@
+//@ts-ignore
 import { Model, Types } from 'mongoose';
 import { PaginateOptions, PaginateResult } from '../../../types/paginate';
 
-
-export interface IDemo {
+export interface IContactUs {
   // _taskId: undefined | Types.ObjectId;
   _id?: Types.ObjectId; // undefined |  Types.ObjectId |
-  userId: Types.ObjectId;
-  message : string;
+  
+  email : string;
+  phoneNumber : string;
 
   isDeleted? : boolean;  
   createdAt?: Date;
   updatedAt?: Date;
 }
 
-export interface IDemoModel extends Model<IDemo> {
+export interface IContactUsModel extends Model<IContactUs> {
   paginate: (
     query: Record<string, any>,
     options: PaginateOptions
-  ) => Promise<PaginateResult<IDemo>>;
+  ) => Promise<PaginateResult<IContactUs>>;
 }

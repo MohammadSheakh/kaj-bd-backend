@@ -1,4 +1,6 @@
+//@ts-ignore
 import { NextFunction, Request, Response } from 'express';
+//@ts-ignore
 import status from 'http-status-codes';
 const notFound = (req: Request, res: Response, next: NextFunction) => {
   const errorDetails = {

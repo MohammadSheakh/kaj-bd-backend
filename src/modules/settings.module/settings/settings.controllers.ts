@@ -1,12 +1,14 @@
+//@ts-ignore
 import { StatusCodes } from 'http-status-codes';
-import catchAsync from '../../shared/catchAsync';
+import catchAsync from '../../../shared/catchAsync';
 import { SettingsService } from './settings.service';
-import sendResponse from '../../shared/sendResponse';
-import { capitalizeFirstLetter } from '../../utils/capitalize';
-import ApiError from '../../errors/ApiError';
+import sendResponse from '../../../shared/sendResponse';
+import { capitalizeFirstLetter } from '../../../utils/capitalize';
+import ApiError from '../../../errors/ApiError';
 import { settingsType } from './settings.constant';
-import { AttachmentService } from '../attachments/attachment.service';
-import { FolderName, TFolderName } from '../../enums/folderNames';
+import { AttachmentService } from '../../attachments/attachment.service';
+//@ts-ignore
+import { Request, Response} from 'express';
 
 const settingsService = new SettingsService();
 
@@ -21,7 +23,7 @@ const allowedTypes = [
 //----------------------------------
 // Admin | Upload Introduction video
 //----------------------------------
-const createOrUpdateSettings = catchAsync(async (req, res, next) => {
+const createOrUpdateSettings = catchAsync(async (req: Request, res: Response) => {
  
   if (!req.query.type) {
     throw new ApiError(StatusCodes.BAD_REQUEST, 'Type is required');
@@ -29,31 +31,6 @@ const createOrUpdateSettings = catchAsync(async (req, res, next) => {
   if(!allowedTypes.includes(req.query.type)){
     throw new ApiError(StatusCodes.BAD_REQUEST, `Invalid type .. Allowed types are ${allowedTypes.join(', ')}`);
   }
-
-  // if (req.file) {
-  //   req.body.profileImage = {
-  //     imageUrl: '/uploads/users/' + req.file.filename,
-  //     file: req.file,
-  //   };
-  // }
-
-  let attachments = [];
-  if (req.file) {
-    attachments.push(
-      await new AttachmentService().uploadSingleAttachment(
-        req.file,
-        TFolderName.informationVideo,
-      )
-    );
-
-    req.body.introductionVideo = attachments[0];
-  }else{
-    https://www.youtube.com/watch?v=p3qvj9hO_Bo&t=2525s
-    req.body.introductionVideo = req.body.link;
-  }
-
-  
-  console.log("🧪attachments[0]🧪", attachments[0]);
   
   const result = await settingsService.createOrUpdateSettings(
     req.query.type,
@@ -69,7 +46,7 @@ const createOrUpdateSettings = catchAsync(async (req, res, next) => {
 
 
 
-const getDetailsByType = catchAsync(async (req, res, next) => {
+const getDetailsByType = catchAsync(async (req: Request, res: Response) => {
 
   if (!req.query.type) {
     throw new ApiError(StatusCodes.BAD_REQUEST, 'Type is required');

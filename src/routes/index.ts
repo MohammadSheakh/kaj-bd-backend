@@ -3,7 +3,6 @@ import express from 'express';
 import { AuthRoutes } from '../modules/auth/auth.routes';
 import { AttachmentRoutes } from '../modules/attachments/attachment.route';
 import { NotificationRoutes } from '../modules/notification/notification.routes';
-import { SettingsRoutes } from '../modules/settings/settings.routes';
 import { ConversationRoute } from '../modules/chatting.module/conversation/conversation.route';
 import { MessageRoute } from '../modules/chatting.module/message/message.route';
 import { PaymentTransactionRoute } from '../modules/payment.module/paymentTransaction/paymentTransaction.route';
@@ -17,6 +16,9 @@ import { ServiceProviderRoute } from '../modules/service.module/serviceProvider/
 import { ServiceCategoryRoute } from '../modules/service.module/serviceCategory/serviceCategory.route';
 import { ServiceBookingRoute } from '../modules/service.module/serviceBooking/serviceBooking.route';
 import { ReviewRoute } from '../modules/service.module/review/review.route';
+import { ContactUsRoute } from '../modules/settings.module/contactUs/contactUs.route';
+import { SettingsRoutes } from '../modules/settings.module/settings/settings.routes';
+
 
 // import { ChatRoutes } from '../modules/chat/chat.routes';
 // import { MessageRoutes } from '../modules/message/message.routes';
@@ -38,13 +40,7 @@ const apiRoutes = [
 
   ////////////////////// Created By Mohammad Sheakh
 
-  {
-    path: '/settings',
-    route: SettingsRoutes,
-  },
 
-  //////////////////////////////////////////// Cart Order
-  
 
   ///////////////////////////////////////// Payment Transaction
   // { // 🟢
@@ -89,6 +85,15 @@ const apiRoutes = [
   {
     path: '/service-categories',
     route: ServiceCategoryRoute,
+  },
+  ///////////////////////////////////////////// Settings And Contact Us
+  {
+    path: '/settings',
+    route: SettingsRoutes,
+  },
+  {
+    path: '/contact-us',
+    route: ContactUsRoute,
   },
   ///////////////////////////////////////////// Reviews
   {

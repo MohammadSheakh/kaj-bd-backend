@@ -1,20 +1,36 @@
+//@ts-ignore
 import { Request, Response } from 'express';
+//@ts-ignore
 import { StatusCodes } from 'http-status-codes';
+import { GenericController } from '../../_generic-module/generic.controller';
+import { ContactUs } from './contactUs.model';
+import { IContactUs } from './contactUs.interface';
+import { ContactUsService } from './contactUs.service';
+import catchAsync from '../../../shared/catchAsync';
+import sendResponse from '../../../shared/sendResponse';
 
-import { GenericController } from '../_generic-module/generic.controller';
-import { Demo } from './demo.model';
-import { IDemo } from './demo.interface';
-import { DemoService } from './demo.service';
-
-export class DemoController extends GenericController<
-  typeof Demo,
-  IDemo
+export class ContactUsController extends GenericController<
+  typeof ContactUs,
+  IContactUs
 > {
-  demoService = new DemoService();
+  contactUsService = new ContactUsService();
 
   constructor() {
-    super(new DemoService(), 'Demo');
+    super(new ContactUsService(), 'ContactUs');
   }
+
+  createOrUpdate = catchAsync(async (req: Request, res: Response) => {
+    
+    const data = req.body;
+    const result = await this.contactUsService.createOrUpdateContactUs(data);
+
+    sendResponse(res, {
+      code: StatusCodes.OK,
+      data: result,
+      message: `${this.modelName} created successfully`,
+      success: true,
+    });
+  });
 
   // add more methods here if needed or override the existing ones 
 }

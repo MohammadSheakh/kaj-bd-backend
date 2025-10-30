@@ -13,8 +13,14 @@ import { setQueryOptions } from '../../../middlewares/setQueryOptions';
 import { defaultExcludes } from '../../../constants/queryOptions';
 import { getLoggedInUserAndSetReferenceToUser } from '../../../middlewares/getLoggedInUserAndSetReferenceToUser';
 import { checkLoggedInUsersPermissionToManipulateModel } from '../../../middlewares/checkPermissionToManipulateModel';
+import { checkProviderCanAcceptBooking, checkProviderCanCancelBooking, checkProviderCanMakeInProgressOfThisBooking, checkProviderCanMakeRequestForPaymentOfThisBooking, checkUserCanCancelBooking } from './serviceBooking.middleware';
+import { allowOnlyFields } from '../../../middlewares/allowOnlyFields';
+import { TBookingStatus } from './serviceBooking.constant';
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
+
+// additional register general 
+// mahfujur rahman khan  
 
 const router = express.Router();
 
@@ -126,7 +132,7 @@ router.route('/user-details/:id').get(
 //-------------------------------------------
 // Provider | 03-04 Home | accept job request
 //-------------------------------------------
-router.route('/update-status/:id').put(
+router.route('/update-status/:id/status/accept').put(
   auth(TRole.provider),
   checkLoggedInUsersPermissionToManipulateModel(
     'ServiceBooking', 
@@ -134,13 +140,100 @@ router.route('/update-status/:id').put(
     true,
     "_id"
   ),
+  checkProviderCanAcceptBooking(),
+  allowOnlyFields([], { status: TBookingStatus.accepted }), // ✅ no user input, status auto-set
+  // validateRequest(validation.createHelpMessageValidationSchema), // i think we dont need validation
+  controller.updateById
+);
+
+//-------------------------------------------
+// Provider | 03-04 Home | cancel job request
+//-------------------------------------------
+router.route('/update-status/:id/status/cancel-by-provider').put(
+  auth(TRole.provider),
+  checkLoggedInUsersPermissionToManipulateModel(
+    'ServiceBooking', 
+    'providerId',
+    true,
+    "_id"
+  ),
+  checkProviderCanCancelBooking(),
+  allowOnlyFields([], { status: TBookingStatus.cancelled }), // ✅ no user input, status auto-set
   // validateRequest(validation.createHelpMessageValidationSchema),
   controller.updateById
 );
 
-// additional register general 
-// mahfujur rahman khan  
+//-------------------------------------------
+// Provider | 03-06 Home | make a job inProgress which means start work
+//-------------------------------------------
+router.route('/update-status/:id/status/inProgress').put(
+  auth(TRole.provider),
+  checkLoggedInUsersPermissionToManipulateModel(
+    'ServiceBooking', 
+    'providerId',
+    true,
+    "_id"
+  ),
+  checkProviderCanMakeInProgressOfThisBooking(),
+  allowOnlyFields([], { status: TBookingStatus.inProgress }), // ✅ no user input, status auto-set
+  // validateRequest(validation.createHelpMessageValidationSchema),
+  controller.updateById
+);
 
+//--------- For Message .. Check Create Conversation API 
+
+//-------------------------------------------
+// Provider | 03-06 Home | make a job inProgress which means start work
+//-------------------------------------------
+router.route('/update-status/:id/status/inProgress').put(
+  auth(TRole.provider),
+  checkLoggedInUsersPermissionToManipulateModel(
+    'ServiceBooking', 
+    'providerId',
+    true,
+    "_id"
+  ),
+  checkProviderCanMakeInProgressOfThisBooking(),
+  allowOnlyFields([], { status: TBookingStatus.inProgress }), // ✅ no user input, status auto-set
+  // validateRequest(validation.createHelpMessageValidationSchema),
+  controller.updateById
+);
+
+
+//-------------------------------------------
+// Provider | 03-09 Home | make a paymentRequest 
+//-------------------------------------------
+router.route('/update-status/:id/status/paymentRequest').put(
+  auth(TRole.provider),
+  checkLoggedInUsersPermissionToManipulateModel(
+    'ServiceBooking', 
+    'providerId',
+    true,
+    "_id"
+  ),
+  checkProviderCanMakeRequestForPaymentOfThisBooking(),
+  allowOnlyFields([], { status: TBookingStatus.paymentRequest }), // ✅ no user input, status auto-set
+  // validateRequest(validation.createHelpMessageValidationSchema),
+  controller.updateById
+);
+
+
+//-------------------------------------------
+// User | 04-02 Home | cancel job request
+//-------------------------------------------
+router.route('/update-status/:id/status/cancel').put(
+  auth(TRole.user),
+  checkLoggedInUsersPermissionToManipulateModel(
+    'ServiceBooking', 
+    'userId',
+    true,
+    "_id"
+  ),
+  checkUserCanCancelBooking(),
+  allowOnlyFields([], { status: TBookingStatus.cancelled }), // ✅ no user input, status auto-set
+  // validateRequest(validation.createHelpMessageValidationSchema),
+  controller.updateById
+);
 
 
 //[🚧][🧑‍💻✅][🧪] // 🆗
