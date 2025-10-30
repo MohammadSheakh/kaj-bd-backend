@@ -9,7 +9,7 @@ import catchAsync from '../../../shared/catchAsync';
 import { config } from '../../../config';
 import ApiError from '../../../errors/ApiError';
 import Stripe from 'stripe';
-import stripe from '../../../config/stripe.config';
+import stripe from '../../../config/paymentGateways/stripe.config';
 import omit from '../../../shared/omit';
 import pick from '../../../shared/pick';
 import sendResponse from '../../../shared/sendResponse';

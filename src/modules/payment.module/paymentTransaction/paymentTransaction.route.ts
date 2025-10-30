@@ -82,10 +82,18 @@ router.route('/overview/admin').get(
 );
 
 //---------------------------------
-// From kappes Backend
+// From kappes Backend For Stripe
 //---------------------------------
 router.route('/success').get(controller.successPage)
 router.route('/cancel').get(controller.cancelPage);
+
+//---------------------------------
+// For SSL
+//---------------------------------
+router.post('/ssl/success', handleSSLSuccess);
+router.post('/ssl/fail', handleSSLFail);
+router.post('/ssl/cancel', handleSSLCancel);
+router.post('/ssl/ipn', handleSSLIPN);
 
 router.route('/:id').get(
   // auth('common'),

@@ -5,7 +5,7 @@ import { StatusCodes } from 'http-status-codes';
 //@ts-ignore
 import Stripe from 'stripe';
 import { config } from '../../../config';
-import stripe from '../../../config/stripe.config';
+import stripe from '../../../config/paymentGateways/stripe.config';
 import { User } from '../../user.module/user/user.model';
 import ApiError from '../../../errors/ApiError';
 import { handlePaymentSucceeded } from './handlePaymentSucceeded';

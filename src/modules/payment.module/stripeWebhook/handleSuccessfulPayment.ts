@@ -1,5 +1,5 @@
 //@ts-ignore
-import stripe from "../../../config/stripe.config";
+import stripe from "../../../config/paymentGateways/stripe.config";
 import { IUser } from "../../user.module/user/user.interface";
 import { User } from "../../user.module/user/user.model";
 import { TPaymentGateway, TPaymentStatus } from "../paymentTransaction/paymentTransaction.constant";

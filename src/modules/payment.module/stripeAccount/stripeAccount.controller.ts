@@ -4,7 +4,7 @@ import sendResponse from "../../../shared/sendResponse";
 // import { IJwtPayload } from "../auth/auth.interface";
 import { StripeAccount } from "./stripeAccount.model";
 import { stripeAccountService } from "./stripeAccount.service";
-import stripe from "../../../config/stripe.config";
+import stripe from "../../../config/paymentGateways/stripe.config";
 
 const createStripeAccount = catchAsync(async (req: Request, res: Response) => {
   const result = await stripeAccountService.createConnectedStripeAccount(

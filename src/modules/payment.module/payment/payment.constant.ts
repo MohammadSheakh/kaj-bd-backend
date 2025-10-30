@@ -1,4 +1,6 @@
 export enum TPaymentGateway{
     shurjoPay= "shurjoPay",
-    sslcommerz = "sslcommerz"
+    sslcommerz = "sslcommerz",
+    stripe = "stripe",
+    
 }
