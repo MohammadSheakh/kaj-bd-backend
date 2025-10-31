@@ -1,3 +1,4 @@
+//@ts-ignore
 import express from 'express';
 import * as validation from './review.validation';
 import { ReviewController} from './review.controller';
@@ -5,7 +6,7 @@ import { IReview } from './review.interface';
 import { validateFiltersForQuery } from '../../../middlewares/queryValidation/paginationQueryValidationMiddleware';
 import validateRequest from '../../../shared/validateRequest';
 import auth from '../../../middlewares/auth';
-
+//@ts-ignore
 import multer from "multer";
 import { TRole } from '../../../middlewares/roles';
 const storage = multer.memoryStorage();

@@ -16,8 +16,7 @@ const allowedTypes = [
   settingsType.aboutUs,
   settingsType.contactUs,
   settingsType.privacyPolicy,
-  settingsType.termsAndConditions,
-  settingsType.introductionVideo
+  settingsType.termsAndConditions
 ];
 
 //----------------------------------

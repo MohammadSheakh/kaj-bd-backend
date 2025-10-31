@@ -235,7 +235,6 @@ router.route('/update-status/:id/status/cancel').put(
   controller.updateById
 );
 
-
 //[🚧][🧑‍💻✅][🧪] // 🆗
 router.route('/').get(
   auth('commonAdmin'),

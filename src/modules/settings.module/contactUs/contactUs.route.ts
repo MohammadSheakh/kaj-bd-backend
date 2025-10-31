@@ -48,9 +48,11 @@ router.route('/update/:id').put(
   controller.updateById
 );
 
-//[🚧][🧑‍💻✅][🧪] // 🆗
+//-----------------------------------------
+// Common | Get contact Us
+//-----------------------------------------
 router.route('/').get(
-  auth('commonAdmin'),
+  auth(TRole.common),
   controller.getAll
 );
 

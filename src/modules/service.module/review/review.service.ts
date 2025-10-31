@@ -27,6 +27,7 @@ export class ReviewService extends GenericService<
     // let originalLanguage = await detectLanguage(data.review); // TODO : MUST .. uncomment this line to detect original language
 
     const existingBooking:IServiceBooking = await ServiceBooking.findById(data.serviceBookingId);
+    
     if(!existingBooking) {
       throw new Error('Invalid Booking Id');
     }
