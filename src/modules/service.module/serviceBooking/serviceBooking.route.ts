@@ -181,19 +181,19 @@ router.route('/update-status/:id/status/inProgress').put(
 //-------------------------------------------
 // Provider | 03-06 Home | make a job inProgress which means start work
 //-------------------------------------------
-router.route('/update-status/:id/status/inProgress').put(
-  auth(TRole.provider),
-  checkLoggedInUsersPermissionToManipulateModel(
-    'ServiceBooking', 
-    'providerId',
-    true,
-    "_id"
-  ),
-  checkProviderCanMakeInProgressOfThisBooking(),
-  allowOnlyFields([], { status: TBookingStatus.inProgress }), // ✅ no user input, status auto-set
-  // validateRequest(validation.createHelpMessageValidationSchema),
-  controller.updateById
-);
+// router.route('/update-status/:id/status/inProgress').put(
+//   auth(TRole.provider),
+//   checkLoggedInUsersPermissionToManipulateModel(
+//     'ServiceBooking', 
+//     'providerId',
+//     true,
+//     "_id"
+//   ),
+//   checkProviderCanMakeInProgressOfThisBooking(),
+//   allowOnlyFields([], { status: TBookingStatus.inProgress }), // ✅ no user input, status auto-set
+//   // validateRequest(validation.createHelpMessageValidationSchema),
+//   controller.updateById
+// );
 
 //-------------------------------------------
 // Provider | 03-09 Home | make a paymentRequest 

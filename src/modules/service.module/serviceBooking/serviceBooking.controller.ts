@@ -91,7 +91,20 @@ export class ServiceBookingController extends GenericController<
     
     const id = req.params.id;
 
-    const updatedObject:IServiceBooking = await this.service.updateById(id, req.body);
+    const updatedObject:IServiceBooking = await ServiceBooking.findByIdAndUpdate(
+      id,
+      req.body,
+      { new: true }
+    ).populate([
+      { path: 'providerId userId', select: 'name' },
+      { path: 'providerDetailsId', select: 'serviceName' },
+    ]);
+
+    console.log("req.body -> ", req.body);
+    console.log("req.params -> ", req.params);
+    console.log("updatedObject -> ", updatedObject);
+
+
     if (!updatedObject) {
       throw new ApiError(
         StatusCodes.NOT_FOUND,
@@ -99,36 +112,113 @@ export class ServiceBookingController extends GenericController<
       );
     }
 
+
+    //------------------------------------------------------------------
+    // Lets send booking related notification to recpective user
+    // user can be provider or user .. also we send notification to admin also ..  
+    //------------------------------------------------------------------
+
     let receiverId = null;
     let senderId = null;
     let receiverRole = null;
 
     if(loggedInUser.role === TRole.provider){
-      senderId = updatedObject.providerId;
-      receiverId = updatedObject.userId;
+      senderId = updatedObject.providerId._id;
+      receiverId = updatedObject.userId._id;
       receiverRole  = TRole.provider;
     }else{
-      senderId = updatedObject.userId;
-      receiverId = updatedObject.providerId;
+      senderId = updatedObject.userId._id;
+      receiverId = updatedObject.providerId._id;
       receiverRole  = TRole.user;
     }
 
-
-    //---------------------------------
-     // Lets send notification to specialist that patient has purchased training program
-     //---------------------------------
-     await enqueueWebNotification(
-          `TrainingProgram ${trainingProgramId} purchased by a patient ${user.userName}`,
+    if(req.body.status === updatedObject.status){
+      if(req.body.status === TBookingStatus.accepted){
+        // provider
+        await enqueueWebNotification(
+          `Booking ${updatedObject._id} is accepted by ${updatedObject.userId.name}`,
           senderId, // senderId
           receiverId, // receiverId
           receiverRole, // receiverRole
           TNotificationType.serviceBooking, // type
-          'trainingProgramId', // linkFor
-          trainingProgramId // linkId
-     );
+          updatedObject._id, // idOfType
+          null, // linkFor
+          null // linkId
+        );
+        
+      }else if(req.body.status === TBookingStatus.cancelled){
+        
+        if(loggedInUser.role === TRole.provider){
+          // cancel by provider
+
+          await enqueueWebNotification(
+            `Booking ${updatedObject._id} is cancelled by provider ${updatedObject.userId.name}`,
+            senderId, // senderId
+            receiverId, // receiverId
+            receiverRole, // receiverRole
+            TNotificationType.serviceBooking, // type
+            updatedObject._id, // idOfType
+            null, // linkFor
+            null // linkId
+          );
+        }else{
+
+          // cancel by user
+          await enqueueWebNotification(
+            `Booking ${updatedObject._id} is cancelled by user ${updatedObject.userId.name}`,
+            senderId, // senderId
+            receiverId, // receiverId
+            receiverRole, // receiverRole
+            TNotificationType.serviceBooking, // type
+            updatedObject._id, // idOfType
+            null, // linkFor
+            null // linkId
+          );
+        }
 
 
-     if(updatedObject.status === TBookingStatus.completed){
+      }else if(req.body.status === TBookingStatus.inProgress){
+        // provider
+        await enqueueWebNotification(
+          `Booking ${updatedObject._id} status in progress by provider ${updatedObject.userId.name}`,
+          senderId, // senderId
+          receiverId, // receiverId
+          receiverRole, // receiverRole
+          TNotificationType.serviceBooking, // type
+          updatedObject._id, // idOfType
+          null, // linkFor
+          null // linkId
+        );
+        
+      }else if(req.body.status === TBookingStatus.paymentRequest){
+        // provider
+
+        await enqueueWebNotification(
+          `${updatedObject.providerId.userName} requested for payment for Booking ${updatedObject._id}`,
+          senderId, // senderId
+          receiverId, // receiverId
+          receiverRole, // receiverRole
+          TNotificationType.serviceBooking, // type
+          updatedObject._id, // idOfType
+          null, // linkFor
+          null // linkId
+        );
+        
+      }else if(req.body.status === TBookingStatus.completed){
+        // provider // incomplete ... 
+        // 🟢 need to send notification to admin and provider both 
+        await enqueueWebNotification(
+          `Booking ${updatedObject._id} status in progress by provider ${updatedObject.userId.name}`,
+          senderId, // senderId
+          receiverId, // receiverId
+          receiverRole, // receiverRole
+          TNotificationType.serviceBooking, // type
+          updatedObject._id, // idOfType
+          null, // linkFor
+          null // linkId
+        );
+
+
         //---------------------------------
         // Now send notification to admin that patient has purchased training program
         //---------------------------------
@@ -141,9 +231,18 @@ export class ServiceBookingController extends GenericController<
           null, // linkFor
           null // linkId
         );
-     }
 
-    
+
+      }
+      // else if(req.body.status === TBookingStatus.cancelled){
+      //   // cancel by user
+      //   sendNotificationToUser();
+      // }
+      else{
+        console.log("🚩🚩❌");
+      }
+
+    }
 
       //   return res.status(StatusCodes.OK).json(updatedObject);
       sendResponse(res, {

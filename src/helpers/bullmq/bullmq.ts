@@ -178,7 +178,6 @@ export const startNotificationWorker = () => {
             data.receiverRole,
             eventName,
             {
-          
               title: data.title,
               // subTitle: data.subTitle,
               senderId: data.senderId,
@@ -188,7 +187,7 @@ export const startNotificationWorker = () => {
               idOfType: data.idOfType,
               linkFor: data.linkFor,
               linkId: data.linkId,
-            }            
+            }
           );
 
           if (emitted) {
