@@ -191,6 +191,7 @@ export class GenericController<ModelType, InterfaceType> {
     });
   });
 
+  
   // Update by ID
   updateById = catchAsync(async (req: Request, res: Response) => {
     if (!req.params.id) {

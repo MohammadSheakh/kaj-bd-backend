@@ -1,6 +1,5 @@
 import { notificationQueue } from "../helpers/bullmq/bullmq";
 import { TNotificationType } from "../modules/notification/notification.constants";
-import { TTransactionFor } from "../modules/payment.module/paymentTransaction/paymentTransaction.constant";
 //@ts-ignore
 import { Types } from "mongoose";
 
@@ -16,18 +15,20 @@ export async function enqueueWebNotification(
    * receiverRole can be null .. important for admin
    * ** */
   receiverRole: string | null, // for admin .. we must need role .. otherwise we dont need role 
+  
   type: TNotificationType,
-  idOfType: Types.ObjectId,
-  /****
-   * so that in query we can pass queryParamKey=queryParamValue
-   * **** */
+  
+  idOfType: Types.ObjectId, //🧩
+  
+  //---------------------------------
+  // queryParamValue  so that in query we can pass queryParamKey=queryParamValue
+  //---------------------------------
   linkFor?: string | null,
+
   //---------------------------------
   // queryParamValue 
   //---------------------------------
   linkId?: string | null,
-  referenceFor?: TTransactionFor,
-  referenceId?: string
 ) {
 
   const notifAdded = await notificationQueue.add(
@@ -38,10 +39,9 @@ export async function enqueueWebNotification(
       receiverId,
       receiverRole,
       type,
+      idOfType,
       linkFor,
       linkId,
-      referenceFor, // what if referenceFor is null
-      referenceId // what if referenceId is null
     },
     {
       attempts: 3,

@@ -94,10 +94,6 @@ router.route('/withTxnHistory/:id').get(
 
 
 //-------------------------------------------
-// User | 04-01 bookings | TODO :::: Cancel Booking
-//-------------------------------------------
-
-//-------------------------------------------
 // User | 04-10 bookings | show details of service booking With Cost Summary
 //-------------------------------------------
 router.route('/:id').get(
@@ -135,7 +131,7 @@ router.route('/user-details/:id').get(
 router.route('/update-status/:id/status/accept').put(
   auth(TRole.provider),
   checkLoggedInUsersPermissionToManipulateModel(
-    'ServiceBooking', 
+    'ServiceBooking',
     'providerId',
     true,
     "_id"
@@ -152,7 +148,7 @@ router.route('/update-status/:id/status/accept').put(
 router.route('/update-status/:id/status/cancel-by-provider').put(
   auth(TRole.provider),
   checkLoggedInUsersPermissionToManipulateModel(
-    'ServiceBooking', 
+    'ServiceBooking',
     'providerId',
     true,
     "_id"
@@ -199,7 +195,6 @@ router.route('/update-status/:id/status/inProgress').put(
   controller.updateById
 );
 
-
 //-------------------------------------------
 // Provider | 03-09 Home | make a paymentRequest 
 //-------------------------------------------
@@ -216,7 +211,6 @@ router.route('/update-status/:id/status/paymentRequest').put(
   // validateRequest(validation.createHelpMessageValidationSchema),
   controller.updateById
 );
-
 
 //-------------------------------------------
 // User | 04-02 Home | cancel job request
