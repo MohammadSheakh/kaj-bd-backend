@@ -34,12 +34,10 @@ const paginationOptions: Array<'sortBy' | 'page' | 'limit' | 'populate'> = [
 // const taskService = new TaskService();
 const controller = new WithdrawalRequstController();
 
-//---------------------------------
-// Admin | Show All Withdraw Request .. which status is requested
-//---------------------------------
+
 
 router.route('/paginate').get(
-  auth(TRole.specialist , TRole.doctor),
+  auth(TRole.provider),
   validateFiltersForQuery(optionValidationChecking(['_id', ...paginationOptions])),
   getLoggedInUserAndSetReferenceToUser('userId'),
   // setRequstFilterAndValue('status', TWithdrawalRequst.requested), // requested 
@@ -53,6 +51,11 @@ router.route('/paginate').get(
   controller.getAllWithPaginationV2WithWalletAmount
 );
 
+
+//---------------------------------
+// Admin | 07-01 Show All Withdraw Request .. which status is requested
+//---------------------------------
+// TODO : MUST :  last month and last 3 month filter add korte hobe  
 router.route('/paginate/for-admin').get(
   auth(TRole.admin),
   validateFiltersForQuery(optionValidationChecking(['_id', 'status', ...paginationOptions])),
@@ -72,7 +75,7 @@ router.route('/:id').get(
 );
 
 //---------------------------------
-//  Admin | Upload receipt And Update status :id actually withdrawalRequestId
+//  Admin | 07-02 Upload receipt And Update status :id actually withdrawalRequestId [approved]
 //---------------------------------
 router.route('/:id').put(
   auth(TRole.admin),

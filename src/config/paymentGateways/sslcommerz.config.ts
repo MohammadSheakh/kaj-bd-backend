@@ -8,3 +8,5 @@ const sslConfig = {
     store_passwd: config.sslcommerz.store_passwd,
     is_live: config.sslcommerz.is_live || false, // true for production
 };
+
+// https://github.com/sslcommerz/SSLCommerz-NodeJS

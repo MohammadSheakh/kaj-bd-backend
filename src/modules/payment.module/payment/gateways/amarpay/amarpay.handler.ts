@@ -1,3 +1,6 @@
+import { TPaymentGateway, TPaymentStatus } from "../../../paymentTransaction/paymentTransaction.constant";
+import { PaymentTransaction } from "../../../paymentTransaction/paymentTransaction.model";
+
 // AamarPay Success Handler
 export const handleAamarPaySuccess = async (req: Request, res: Response) => {
     try {

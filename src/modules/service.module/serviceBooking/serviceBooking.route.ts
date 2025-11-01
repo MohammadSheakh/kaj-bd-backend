@@ -59,6 +59,29 @@ router.route('/paginate').get(
   controller.getAllWithPaginationV2
 );
 
+
+
+//-------------------------------------------
+// FROM HOME  | NEED TO TEST | 
+// Admin | 06-01 | Get all service booking for work tracker
+//-------------------------------------------
+router.route('/paginate').get(
+  auth(TRole.user),
+  validateFiltersForQuery(optionValidationChecking(['_id','status', ...paginationOptions])),
+  // getLoggedInUserAndSetReferenceToUser('userId'),
+  setQueryOptions({
+    populate: [
+      { path: 'providerDetailsId', select: 'serviceName rating' },
+      { path: 'userId', select: 'name profileImage role phoneNumber' },
+      { path: 'providerId', select: 'name profileImage role phoneNumber' },
+    ],
+    select: `address bookingDateTime startPrice hasReview status`// address bookingDateTime startPrice
+    // ${defaultExcludes} // also select completion date ... 
+  }),
+  // service provider er rating show kora lagbe 
+  controller.getAllWithPaginationV2
+);
+
 //-------------------------------------------
 // Provider | 03-04 | Get all Job Request
 //-------------------------------------------

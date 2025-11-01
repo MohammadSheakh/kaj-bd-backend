@@ -207,102 +207,10 @@ export class ServiceBookingService extends GenericService<
   // By that we complete a service booking .. 
   // TODO : change this Partial<IServiceBooking> and add actual Interface 
   //----------------------------------------
-  async makePayment(data:Partial<IServiceBooking>, user: IUser) : Promise<any> {
-
-    /********
-     * 📝
-     * Here first we have to check 
-     * ****** */
-    
-
-    const existingUser = await User.findById(user.userId);
-    
-
-    /*********
-     * 📝🥇
-     * 1. ++++++ We Create ServiceBooking [status.pending] [PaymentStatus.unpaid] [PaymentTransactionId = null] [PaymentGateway = null]
-     * 2. ++ we Provide URL or something to payment .. 
-     * -----------------------------------------------------------
-     * 6. If Payment Successful .. its going to WEBHOOK 
-     * 7. ++++ We create Payment Transaction .. referenceId should be that serviceBookingId, referenceFor should be "ServiceBooking"
-     * 7. ++++ We update ServiceBooking [status.completed] [PaymentStatus.paid] [PaymentTransactionId = <transaction_id>] [PaymentGateway = "gateway name"]
-     * 
-     * ******* */
-
-    const session = await mongoose.startSession();
-
-    let finalAmount = 0;
-    let createdBooking = null;
-
-    // session.startTransaction();
-    await session.withTransaction(async () => {
-        /****
-         * TODO :
-         * check labTest exist or not 
-         * must add session in all db operation inside transaction
-         * *** */
-
-        let isBookingExist:IServiceBooking = await ServiceBooking.findById(data._id).session(session);
-
-        if(!isBookingExist){
-            throw new ApiError(StatusCodes.NOT_FOUND, "Service Booking not found");
-        }
-
-        finalAmount = isBookingExist.startPrice;
-
-        const additionalCosts :IAdditionalCost = await AdditionalCost.find({
-
-        }, { session }); 
-
-
-        // we dont need to create any booking here .. we can update totalCost 
-
-    });
-    session.endSession();
   
-  }
+  // we use processPayment of sslcommerz.gateway.ts ----------------- -------------- -------------- -------------
+
 
 
 }
 
-// metadata: {
-//             /*****
-//              * 📝 
-//              * we receive these data in webhook ..
-//              * based on this data .. we have to update our database in webhook ..
-//              * also give user a response ..
-//              * 
-//              * now as our system has multiple feature that related to payment 
-//              * so we provide all related data as object and stringify that ..
-//              * also provide .. for which category these information we passing ..
-//              * 
-//              * like we have multiple usecase like
-//              * 1. Product Order,
-//              * 2. Lab Booking,
-//              * 3. Doctor Appointment 
-//              * 4. Specialist Workout Class Booking,
-//              * 5. Training Program Buying .. 
-//              *  
-//              * **** */
-//             referenceId: createdBooking._id.toString(), // in webhook .. in PaymentTransaction Table .. this should be referenceId
-//             referenceFor: TTransactionFor.LabTestBooking, // in webhook .. this should be the referenceFor
-//             currency: TCurrency.bdt,
-//             amount: finalAmount.toString(),
-//             user: JSON.stringify(user) // who created this order  // as we have to send notification also may be need to send email
-            
-//             /******
-//              * 📝
-//              * With this information .. first we create a 
-//              * PaymentTransaction ..  where paymentStatus[Complete]
-//              *  +++++++++++++++++++++ transactionId :: coming from Stripe
-//              * ++++++++++++++++++++++ paymentIntent :: coming from stripe .. or we generate this 
-//              * ++++++++++++++++++++++ gatewayResponse :: whatever coming from stripe .. we save those for further log
-//              * 
-//              * We also UPDATE Order Infomation .. 
-//              * 
-//              * status [ ]
-//              * paymentTransactionId [🆔]
-//              * paymentStatus [paid]
-//              * 
-//              * ******* */
-//         },
