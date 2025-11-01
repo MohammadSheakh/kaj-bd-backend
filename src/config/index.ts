@@ -86,12 +86,16 @@ export const config = {
   // },
   
   sslcommerz: {
-        store_id: process.env.SSL_STORE_ID,
-        store_passwd: process.env.SSL_STORE_PASSWORD,
-        is_live: process.env.NODE_ENV === 'production',
-        success_url: `${process.env.BACKEND_URL}/api/payment/ssl/success`,
-        fail_url: `${process.env.BACKEND_URL}/api/payment/ssl/fail`,
-        cancel_url: `${process.env.BACKEND_URL}/api/payment/ssl/cancel`,
-        ipn_url: `${process.env.BACKEND_URL}/api/payment/ssl/ipn`,
-    },
+    store_id: process.env.SSL_STORE_ID,
+    store_passwd: process.env.SSL_STORE_PASSWORD,
+    is_live: process.env.NODE_ENV === 'production',
+    success_url: `${process.env.BACKEND_URL}/api/payment/ssl/success`,
+    fail_url: `${process.env.BACKEND_URL}/api/payment/ssl/fail`,
+    cancel_url: `${process.env.BACKEND_URL}/api/payment/ssl/cancel`,
+    ipn_url: `${process.env.BACKEND_URL}/api/payment/ssl/ipn`,
+
+    Session_API_to_generate_transaction: process.env.SSL_SESSION_API,
+    Validation_API : process.env.SSL_VALIDATION_API,
+    Validation_API_Web_Service_name : process.env.SSL_VALIDATION_API_WEB_SERVICE,
+  },
 };

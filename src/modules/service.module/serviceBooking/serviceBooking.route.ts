@@ -179,23 +179,6 @@ router.route('/update-status/:id/status/inProgress').put(
 //--------- For Message .. Check Create Conversation API 
 
 //-------------------------------------------
-// Provider | 03-06 Home | make a job inProgress which means start work
-//-------------------------------------------
-// router.route('/update-status/:id/status/inProgress').put(
-//   auth(TRole.provider),
-//   checkLoggedInUsersPermissionToManipulateModel(
-//     'ServiceBooking', 
-//     'providerId',
-//     true,
-//     "_id"
-//   ),
-//   checkProviderCanMakeInProgressOfThisBooking(),
-//   allowOnlyFields([], { status: TBookingStatus.inProgress }), // ✅ no user input, status auto-set
-//   // validateRequest(validation.createHelpMessageValidationSchema),
-//   controller.updateById
-// );
-
-//-------------------------------------------
 // Provider | 03-09 Home | make a paymentRequest 
 //-------------------------------------------
 router.route('/update-status/:id/status/paymentRequest').put(
@@ -255,8 +238,22 @@ router.route('/softDelete/:id').put(
   controller.softDeleteById
 );
 
-////////////
-//[🚧][🧑‍💻✅][🧪] // 🆗
-
-
 export const ServiceBookingRoute = router;
+
+
+//-------------------------------------------
+// Provider | 03-06 Home | make a job inProgress which means start work
+//-------------------------------------------
+// router.route('/update-status/:id/status/inProgress').put(
+//   auth(TRole.provider),
+//   checkLoggedInUsersPermissionToManipulateModel(
+//     'ServiceBooking', 
+//     'providerId',
+//     true,
+//     "_id"
+//   ),
+//   checkProviderCanMakeInProgressOfThisBooking(),
+//   allowOnlyFields([], { status: TBookingStatus.inProgress }), // ✅ no user input, status auto-set
+//   // validateRequest(validation.createHelpMessageValidationSchema),
+//   controller.updateById
+// );

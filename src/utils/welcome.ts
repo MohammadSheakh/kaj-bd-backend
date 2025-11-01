@@ -14,7 +14,7 @@ export const welcome = () => {
 
      return `
       <div style="border:1px solid black; text-align:center; font-family: 'Verdana', sans-serif; color:#4CAF50; padding: 50px 20px; border-radius: 10px; box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); max-width: 100%; margin: 200px 200px; animation: fadeIn 2s;">
-        <h1 style="font-size: 48px; color: #FF6347; animation: scaleUp 1s ease-in-out;">Suplify Life</h1>
+        <h1 style="font-size: 48px; color: #FF6347; animation: scaleUp 1s ease-in-out;">Kaj BD</h1>
         <p style="font-size: 24px; color: #2F4F4F; animation: slideIn 1.5s ease-in-out;">${greeting}</p>
       </div>
   

@@ -71,6 +71,7 @@ export class ServiceBookingController extends GenericController<
    * @Section 
    * @module |
    * @figmaIndex 0-0
+   * @todo we need to move all logic to service 
    * @desc we need to override this method .. because .. we need 
    * functionality like sending in app notification
    * and push notification targeted user about the 
@@ -251,6 +252,19 @@ export class ServiceBookingController extends GenericController<
         message: `${this.modelName} updated successfully`,
       });
   });
+
+
+  makePayment = catchAsync(async (req: Request, res: Response) => {
+    const loggedInUser = (req.user as IUser);
+
+    const result = await this.serviceBookingService.makePayment(req.body, loggedInUser);
+  
+    sendResponse(res, {
+      code: StatusCodes.OK,
+      data: result,
+      message: `${this.modelName} updated successfully`,
+    });
+  })
 
   // add more methods here if needed or override the existing ones 
 }
