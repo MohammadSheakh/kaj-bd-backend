@@ -1,3 +1,3 @@
 export enum TCurrency {
-    bdt = 'bdt',
+    bdt = 'BDT',
 }

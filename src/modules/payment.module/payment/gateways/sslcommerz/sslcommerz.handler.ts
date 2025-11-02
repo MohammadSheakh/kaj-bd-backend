@@ -24,7 +24,7 @@ import { PaymentTransactionService } from "../../../paymentTransaction/paymentTr
 
 const paymentTransactionService = new PaymentTransactionService();
 
-export const validateAfterSuccessfulTransaction = async (req: Request, res: Response) => {
+export const validateAfterSuccessfulTransaction = async (req: Request, res: Response) :Promise<any> => {
     try {
         const sslData = req.body;
         
@@ -33,7 +33,11 @@ export const validateAfterSuccessfulTransaction = async (req: Request, res: Resp
         // Validate the transaction
         const isValidTransaction = await paymentTransactionService.validateSSLTransaction(sslData.val_id);
         
-        if (!isValidTransaction) {
+        // if (!isValidTransaction) {
+        //     throw new ApiError(StatusCodes.BAD_REQUEST, 'Invalid transaction');
+        // }
+
+        if (!isValidTransaction || !isValidTransaction.valid) {
             throw new ApiError(StatusCodes.BAD_REQUEST, 'Invalid transaction');
         }
 
@@ -81,7 +85,7 @@ export const validateAfterSuccessfulTransaction = async (req: Request, res: Resp
         await ServiceBooking.findByIdAndUpdate(referenceId, {
             $set: {
                 status: TBookingStatus.completed, // finally we make this status completed .. 
-                paymentStatus: TPaymentStatus.paid, // TODO : MUST : paid ekta option create korte hobe  
+                paymentStatus: TPaymentStatus.completed, // TODO : MUST : paid ekta option create korte hobe  
                 paymentTransactionId: newPayment._id
             }
         });
@@ -111,7 +115,8 @@ export const validateAfterSuccessfulTransaction = async (req: Request, res: Resp
         }
 
         // Redirect to success page
-        res.redirect(`${config.frontend.url}/payment/success?booking_id=${referenceId}`);
+        // res.redirect(`${config.frontend.url}/payment/success?booking_id=${referenceId}`);
+        res.redirect(`http://localhost:6733/`);
         
     } catch (error) {
         console.error('SSL Success Handler Error:', error);

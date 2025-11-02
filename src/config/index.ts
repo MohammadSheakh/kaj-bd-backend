@@ -89,7 +89,8 @@ export const config = {
     store_id: process.env.SSL_STORE_ID,
     store_passwd: process.env.SSL_STORE_PASSWORD,
     is_live: process.env.NODE_ENV === 'production',
-    success_url: `${process.env.BACKEND_URL}/api/payment/ssl/success`,
+    
+    success_url: `http://localhost:6733/api/v1/payment-transactions/pay/apn/validate`,
     fail_url: `${process.env.BACKEND_URL}/api/payment/ssl/fail`,
     cancel_url: `${process.env.BACKEND_URL}/api/payment/ssl/cancel`,
     ipn_url: `${process.env.BACKEND_URL}/api/payment/ssl/ipn`,

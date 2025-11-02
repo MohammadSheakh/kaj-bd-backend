@@ -34,17 +34,25 @@ export class PaymentTransactionService extends GenericService<
     const data = {
         val_id, //that you go from sslcommerz response
     };
-    const sslcz = new SSLCommerzPayment(sslConfig)
+    const sslcz = new SSLCommerzPayment(
+      sslConfig.store_id,
+      sslConfig.store_passwd,
+      sslConfig.is_live,
+    )
+    
+
+    /*
     sslcz.validate(data).then(data => {
         //process the response that got from sslcommerz 
        // https://developer.sslcommerz.com/doc/v4/#order-validation-api
       const response = {
         status : data.status, // This parameter needs to be checked before update your database as a successful transaction.
-        /**
-         * if VALID  :  A successful transaction.
-         *  VALIDATED  : already validated
-         * INVALID_TRANSACTION : Invalid validation id (val_id).
-         */
+        
+        // if VALID  :  A successful transaction.
+        // VALIDATED  : already validated
+        // INVALID_TRANSACTION : Invalid validation id (val_id).
+
+
         tran_date, // Payment completion date 
         tran_id, // that was sent by me during initiation. 
         val_id, //A Validation ID against the Transaction which is provided by SSLCOMMERZ.
@@ -76,6 +84,22 @@ export class PaymentTransactionService extends GenericService<
       
       }
     });
+
+    */
+
+    try {
+      const result = await sslcz.validate({ val_id });
+
+      if (!result || (result.status !== 'VALID' && result.status !== 'VALIDATED')) {
+        return false;
+      }
+
+      return { valid: true, data: result };
+    } catch (error) {
+      console.error('SSLCommerz validation failed:', error);
+      return false;
+    }
+
   }
 
    // Get comprehensive earnings overview

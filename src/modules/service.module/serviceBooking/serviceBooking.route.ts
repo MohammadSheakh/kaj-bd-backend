@@ -257,7 +257,10 @@ router.route('/').post(
 // we have loggedIn User Id who pay
 // :id is bookingId  
 //---------------------------------------
-router.route('/pay/create/:id').post(controller.makePayment)
+router.route('/pay/create/:id').post(
+  auth(TRole.user),  
+  controller.makePayment
+)
 
 
 router.route('/delete/:id').delete(

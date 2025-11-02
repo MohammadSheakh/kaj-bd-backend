@@ -45,8 +45,9 @@ const paymentTransactionSchema = new Schema<IPaymentTransaction>(
     paymentGateway: {
       type: String,
       enum: [
-        TPaymentGateway.stripe,
+        TPaymentGateway.stripe, 
         TPaymentGateway.paypal,
+        TPaymentGateway.sslcommerz, // For Kaj BD
         TPaymentGateway.none
       ],
       required: [true, `paymentGateway is required .. it can be  ${Object.values(TPaymentGateway).join(
@@ -69,7 +70,7 @@ const paymentTransactionSchema = new Schema<IPaymentTransaction>(
     },
     currency: {
       type: String,
-      enum: [TCurrency.bdt],
+      enum: [TCurrency.bdt], // BDT
       required: true
     },
     paymentStatus: {

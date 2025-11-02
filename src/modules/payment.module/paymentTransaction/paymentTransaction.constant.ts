@@ -2,6 +2,7 @@
 export enum TPaymentGateway {
     stripe = 'stripe',
     paypal = 'paypal',
+    sslcommerz = 'sslcommerz',
     none = 'none'
 }
 export enum TPaymentStatus {

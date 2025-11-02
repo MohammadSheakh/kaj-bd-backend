@@ -1,7 +1,8 @@
 import ApiError from "../../../../../errors/ApiError";
 import { IServiceBooking } from "../../../../service.module/serviceBooking/serviceBooking.interface";
 import { ServiceBooking } from "../../../../service.module/serviceBooking/serviceBooking.model";
-import { IUser } from "../../../../token/token.interface";
+import { IUser as IUserFromToken } from "../../../../token/token.interface";
+
 import { PaymentGateway } from "../../payment.gateway";
 import { StatusCodes } from 'http-status-codes';
 import mongoose from "mongoose";
@@ -17,6 +18,7 @@ import { TPaymentStatus } from "../../../paymentTransaction/paymentTransaction.c
 import { TBookingStatus } from "../../../../service.module/serviceBooking/serviceBooking.constant";
 import { sslConfig } from "../../../../../config/paymentGateways/sslcommerz.config";
 import { TTransactionFor } from "../../../../../constants/TTransactionFor";
+import { IUser } from "../../../../user.module/user/user.interface";
 
 // https://github.com/sslcommerz/SSLCommerz-NodeJS
 
@@ -34,15 +36,16 @@ export class SSLGateway implements PaymentGateway {
      * 6. Create PaymentTransaction and update LabTestBooking
      */
 
-    async processPayment(serviceBookingId: IServiceBooking['_id'], user: IUser){
+    async processPayment(serviceBookingId: IServiceBooking['_id'], user: IUserFromToken){
         const session = await mongoose.startSession();
     
         let finalAmount = 0;
 
         let isBookingExist : IServiceBooking | null;
+        let existingUser: IUser | null;
 
         await session.withTransaction(async () => {
-            const existingUser = await User.findById(user.userId);
+            existingUser = await User.findById(user.userId);
             /*********
              * 📝🥇
              * 1. ++++++ We Create ServiceBooking [status.pending] [PaymentStatus.unpaid] [PaymentTransactionId = null] [PaymentGateway = null]
@@ -58,6 +61,11 @@ export class SSLGateway implements PaymentGateway {
 
             console.log('isBookingExist :: ', isBookingExist);
 
+
+            //TODO : booking er status check dite hobe 
+            // TODO : booking er user er shathe .. je payment korte chacche ..
+            // take match korte hobe 
+
             if(!isBookingExist){
                 throw new ApiError(StatusCodes.NOT_FOUND, "Service Booking not found");
             }
@@ -69,21 +77,23 @@ export class SSLGateway implements PaymentGateway {
             const additionalCosts : IAdditionalCost | null = await AdditionalCost.find({
                 serviceBookingId : isBookingExist,
                 isDeleted : false,
-            }, { session });
+            }).session(session);
 
             console.log('additionalCosts :: ', additionalCosts);
 
             let totalAdditionalCost;
 
-            if(additionalCosts){
+            if(additionalCosts.length > 0){
                 totalAdditionalCost = additionalCosts.reduce((sum, cost) => {
                     return sum + ( cost.price || 0 )
                 })
+
+                console.log('totalAdditionalCost :: ', totalAdditionalCost);
+
+                finalAmount += totalAdditionalCost;
             }
 
-            console.log('totalAdditionalCost :: ', totalAdditionalCost);
-
-            finalAmount += totalAdditionalCost;
+            
 
             console.log('finalAmount :: ', finalAmount);
 
@@ -99,9 +109,9 @@ export class SSLGateway implements PaymentGateway {
 
         // SSL Commerz Payment Data
         const sslData = {
-            total_amount: finalAmount,
+            total_amount: finalAmount.toString(),
             currency: 'BDT',
-            tran_id: `SBooking_${isBookingExist._id}_${Date.now()}`, // Unique transaction ID
+            tran_id: `SBooking_${isBookingExist._id?.toString()}_${Date.now()}`, // Unique transaction ID
             success_url: `${config.sslcommerz.success_url}`,
             fail_url: `${config.sslcommerz.fail_url}`,
             cancel_url: `${config.sslcommerz.cancel_url}`,
@@ -113,33 +123,44 @@ export class SSLGateway implements PaymentGateway {
             product_profile: 'general',
             
             // Customer Information
-            cus_name: user?.userName,
-            cus_email: user?.email,
-            cus_add1: data.address || 'Dhaka',
-            cus_city: data.city || 'Dhaka',
-            cus_state: data.state || 'Dhaka',
-            cus_postcode: data.zipCode || '1000',
+            cus_name: String(user?.userName || 'Guest'),
+            cus_email: String(user?.email || 'guest@example.com'),
+            cus_add1:  String(isBookingExist?.address || 'Dhaka'),
+            cus_city:  'Dhaka',
+            cus_state: 'Dhaka',
+            cus_postcode: '1000',
             cus_country: 'Bangladesh',
-            cus_phone: user?.phone || '01518419801',
+            cus_phone: String(existingUser?.phoneNumber || '0155555555'),
             
             // Shipping Information (required by SSL)
             shipping_method: 'NO',
             num_of_item: 1,
             
             // Custom Fields for our reference (max 4 value fields)
-            value_a: createdBooking._id.toString(), // referenceId
-            value_b: TTransactionFor.ServiceBooking, // referenceFor
+            value_a: isBookingExist._id.toString(), // referenceId
+            value_b: TTransactionFor.ServiceBooking.toString(), // referenceFor
             value_c: user.userId.toString(), // userId
             value_d: finalAmount.toString(), // amount
         };
 
         console.log("sslData :: " ,sslData)
 
-        const sslcz = new SSLCommerzPayment(sslConfig);
+        console.log("sslConfig :: ", sslConfig)
+
+        const sslcz = new SSLCommerzPayment(
+            sslConfig.store_id,
+            sslConfig.store_passwd,
+            sslConfig.is_live,
+        );
+
+        console.log("sslcz :: ", sslcz)
         
         try {
             const apiResponse = await sslcz.init(sslData);
             
+
+            console.log("apiResponse :: ", apiResponse)
+
             if (apiResponse?.GatewayPageURL) {
                 return {
                     url: apiResponse.GatewayPageURL,
@@ -150,7 +171,7 @@ export class SSLGateway implements PaymentGateway {
                 throw new ApiError(StatusCodes.BAD_REQUEST, 'SSL Session initialization failed');
             }
         } catch (error) {
-            throw new ApiError(StatusCodes.INTERNAL_SERVER_ERROR, 'Payment gateway error');
+            throw new ApiError(StatusCodes.INTERNAL_SERVER_ERROR, 'Payment gateway error', error?.message || error);
         }
     }
 }

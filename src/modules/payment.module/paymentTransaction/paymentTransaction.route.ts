@@ -111,7 +111,7 @@ router.route('/cancel').get(controller.cancelPage);
  * This is validation API that SSLCommerz will POST to
  * based on this .. we have to update our database
  * * */
-router.post('/pay/apn/validate', validateAfterSuccessfulTransaction); // may be method will be get
+router.route('/pay/apn/validate').post(validateAfterSuccessfulTransaction); // may be method will be get
 
 //---------------- https://github.com/sslcommerz/SSLCommerz-NodeJS 
 router.route('/initiate-refund').get(controller.initiateARefundThroughAPI);
