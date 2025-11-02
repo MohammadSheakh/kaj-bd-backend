@@ -43,10 +43,10 @@ const apiRoutes = [
 
 
   ///////////////////////////////////////// Payment Transaction
-  // { // 🟢
-  //   path: '/payment-transactions',
-  //   route: PaymentTransactionRoute,
-  // },
+  { // 🟢
+    path: '/payment-transactions',
+    route: PaymentTransactionRoute,
+  },
 
   ///////////////////////////////////////// Chatting 
   { // 🟢
@@ -117,11 +117,15 @@ const apiRoutes = [
   //   route: PaymentTransactionRoute,
   // },
 
-  //////////////////////////////////////// Subscription
+  //////////////////////////////////////// Subscription Or Purchase
   // {  // 🟢 from kappes
   //   path: '/stripe',
   //   route: stripeAccountRoutes,
   // },
+  {  // 🟢 from kappes
+    path: '/ssl',
+    route: stripeAccountRoutes,
+  },
   ///////////////////////////////////////////// Wallet
   { // 🟢
     path: '/wallet-transactions',

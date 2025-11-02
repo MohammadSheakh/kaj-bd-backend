@@ -1,24 +1,37 @@
 import ApiError from "../../../../../errors/ApiError";
 import { ServiceBooking } from "../../../../service.module/serviceBooking/serviceBooking.model";
+//@ts-ignore
 import { StatusCodes } from 'http-status-codes';
 import { config } from "../../../../../config";
 import { PaymentTransaction } from "../../../paymentTransaction/paymentTransaction.model";
 import { TPaymentGateway } from "../../payment.constant";
 import { TPaymentStatus } from "../../../paymentTransaction/paymentTransaction.constant";
 import { TBookingStatus } from "../../../../service.module/serviceBooking/serviceBooking.constant";
+import { PaymentTransactionService } from "../../../paymentTransaction/paymentTransaction.service";
 
 // ===================================
-// SSL COMMERZ SUCCESS HANDLER
+// SSL COMMERZ SUCCESS HANDLER 
+// 
+//# you found rest of the ssl related handler in paymentTransaction.controller.ts
+//
+// validateAfterSuccessfulTransaction
+// initiateARefundThroughAPI
+// refundQuery
+// queryTheStatusOfATransactionByTxnId
+// queryTheStatusOfATransactionBySessionId
+//
 // ===================================
 
-export const handleSSLSuccess = async (req: Request, res: Response) => {
+const paymentTransactionService = new PaymentTransactionService();
+
+export const validateAfterSuccessfulTransaction = async (req: Request, res: Response) => {
     try {
         const sslData = req.body;
         
         console.log('SSL Success Data:', sslData);
 
         // Validate the transaction
-        const isValidTransaction = await validateSSLTransaction(sslData.val_id);
+        const isValidTransaction = await paymentTransactionService.validateSSLTransaction(sslData.val_id);
         
         if (!isValidTransaction) {
             throw new ApiError(StatusCodes.BAD_REQUEST, 'Invalid transaction');
@@ -77,6 +90,25 @@ export const handleSSLSuccess = async (req: Request, res: Response) => {
 
         // TODO : MUST : also add money to the Providers wallet .. 
 
+
+        // ✅ Step 3: Handle mobile vs web client
+        const userAgent = req.headers['user-agent']?.toLowerCase() || '';
+
+        const isAndroid = userAgent.includes('android');
+        const isIOS = userAgent.includes('iphone') || userAgent.includes('ipad') || userAgent.includes('ios');
+
+
+        if (isAndroid || isIOS) {
+            return res.status(StatusCodes.OK).json({
+                message: 'Payment successful',
+                data: {
+                transactionId: tran_id,
+                amount: data.amount,
+                status: data.status,
+                currency: data.currency,
+                },
+            });
+        }
 
         // Redirect to success page
         res.redirect(`${config.frontend.url}/payment/success?booking_id=${referenceId}`);

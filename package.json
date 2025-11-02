@@ -93,6 +93,7 @@
     "openai": "^5.23.2",
     "redis": "^4.7.0",
     "socket.io": "^4.8.1",
+    "sslcommerz-lts": "^1.2.0",
     "stream": "^0.0.3",
     "stripe": "^17.7.0",
     "ts-node": "^10.9.2",

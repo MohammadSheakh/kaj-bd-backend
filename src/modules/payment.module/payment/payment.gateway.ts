@@ -1,7 +1,8 @@
 import { IServiceBooking } from "../../service.module/serviceBooking/serviceBooking.interface";
+import { IUser } from "../../token/token.interface";
 
 export abstract class PaymentGateway{
-    abstract processPayment(serviceBooking: IServiceBooking) :any;
+    abstract processPayment(serviceBookingId: IServiceBooking['_id'], loggedInUserId: IUser) :any;
 }
 
 

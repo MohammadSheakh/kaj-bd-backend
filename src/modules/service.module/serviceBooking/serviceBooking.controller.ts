@@ -22,6 +22,7 @@ import { enqueueWebNotification } from '../../../services/notification.service';
 import { TBookingStatus } from './serviceBooking.constant';
 import { TRole } from '../../../middlewares/roles';
 import { TNotificationType } from '../../notification/notification.constants';
+import { SSLGateway } from '../../payment.module/payment/gateways/sslcommerz/sslcommerz.gateway';
 
 export class ServiceBookingController extends GenericController<
   typeof ServiceBooking,
@@ -29,6 +30,7 @@ export class ServiceBookingController extends GenericController<
 > {
   serviceBookingService = new ServiceBookingService();
   paymentTransactionService = new PaymentTransactionService();
+  sslGateway = new SSLGateway();
 
   constructor() {
     super(new ServiceBookingService(), 'ServiceBooking');
@@ -257,7 +259,10 @@ export class ServiceBookingController extends GenericController<
   makePayment = catchAsync(async (req: Request, res: Response) => {
     const loggedInUser = (req.user as IUser);
 
-    const result = await this.serviceBookingService.makePayment(req.body, loggedInUser);
+    // here id is serviceBookingId
+
+    // processPayment is makePayment 
+    const result = await this.sslGateway.processPayment(req.params.id, loggedInUser);
   
     sendResponse(res, {
       code: StatusCodes.OK,

@@ -1,6 +1,8 @@
 //@ts-ignore
 import { StatusCodes } from 'http-status-codes';
 //@ts-ignore
+import SSLCommerzPayment from 'sslcommerz-lts';
+//@ts-ignore
 import {
   startOfDay,
   startOfWeek,
@@ -17,6 +19,7 @@ import { GenericService } from '../../_generic-module/generic.services';
 import { PaymentTransaction } from './paymentTransaction.model';
 import { IPaymentTransaction } from './paymentTransaction.interface';
 import { TPaymentStatus } from './paymentTransaction.constant';
+import { sslConfig } from '../../../config/paymentGateways/sslcommerz.config';
 
 // TODO : need to re check this service
 export class PaymentTransactionService extends GenericService<
@@ -25,6 +28,54 @@ export class PaymentTransactionService extends GenericService<
 > {
   constructor() {
     super(PaymentTransaction);
+  }
+
+  async validateSSLTransaction(val_id: string) {
+    const data = {
+        val_id, //that you go from sslcommerz response
+    };
+    const sslcz = new SSLCommerzPayment(sslConfig)
+    sslcz.validate(data).then(data => {
+        //process the response that got from sslcommerz 
+       // https://developer.sslcommerz.com/doc/v4/#order-validation-api
+      const response = {
+        status : data.status, // This parameter needs to be checked before update your database as a successful transaction.
+        /**
+         * if VALID  :  A successful transaction.
+         *  VALIDATED  : already validated
+         * INVALID_TRANSACTION : Invalid validation id (val_id).
+         */
+        tran_date, // Payment completion date 
+        tran_id, // that was sent by me during initiation. 
+        val_id, //A Validation ID against the Transaction which is provided by SSLCOMMERZ.
+        amount , // This parameter needs to be validated with your system database for security
+        store_amount, //  amount what you will get in your account after bank charge ( Example: 100 BDT will be your store amount of 96 BDT after 4% Bank Commission )
+        card_type, // The Bank Gateway Name that customer selected
+        card_no, //Customer’s Card number. However, for Mobile Banking and Internet Banking, it will return customer's reference id.
+        currency,// Currency Type which will be settled with your merchant account after deducting the Gateway charges. This parameter is the currency type of the parameter amount
+        bank_tran_id, // The transaction ID at Banks End
+        card_issuer, // Issuer Bank Name 
+        card_brand , //VISA, MASTER, AMEX, IB or MOBILE BANKING
+        card_issuer_country, //Country of Card Issuer Bank
+      
+        
+        card_issuer_country_code, //2 digits short code of Country of Card Issuer Bank
+        currency_type, // The currency you have sent during initiation of this transaction. If the currency is different than BDT, then it will be converted to BDT by the current conversion rate. This parameter needs to be validated with your system database for security
+        // THIS PARAMETER NEEDS TO BE VALIDATED WITH YOUR SYSTEM DATABASE FOR SECURITY
+        
+        currency_amount, 
+        // The currency amount you have sent during initiation of this transaction. If the amount is not mentioned in BDT, then it will be converted to BDT by the current conversion rate and return by the above field amount. 
+        // THIS PARAMETER NEEDS TO BE VALIDATED WITH YOUR SYSTEM DATABASE FOR SECURITY
+        
+        value_a, // Same Value will be returned as Passed during initiation
+        value_b, // Same Value will be returned as Passed during initiation
+        value_c, // Same Value will be returned as Passed during initiation
+        value_d, // Same Value will be returned as Passed during initiation
+      
+        risk_level, // High (1) for most risky transactions and Low (0) for safe transactions.
+      
+      }
+    });
   }
 
    // Get comprehensive earnings overview

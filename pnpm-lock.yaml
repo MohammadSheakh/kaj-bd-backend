@@ -161,6 +161,9 @@ importers:
       socket.io:
         specifier: ^4.8.1
         version: 4.8.1
+      sslcommerz-lts:
+        specifier: ^1.2.0
+        version: 1.2.0
       stream:
         specifier: ^0.0.3
         version: 0.0.3
@@ -1707,6 +1710,10 @@ packages:
     resolution: {integrity: sha512-XHIrMD0NpDrNM/Ckf7XJiBbLl57KEhT3+i3yY+eWm+cqYZJQTZrKo8Y8AWKnuV5GT4scfuUGt9LzNoIx3dU1nQ==}
     engines: {node: '>= 0.12'}
 
+  form-data@2.5.5:
+    resolution: {integrity: sha512-jqdObeR2rxZZbPSGL+3VckHMYtu+f9//KXBsVny6JSX/pa38Fy+bGjuG8eW/H6USNQWhLi8Num++cU2yOCNz4A==}
+    engines: {node: '>= 0.12'}
+
   form-data@4.0.4:
     resolution: {integrity: sha512-KrGhL9Q4zjj0kiUt5OO4Mr/A/jlI2jDYs5eHBpYHPcBEVSiipAvn2Ko2HnPe20rmcuuvMHNdZFp+4IlGTMF0Ow==}
     engines: {node: '>= 6'}
@@ -2286,6 +2293,15 @@ packages:
     engines: {node: '>=10.5.0'}
     deprecated: Use your platform's native DOMException instead
 
+  node-fetch@2.6.7:
+    resolution: {integrity: sha512-ZjMPFEfVx5j+y2yF35Kzx5sF7kDzxuDj6ziH4FFbOp87zKDZNx8yExJIb05OGF4Nlt9IHFIMBkRl41VdvcNdbQ==}
+    engines: {node: 4.x || >=6.0.0}
+    peerDependencies:
+      encoding: ^0.1.0
+    peerDependenciesMeta:
+      encoding:
+        optional: true
+
   node-fetch@2.7.0:
     resolution: {integrity: sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==}
     engines: {node: 4.x || >=6.0.0}
@@ -2684,6 +2700,9 @@ packages:
 
   sparse-bitfield@3.0.3:
     resolution: {integrity: sha512-kvzhi7vqKTfkh0PZU+2D2PIllw2ymqJKujUcyPMd9Y75Nv4nPbGJZXNhxsgdQab2BmlDct1YnfQCguEvHr7VsQ==}
+
+  sslcommerz-lts@1.2.0:
+    resolution: {integrity: sha512-OajULbnHHxzBvFfAqQKz4NMKkmyVBbVEKHbfstsR7wckYh0YfoQhZriHprcr0aQYSUqyOA/mc5g66KcW4/idJQ==}
 
   stack-trace@0.0.10:
     resolution: {integrity: sha512-KGzahc7puUKkzyMt+IqAep+TVNbKP+k2Lmwhub39m1AsTSkaDutx56aDCo+HLDzf/D26BIHTJWNiTG1KAJiQCg==}
@@ -5036,6 +5055,15 @@ snapshots:
       mime-types: 2.1.35
       safe-buffer: 5.2.1
 
+  form-data@2.5.5:
+    dependencies:
+      asynckit: 0.4.0
+      combined-stream: 1.0.8
+      es-set-tostringtag: 2.1.0
+      hasown: 2.0.2
+      mime-types: 2.1.35
+      safe-buffer: 5.2.1
+
   form-data@4.0.4:
     dependencies:
       asynckit: 0.4.0
@@ -5663,6 +5691,10 @@ snapshots:
 
   node-domexception@1.0.0: {}
 
+  node-fetch@2.6.7:
+    dependencies:
+      whatwg-url: 5.0.0
+
   node-fetch@2.7.0:
     dependencies:
       whatwg-url: 5.0.0
@@ -6028,6 +6060,13 @@ snapshots:
   sparse-bitfield@3.0.3:
     dependencies:
       memory-pager: 1.5.0
+
+  sslcommerz-lts@1.2.0:
+    dependencies:
+      form-data: 2.5.5
+      node-fetch: 2.6.7
+    transitivePeerDependencies:
+      - encoding
 
   stack-trace@0.0.10: {}
 

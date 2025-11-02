@@ -9,6 +9,7 @@ import * as validation from './paymentTransaction.validation';
 
 import multer from "multer";
 import { TRole } from '../../../middlewares/roles';
+import { validateAfterSuccessfulTransaction } from '../payment/gateways/sslcommerz/sslcommerz.handler';
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
@@ -90,10 +91,36 @@ router.route('/cancel').get(controller.cancelPage);
 //---------------------------------
 // For SSL
 //---------------------------------
-router.post('/ssl/success', handleSSLSuccess);
-router.post('/ssl/fail', handleSSLFail);
-router.post('/ssl/cancel', handleSSLCancel);
-router.post('/ssl/ipn', handleSSLIPN);
+/***
+ * /ssl/success
+ * The gateway POSTs transaction result to you here
+ * You can show a nice page or redirect to client app page
+ * But still call validation API before marking paid
+ * 
+ * SSLCommerz will POST to the success_url and then 
+ * redirect client. But do not mark as paid based only
+ * on redirect—use IPN/validation.
+ * 
+ * ** */
+// router.route('/ssl/success').get(controller.successPageForSSL); // not sure
+// router.post('/ssl/fail', handleSSLFail); // not sure
+// router.post('/ssl/cancel', handleSSLCancel); // not sure
+// router.post('/ssl/ipn', handleSSLIPN); // not sure
+
+/**
+ * This is validation API that SSLCommerz will POST to
+ * based on this .. we have to update our database
+ * * */
+router.post('/pay/apn/validate', validateAfterSuccessfulTransaction); // may be method will be get
+
+//---------------- https://github.com/sslcommerz/SSLCommerz-NodeJS 
+router.route('/initiate-refund').get(controller.initiateARefundThroughAPI);
+router.route('/refund-query').get(controller.refundQuery);
+router.route('/transaction-query-by-transaction-id')
+        .get(controller.queryTheStatusOfATransactionByTxnId);
+router.route('/transaction-query-by-session-id')
+        .get(controller.queryTheStatusOfATransactionBySessionId);
+        
 
 router.route('/:id').get(
   // auth('common'),

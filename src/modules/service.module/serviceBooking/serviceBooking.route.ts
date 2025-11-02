@@ -251,6 +251,15 @@ router.route('/').post(
   controller.create
 );
 
+//---------------------------------------
+// User | 04-(10/11) Make Payment For Service Booking To Admin 
+// from req.body .. we get bookingId
+// we have loggedIn User Id who pay
+// :id is bookingId  
+//---------------------------------------
+router.route('/pay/create/:id').post(controller.makePayment)
+
+
 router.route('/delete/:id').delete(
   //auth('common'),
   controller.deleteById

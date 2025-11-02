@@ -15,6 +15,8 @@ import { PaymentTransaction } from "../../../paymentTransaction/paymentTransacti
 import { TPaymentGateway } from "../../payment.constant";
 import { TPaymentStatus } from "../../../paymentTransaction/paymentTransaction.constant";
 import { TBookingStatus } from "../../../../service.module/serviceBooking/serviceBooking.constant";
+import { sslConfig } from "../../../../../config/paymentGateways/sslcommerz.config";
+import { TTransactionFor } from "../../../../../constants/TTransactionFor";
 
 // https://github.com/sslcommerz/SSLCommerz-NodeJS
 
@@ -32,7 +34,7 @@ export class SSLGateway implements PaymentGateway {
      * 6. Create PaymentTransaction and update LabTestBooking
      */
 
-    async processPayment(/*serviceBooking : IServiceBooking*/ data: any, user: IUser){
+    async processPayment(serviceBookingId: IServiceBooking['_id'], user: IUser){
         const session = await mongoose.startSession();
     
         let finalAmount = 0;
@@ -52,7 +54,9 @@ export class SSLGateway implements PaymentGateway {
              * 
              * ******* */
 
-            isBookingExist = await ServiceBooking.findById(data._id).session(session);
+            isBookingExist = await ServiceBooking.findById(serviceBookingId).session(session);
+
+            console.log('isBookingExist :: ', isBookingExist);
 
             if(!isBookingExist){
                 throw new ApiError(StatusCodes.NOT_FOUND, "Service Booking not found");
@@ -60,10 +64,14 @@ export class SSLGateway implements PaymentGateway {
 
             finalAmount = isBookingExist.startPrice;
 
+            console.log('finalAmount :: ', finalAmount);
+
             const additionalCosts : IAdditionalCost | null = await AdditionalCost.find({
-            serviceBookingId : isBookingExist,
-            isDeleted : false,
-            }, { session }); 
+                serviceBookingId : isBookingExist,
+                isDeleted : false,
+            }, { session });
+
+            console.log('additionalCosts :: ', additionalCosts);
 
             let totalAdditionalCost;
 
@@ -73,8 +81,11 @@ export class SSLGateway implements PaymentGateway {
                 })
             }
 
+            console.log('totalAdditionalCost :: ', totalAdditionalCost);
 
             finalAmount += totalAdditionalCost;
+
+            console.log('finalAmount :: ', finalAmount);
 
             isBookingExist.totalCost = finalAmount;
 
@@ -109,7 +120,7 @@ export class SSLGateway implements PaymentGateway {
             cus_state: data.state || 'Dhaka',
             cus_postcode: data.zipCode || '1000',
             cus_country: 'Bangladesh',
-            cus_phone: user?.phone || '01XXXXXXXXX',
+            cus_phone: user?.phone || '01518419801',
             
             // Shipping Information (required by SSL)
             shipping_method: 'NO',
@@ -117,14 +128,14 @@ export class SSLGateway implements PaymentGateway {
             
             // Custom Fields for our reference (max 4 value fields)
             value_a: createdBooking._id.toString(), // referenceId
-            value_b: TTransactionFor.LabTestBooking, // referenceFor
+            value_b: TTransactionFor.ServiceBooking, // referenceFor
             value_c: user.userId.toString(), // userId
             value_d: finalAmount.toString(), // amount
         };
 
-        const sslcz = new SSLCommerzPayment(
-            // may be these value come from config file 
-            config.sslcommerz.store_id, config.sslcommerz.store_passwd, config.sslcommerz.is_live);
+        console.log("sslData :: " ,sslData)
+
+        const sslcz = new SSLCommerzPayment(sslConfig);
         
         try {
             const apiResponse = await sslcz.init(sslData);
@@ -132,7 +143,7 @@ export class SSLGateway implements PaymentGateway {
             if (apiResponse?.GatewayPageURL) {
                 return {
                     url: apiResponse.GatewayPageURL,
-                    bookingId: createdBooking._id,
+                    bookingId: isBookingExist._id,
                     transactionId: sslData.tran_id
                 };
             } else {
