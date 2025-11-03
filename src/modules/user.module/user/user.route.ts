@@ -82,6 +82,16 @@ router.route('/home-page').get(
   controller.getCategoriesAndPopularProvidersForUser
 )
 
+
+//--------------------------------- kaj bd
+// Provider | Home Page | 03-01 | get earning by category, categorically booking count, all recent job request  
+//---------------------------------
+router.route('/home-page/for-provider').get(
+  auth(TRole.provider),
+  controller.getEarningAndCategoricallyBookingCountAndRecentJobRequest
+)
+
+
 //--------------------------------- kaj bd
 // User | Profile | 06-01 | get profile information of a user 
 //---------------------------------

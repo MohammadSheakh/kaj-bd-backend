@@ -92,7 +92,7 @@ export class SSLGateway implements PaymentGateway {
             if(additionalCosts.length > 0){
                 totalAdditionalCost = additionalCosts.reduce((sum, cost) => {
                     return sum + ( cost.price || 0 )
-                })
+                }, 0)
 
                 console.log('totalAdditionalCost :: ', totalAdditionalCost);
 

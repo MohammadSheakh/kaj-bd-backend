@@ -1,7 +1,7 @@
 //@ts-ignore
 import { StatusCodes } from 'http-status-codes';
 import ApiError from '../../../errors/ApiError';
-import { PaginateOptions, PaginateResult } from '../../../types/paginate';
+import { PaginateOptions } from '../../../types/paginate';
 import { IUpdateUserInfo, IUser } from './user.interface';
 import { User } from './user.model';
 import { sendAdminOrSuperAdminCreationEmail } from '../../../helpers/emailService';
@@ -14,6 +14,23 @@ import { ServiceCategory } from '../../service.module/serviceCategory/serviceCat
 import { ServiceProvider } from '../../service.module/serviceProvider/serviceProvider.model';
 import { IUserProfile } from '../userProfile/userProfile.interface';
 import { buildTranslatedField } from '../../../utils/buildTranslatedField';
+import { ServiceBooking } from '../../service.module/serviceBooking/serviceBooking.model';
+import { TBookingStatus, TPaymentStatus } from '../../service.module/serviceBooking/serviceBooking.constant';
+//@ts-ignore
+import mongoose from 'mongoose';
+import { WalletTransactionHistory } from '../../wallet.module/walletTransactionHistory/walletTransactionHistory.model';
+// import dayjs from 'dayjs';
+import {
+  startOfWeek,
+  startOfMonth,
+  startOfYear,
+  getDaysInMonth,
+  format,
+  eachDayOfInterval,
+  isSameDay,
+} from 'date-fns';
+import { TWalletTransactionHistory, TWalletTransactionStatus } from '../../wallet.module/walletTransactionHistory/walletTransactionHistory.constant';
+
 
 interface IAdminOrSuperAdminPayload {
   email: string;
@@ -70,6 +87,183 @@ export class UserService extends GenericService<typeof User, IUser> {
       ...userProfile
     };
   };
+
+
+  getEarningAndCategoricallyBookingCountAndRecentJobRequest = async (providerId: string, type: string) => {
+    if (!providerId) throw new Error('Provider ID is required');
+
+    const now = new Date();
+    let startDate: Date;
+    let groupStage: any;
+    let dateLabels: string[];
+
+    if (type === 'weekly') {
+      // Sunday as start of week (matches MongoDB $dayOfWeek)
+      startDate = startOfWeek(now, { weekStartsOn: 0 });
+      groupStage = { $dayOfWeek: '$createdAt' };
+      // Generate ['Sun', 'Mon', ..., 'Sat'] based on actual dates
+      const weekDays = eachDayOfInterval({ start: startDate, end: now });
+      const allWeekDays = eachDayOfInterval({ start: startDate, end: new Date(startDate.getTime() + 6 * 86400000) });
+      dateLabels = allWeekDays.map((d) => format(d, 'EEE')); // ['Sun', 'Mon', ...]
+    } else if (type === 'monthly') {
+      startDate = startOfMonth(now);
+      groupStage = { $dayOfMonth: '$createdAt' };
+      const daysInMonth = getDaysInMonth(now);
+      dateLabels = Array.from({ length: daysInMonth }, (_, i) => `${i + 1}`);
+    } else {
+      startDate = startOfYear(now);
+      groupStage = { $month: '$createdAt' };
+      dateLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    }
+
+    // 💰 Income Chart Data
+    const incomeData = await WalletTransactionHistory.aggregate([
+      {
+        $match: {
+          userId: new mongoose.Types.ObjectId(providerId),
+          type: TWalletTransactionHistory.credit,
+          status: TWalletTransactionStatus.completed,
+          isDeleted: false,
+          createdAt: { $gte: startDate, $lte: now },
+        },
+      },
+      {
+        $group: {
+          _id: groupStage,
+          totalIncome: { $sum: '$amount' },
+        },
+      },
+      { $sort: { _id: 1 } },
+    ]);
+
+    // 🧮 Format chart data
+    const incomeByDate: Record<string, number> = {};
+    incomeData.forEach((item) => (incomeByDate[item._id] = item.totalIncome));
+
+    const chartData = dateLabels.map((label, i) => ({
+      label,
+      income: incomeByDate[i + 1] || 0, // works for day/month (1-indexed)
+    }));
+
+    // Special handling for weekly: MongoDB $dayOfWeek is 1–7 (Sun–Sat)
+    if (type === 'weekly') {
+      // incomeByDate keys are 1 (Sun) to 7 (Sat)
+      chartData.forEach((_, idx) => {
+        chartData[idx].income = incomeByDate[idx + 1] || 0;
+      });
+    }
+
+    const totalIncome = incomeData.reduce((sum, d) => sum + d.totalIncome, 0);
+   
+
+    // 📊 3. Booking stats
+    const [totalRequests, accepted, inProgress, completed] = await Promise.all([
+      ServiceBooking.countDocuments({ providerId, status: TBookingStatus.pending }),
+      ServiceBooking.countDocuments({ providerId, status: TBookingStatus.accepted }),
+      ServiceBooking.countDocuments({ providerId, status: TBookingStatus.inProgress }),
+      ServiceBooking.countDocuments({ providerId, status: TBookingStatus.completed }),
+    ]);
+
+    // 🕓 4. Recent job requests
+    const recentJobRequests = await ServiceBooking.find({
+      providerId,
+      status: TBookingStatus.pending,
+    })
+      .populate('userId', 'name avatar')
+      .sort({ createdAt: -1 })
+      .limit(5)
+      .lean();
+
+    return {
+      totalIncome,
+      type,
+      chartData, // ✅ Chart ready for frontend (x: day, y: income)
+      stats: {
+        totalRequests,
+        accepted,
+        inProgress,
+        completed,
+      },
+      recentJobRequests,
+    };
+  }
+
+
+
+   /*
+
+    const now = new Date();
+    let startDate: Date;
+    let groupStage: any = {};
+    let dateLabels: string[] = [];
+
+    switch (type) {
+      case 'monthly':
+        startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+        groupStage = { $dayOfMonth: '$completionDate' };
+        dateLabels = Array.from({ length: 31 }, (_, i) => `${i + 1}`);
+        break;
+      case 'yearly':
+        startDate = new Date(now.getFullYear(), 0, 1);
+        groupStage = { $month: '$completionDate' };
+        dateLabels = [
+          'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+          'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+        ];
+        break;
+      default:
+        const day = now.getDay();
+        startDate = new Date(now);
+        startDate.setDate(now.getDate() - day);
+        groupStage = { $dayOfWeek: '$completionDate' };
+        dateLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        break;
+    }
+    */
+
+
+     /*
+
+    // 🧾 1. Income aggregation for chart
+    const incomeData = await ServiceBooking.aggregate([
+      {
+        $match: {
+          providerId: new mongoose.Types.ObjectId(providerId),
+          paymentStatus: { $in: [TPaymentStatus.paid, TPaymentStatus.completed] },
+          completionDate: { $gte: startDate, $lte: now },
+        },
+      },
+      {
+        $group: {
+          _id: groupStage,
+          totalIncome: { $sum: '$totalCost' },
+        },
+      },
+      { $sort: { _id: 1 } },
+    ]);
+
+    // 🧮 Prepare chart dataset
+    const incomeByDate: Record<string, number> = {};
+    incomeData.forEach((item) => {
+      incomeByDate[item._id] = item.totalIncome;
+    });
+
+    const chartData = dateLabels.map((label, i) => {
+      // For weekly: _id=1 means Sunday ... so we map accordingly
+      const key =
+        type === 'weekly'
+          ? ((i + 1) % 7) + 1 // Sunday (1) to Saturday (7)
+          : i + 1;
+      return {
+        label,
+        income: incomeByDate[key] || 0,
+      };
+    });
+
+    // 💰 2. Total Income
+    const totalIncome = incomeData.reduce((sum, d) => sum + d.totalIncome, 0);
+
+    */
 
   
   updateProfileInformationOfAUser = async (id: string, data:IUpdateUserInfo) => {

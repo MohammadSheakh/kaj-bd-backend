@@ -232,6 +232,19 @@ export class UserController extends GenericController<
       success: true,
     });
   })
+
+  //--------------------------------- kaj bd
+  // User | Home Page | 03-01 | get category and popular providers also banners 
+  //---------------------------------
+  getEarningAndCategoricallyBookingCountAndRecentJobRequest = catchAsync(async (req: Request, res: Response) => {
+    const result = await this.userService.getEarningAndCategoricallyBookingCountAndRecentJobRequest(req.user.userId, req.query.type);
+    sendResponse(res, {
+      code: StatusCodes.OK,
+      data: result,
+      message: 'Categories and popular providers fetched successfully',
+      success: true,
+    });
+  })
  
   //--------------------------------- kaj bd
   // User | Profile | 06-01 | get profile information of a user 

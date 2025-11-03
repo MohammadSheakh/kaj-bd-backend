@@ -94,7 +94,9 @@ export const config = {
     // success_url: `http://localhost:6733/api/v1/payment-transactions/pay/apn/validate`,
     
     // for office  TODO : MUST :
-    success_url: `http://172.26.89.58:6733/api/v1/payment-transactions/pay/apn/validate`,
+    //success_url: `http://172.26.89.58:6733/api/v1/payment-transactions/pay/apn/validate`,
+    
+    success_url: `https://newsheakh6733.sobhoy.com/api/v1/payment-transactions/pay/apn/validate`,
     
     fail_url: `${process.env.BACKEND_URL}/api/payment/ssl/fail`,
     cancel_url: `${process.env.BACKEND_URL}/api/payment/ssl/cancel`,

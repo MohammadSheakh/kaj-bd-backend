@@ -3,11 +3,21 @@ import { ServiceBooking } from "../../../../service.module/serviceBooking/servic
 //@ts-ignore
 import { StatusCodes } from 'http-status-codes';
 import { config } from "../../../../../config";
-import { PaymentTransaction } from "../../../paymentTransaction/paymentTransaction.model";
 import { TPaymentGateway } from "../../payment.constant";
-import { TPaymentStatus } from "../../../paymentTransaction/paymentTransaction.constant";
-import { TBookingStatus } from "../../../../service.module/serviceBooking/serviceBooking.constant";
+import { PaymentMethod } from "../../../paymentTransaction/paymentTransaction.constant";
+import { TBookingStatus, TPaymentStatus } from "../../../../service.module/serviceBooking/serviceBooking.constant";
 import { PaymentTransactionService } from "../../../paymentTransaction/paymentTransaction.service";
+import { Wallet } from "../../../../wallet.module/wallet/wallet.model";
+import { IServiceBooking } from "../../../../service.module/serviceBooking/serviceBooking.interface";
+import { TRole } from "../../../../../middlewares/roles";
+import { TNotificationType } from "../../../../notification/notification.constants";
+import { enqueueWebNotification } from "../../../../../services/notification.service";
+import { PaymentTransaction } from "../../../paymentTransaction/paymentTransaction.model";
+import { WalletTransactionHistory } from "../../../../wallet.module/walletTransactionHistory/walletTransactionHistory.model";
+import { IWallet } from "../../../../wallet.module/wallet/wallet.interface";
+import { TWalletTransactionHistory, TWalletTransactionStatus } from "../../../../wallet.module/walletTransactionHistory/walletTransactionHistory.constant";
+import { TCurrency } from "../../../../../enums/payment";
+import { TTransactionFor } from "../../../../../constants/TTransactionFor";
 
 // ===================================
 // SSL COMMERZ SUCCESS HANDLER 
@@ -82,18 +92,67 @@ export const validateAfterSuccessfulTransaction = async (req: Request, res: Resp
         });
 
         // Update LabTestBooking
-        await ServiceBooking.findByIdAndUpdate(referenceId, {
+        const updatedBooking :IServiceBooking =  await ServiceBooking.findByIdAndUpdate(referenceId, {
             $set: {
                 status: TBookingStatus.completed, // finally we make this status completed .. 
-                paymentStatus: TPaymentStatus.completed, // TODO : MUST : paid ekta option create korte hobe  
-                paymentTransactionId: newPayment._id
+                paymentStatus: TPaymentStatus.completed,  
+                paymentTransactionId: newPayment._id,
+                paymentMethod : PaymentMethod.online,
             }
         });
 
-        // TODO : MUST : Need to send notification to admin and provider about the money received ..
+    
+        const wallet : IWallet = await Wallet.findOne({ userId:updatedBooking.providerId });
+        const balanceBeforeTransaction = wallet.amount;
+        const balanceAfterTransaction = wallet.amount + amount;
 
-        // TODO : MUST : also add money to the Providers wallet .. 
 
+        // add money to the Providers wallet .. 
+        const updatedWallet :IWallet = await Wallet.findOneAndUpdate(
+            { userId:updatedBooking.providerId },
+            { $inc: { amount: parseFloat(amount) } },
+            { new: true }
+        );
+
+        // also create wallet transaction history for provider
+        await WalletTransactionHistory.create(
+            { 
+                walletId:updatedWallet._id,
+                paymentTransactionId: newPayment._id,
+                type : TWalletTransactionHistory.credit,
+                amount : parseFloat(amount),
+                currency : TCurrency.bdt,
+                status : TWalletTransactionStatus.completed,
+                referenceFor : TTransactionFor.ServiceBooking,
+                referenceId : updatedBooking._id,
+                balanceBefore: balanceBeforeTransaction,
+                balanceAfter: balanceAfterTransaction
+            },
+        );
+
+        // Send notification to admin and provider about the money received ..
+
+        await enqueueWebNotification(
+            `BDT ${amount} is added to your wallet for Booking ${referenceId} TnxId : ${newPayment._id}`,
+            updatedBooking.userId, // senderId
+            updatedBooking.providerId, // receiverId
+            TRole.provider, // receiverRole
+            TNotificationType.serviceBooking, // type
+            updatedBooking._id, // idOfType
+            null, // linkFor
+            null // linkId
+        );
+
+        await enqueueWebNotification(
+            `BDT ${amount} is added to ${updatedBooking.providerId} wallet for Booking ${referenceId} TnxId : ${newPayment._id}`,
+            updatedBooking.userId, // senderId
+            null, // receiverId
+            TRole.admin, // receiverRole
+            TNotificationType.payment, // type
+            updatedBooking._id, // idOfType
+            null, // linkFor
+            null // linkId
+        );
 
         // ✅ Step 3: Handle mobile vs web client
         const userAgent = req.headers['user-agent']?.toLowerCase() || '';
