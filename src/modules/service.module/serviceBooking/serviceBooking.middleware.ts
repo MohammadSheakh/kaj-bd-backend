@@ -9,6 +9,14 @@ import { TBookingStatus } from './serviceBooking.constant';
 //@ts-ignore
 import { differenceInHours } from 'date-fns';
 
+import { TFolderName } from "../../../enums/folderNames";
+//@ts-ignore
+import multer from "multer";
+import { processUploadedFilesForUpdate } from "../../../middlewares/processUploadedFiles";
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
+
 export const checkUserCanCancelBooking = () => {
     return async(req: Request, res:Response, next:NextFunction) => {
         const booking:IServiceBooking = await ServiceBooking.findOne({
@@ -163,7 +171,38 @@ export const checkProviderCanMakeRequestForPaymentOfThisBooking = () => {
             });
             return;
         }
+
+
+
+        // for update cases .. if image uploaded then we use that uploaded image url otherwise we use previous one
+        if(req.uploadedFiles?.attachments.length > 0){
+        console.log('req.uploadedFiles?.attachments.length > 0 .. replace prev image with the new one');
+        req.body.attachments = [...req.uploadedFiles?.attachments, ...booking.attachments];
+        }else{
+        req.body.attachments = booking.attachments;
+        }
+
+        // ✅ Use preprocessed uploaded file URLs //🥇🔁 this task we do in middleware level for create API not for update API
+        // req.body.attachments = req.uploadedFiles?.attachments || [];
+        // req.body.trailerContents = req.uploadedFiles?.trailerContents || [];
+
     
         next();
     }
-} 
+}
+
+export const imageUploadPipelineForUpdateServiceBooking = [
+  [
+    upload.fields([
+      { name: 'attachments', maxCount: 10 }, // Allow up to 10 
+    ]),
+  ],
+  processUploadedFilesForUpdate([
+    {
+      name: 'attachments',
+      folder: TFolderName.trainingProgram,
+      required: true, // optional
+      allowedMimeTypes: ['image/jpeg', 'image/png'], // , 'application/pdf'
+    },
+  ]),
+];

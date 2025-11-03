@@ -13,7 +13,7 @@ import { setQueryOptions } from '../../../middlewares/setQueryOptions';
 import { defaultExcludes } from '../../../constants/queryOptions';
 import { getLoggedInUserAndSetReferenceToUser } from '../../../middlewares/getLoggedInUserAndSetReferenceToUser';
 import { checkLoggedInUsersPermissionToManipulateModel } from '../../../middlewares/checkPermissionToManipulateModel';
-import { checkProviderCanAcceptBooking, checkProviderCanCancelBooking, checkProviderCanMakeInProgressOfThisBooking, checkProviderCanMakeRequestForPaymentOfThisBooking, checkUserCanCancelBooking } from './serviceBooking.middleware';
+import { checkProviderCanAcceptBooking, checkProviderCanCancelBooking, checkProviderCanMakeInProgressOfThisBooking, checkProviderCanMakeRequestForPaymentOfThisBooking, checkUserCanCancelBooking, imageUploadPipelineForUpdateServiceBooking, imageUploadPipelineForUpdateServiceCategory } from './serviceBooking.middleware';
 import { allowOnlyFields } from '../../../middlewares/allowOnlyFields';
 import { TBookingStatus } from './serviceBooking.constant';
 const storage = multer.memoryStorage();
@@ -117,8 +117,16 @@ router.route('/withTxnHistory/:id').get(
 
 
 //-------------------------------------------
-// User | 04-10 bookings | show details of service booking With Cost Summary
+// User | 04-10 bookings | show details of service booking With Cost Summary With Review If Provider
+//        04-20 
+// Provider | 04-11 
 //-------------------------------------------
+router.route('/with-costs-summary/:id').get(
+  auth(TRole.user, TRole.provider),
+  // controller.getById
+  controller.getWithAdditionalCosts
+);
+/*
 router.route('/:id').get(
   auth(TRole.user),
   setQueryOptions({
@@ -129,6 +137,10 @@ router.route('/:id').get(
   // controller.getById
   controller.getByIdV2
 );
+*/
+
+
+
 
 //-------------------------------------------
 // Provider | 03-05 Home | get booking details with user  information
@@ -213,10 +225,35 @@ router.route('/update-status/:id/status/paymentRequest').put(
     "_id"
   ),
   checkProviderCanMakeRequestForPaymentOfThisBooking(),
-  allowOnlyFields([], { status: TBookingStatus.paymentRequest }), // ✅ no user input, status auto-set
+  allowOnlyFields([
+    'duration',
+    'completionDate',
+  ], { status: TBookingStatus.paymentRequest }), // ✅ no user input, status auto-set
   // validateRequest(validation.createHelpMessageValidationSchema),
   controller.updateById
 );
+
+
+//-------------------------------------------
+// Provider | 03-09 Home | Upload Proof of Work Before make a paymentRequest 
+//-------------------------------------------
+router.route('/update-work-proof/:id').put(
+  auth(TRole.provider),
+  checkLoggedInUsersPermissionToManipulateModel(
+    'ServiceBooking', 
+    'providerId',
+    true,
+    "_id"
+  ),
+
+  ...imageUploadPipelineForUpdateServiceBooking,
+
+  checkProviderCanMakeRequestForPaymentOfThisBooking(), // its also work for upload image and we manage image upload here 
+  
+  // validateRequest(validation.createHelpMessageValidationSchema),
+  controller.updateById
+);
+
 
 //-------------------------------------------
 // User | 04-02 Home | cancel job request

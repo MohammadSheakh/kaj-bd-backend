@@ -9,7 +9,9 @@ export enum TBookingStatus {
 
 export enum TPaymentStatus {
      unpaid = 'unpaid',
-     paid = 'paid',
+     paid = 'paid', // i think i dont need this
      refunded = 'refunded',
      failed = 'failed',
+     completed = 'completed' // we use this 
+     // need to check
 }

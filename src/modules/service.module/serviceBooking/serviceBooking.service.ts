@@ -32,6 +32,7 @@ export class ServiceBookingService extends GenericService<
     super(ServiceBooking);
   }
 
+  // bookingsWithReviewFlag
   async getAllCompletedBookings(userId: string,
     filters : any,
     options :any
@@ -54,41 +55,18 @@ export class ServiceBookingService extends GenericService<
 
     return res
 
-    /*
-    const bookingsWithReviewFlag = await ServiceBooking.aggregate([
-      {
-        $match: {
-          userId: userId,
-          isDeleted: { $ne: true }, // optional: exclude soft-deleted
-        },
-      },
-      {
-        $lookup: {
-          from: 'reviews', // collection name for Review model
-          localField: '_id',
-          foreignField: 'serviceBookingId',
-          as: 'reviews',
-        },
-      },
-      {
-        $addFields: {
-          hasReview: {
-            $gt: [{ $size: '$reviews' }, 0],
-          },
-        },
-      },
-      {
-        $project: {
-          reviews: 0, // exclude the actual reviews array (we only need the flag)
-        },
-      },
-      {
-        $sort: { createdAt: -1 }, // optional: sort by newest first
-      },
-    ]);
-    */
 
     // return bookingsWithReviewFlag;
+  }
+
+
+  async getWithAdditionalCosts(bookingId, loggedInUserId){
+    
+
+    return {
+      serviceBooking,
+      additionalCosts
+    }
   }
   
 

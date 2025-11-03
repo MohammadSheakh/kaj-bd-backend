@@ -29,6 +29,8 @@ export interface IServiceBooking {
   // otherPartsPrice: number;
   totalCost: number;
 
+  hasReview: Boolean;
+
   paymentTransactionId?: Types.ObjectId;
   paymentMethod? : PaymentMethod; //🧩
   paymentStatus : TPaymentStatus; //🧩

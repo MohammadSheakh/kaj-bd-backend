@@ -66,9 +66,15 @@ export class SSLGateway implements PaymentGateway {
             // TODO : booking er user er shathe .. je payment korte chacche ..
             // take match korte hobe 
 
+
             if(!isBookingExist){
                 throw new ApiError(StatusCodes.NOT_FOUND, "Service Booking not found");
             }
+
+            // if(isBookingExist.status !== TBookingStatus.paymentRequest){
+            //     // || isBookingExist.status !== TBookingStatus.inProgress
+            //     throw new ApiError(StatusCodes.BAD_REQUEST, "You Can not pay for this booking as provider is not request you for payment");
+            // }
 
             finalAmount = isBookingExist.startPrice;
 

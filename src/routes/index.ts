@@ -18,6 +18,7 @@ import { ServiceBookingRoute } from '../modules/service.module/serviceBooking/se
 import { ReviewRoute } from '../modules/service.module/review/review.route';
 import { ContactUsRoute } from '../modules/settings.module/contactUs/contactUs.route';
 import { SettingsRoutes } from '../modules/settings.module/settings/settings.routes';
+import { AdditionalCostRoute } from '../modules/service.module/additionalCost/additionalCost.route';
 
 
 // import { ChatRoutes } from '../modules/chat/chat.routes';
@@ -138,6 +139,10 @@ const apiRoutes = [
   { // 🟢
     path: '/bank-info',
     route: BankInfoRoute,
+  },
+  { // 🟢
+    path: '/additional-cost',
+    route: AdditionalCostRoute,
   }
   
 ];

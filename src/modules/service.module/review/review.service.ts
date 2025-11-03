@@ -48,6 +48,10 @@ export class ReviewService extends GenericService<
     
     await newReview.save();
 
+    // 6. Update Booking TODO : MUST : mongo db transaction add korte hobe 
+    existingBooking.hasReview = true;
+    await existingBooking.save();
+
     return newReview
   }
 

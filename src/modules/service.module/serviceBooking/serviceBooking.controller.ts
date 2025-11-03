@@ -23,6 +23,8 @@ import { TBookingStatus } from './serviceBooking.constant';
 import { TRole } from '../../../middlewares/roles';
 import { TNotificationType } from '../../notification/notification.constants';
 import { SSLGateway } from '../../payment.module/payment/gateways/sslcommerz/sslcommerz.gateway';
+import { Review } from '../review/review.model';
+import { IReview } from '../review/review.interface';
 
 export class ServiceBookingController extends GenericController<
   typeof ServiceBooking,
@@ -93,6 +95,7 @@ export class ServiceBookingController extends GenericController<
     }
     
     const id = req.params.id;
+
 
     const updatedObject:IServiceBooking = await ServiceBooking.findByIdAndUpdate(
       id,
@@ -267,6 +270,47 @@ export class ServiceBookingController extends GenericController<
     sendResponse(res, {
       code: StatusCodes.OK,
       data: result,
+      message: `${this.modelName} updated successfully`,
+    });
+  })
+
+  getWithAdditionalCosts = catchAsync(async (req: Request, res: Response) => {
+    const loggedInUser = (req.user as IUser);
+    // const result = await this.service.getWithAdditionalCosts(req.params.id, loggedInUser);
+
+    const serviceBooking = await ServiceBooking.findById(req.params.id).select(defaultExcludes).populate([
+      {
+      path: 'providerId',
+      select: 'name profileImage'
+      },
+      {
+      path: 'attachments',
+      select: 'attachment'
+      },]
+    ); // its booking id
+    const additionalCosts = await AdditionalCost.find({
+      serviceBookingId: req.params.id
+    }).select(defaultExcludes);
+
+    let review: IReview | null = null;
+
+    // if provider then show review
+    if(loggedInUser.role == TRole.provider){
+      review = await Review.findOne({
+        serviceBookingId: req.params.id
+      }).select(defaultExcludes).populate({
+        path: 'userId',
+        select: 'name profileImage'
+      })
+    }
+
+    sendResponse(res, {
+      code: StatusCodes.OK,
+      data: {
+        serviceBooking,
+        additionalCosts,
+        review
+      },
       message: `${this.modelName} updated successfully`,
     });
   })

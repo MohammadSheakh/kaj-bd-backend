@@ -126,7 +126,8 @@ const ServiceBookingSchema = new Schema<IServiceBooking>(
         TPaymentStatus.unpaid,
         TPaymentStatus.paid,
         TPaymentStatus.refunded,
-        TPaymentStatus.failed
+        TPaymentStatus.failed,
+        TPaymentStatus.completed
       ],
       default: TPaymentStatus.unpaid,
       required: [true, `paymentStatus is required .. it can be  ${Object.values(TPaymentStatus).join(
