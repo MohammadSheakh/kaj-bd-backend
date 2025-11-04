@@ -40,7 +40,7 @@ export class WithdrawalRequstController extends GenericController<
   }
 
 //---------------------------------
-// Specialist / Doctor  | Wallet | Create withdrawal request TODO : MUST : NEED_TO_TEST
+// Provider | Wallet | Create withdrawal request TODO : MUST : NEED_TO_TEST
 //---------------------------------
   create = catchAsync(async (req: Request, res: Response) => {
     
@@ -76,6 +76,7 @@ export class WithdrawalRequstController extends GenericController<
       });
     }
 
+    /*-----------------------------------------
     const bankInfo = await BankInfo.findOne({
       userId: data.userId,
       isActive : true
@@ -88,6 +89,7 @@ export class WithdrawalRequstController extends GenericController<
         success: false,
       });
     }
+    -----------------------------------------*/
 
     if(data.requestedAmount > wallet.amount){
       return sendResponse(res, {
@@ -101,38 +103,21 @@ export class WithdrawalRequstController extends GenericController<
       walletId : wallet._id, // NEED_TO_TEST : wallet id is coming or not
       userId : data.userId,
       requestedAmount : data.requestedAmount,
-      bankAccountNumber : bankInfo.bankAccountNumber,
-      bankRoutingNumber : bankInfo.bankRoutingNumber,
-      bankAccountHolderName : bankInfo.bankAccountHolderName,
-      bankAccountType : bankInfo.bankAccountType,
-      bankBranch : bankInfo.bankBranch,
-      bankName : bankInfo.bankName,
+      bankAccountNumber : data.bankAccountNumber,
+      bankRoutingNumber : data.bankRoutingNumber,
+      bankAccountHolderName : data.bankAccountHolderName,
+      bankAccountType : data.bankAccountType,
+      bankBranch : data.bankBranch,
+      bankName : data.bankName,
       status : TWithdrawalRequst.requested,
       requestedAt: new Date(),
       processedAt : null,
     }
 
-    const lastWithdrawalRequest = await WithdrawalRequst.findOne({
-      userId: data.userId
-    }).sort({
-      createdAt: -1
-    }) // TODO : MUST : add logic 
-
-    // if last Withdrawal request is in week then we can not create withdrawal request
-    /************** TODO : MUST .. uncomment this part
-    if (lastWithdrawalRequest && 
-      lastWithdrawalRequest.createdAt > new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000)
-    ) {
-      return sendResponse(res, {
-        code: StatusCodes.BAD_REQUEST,
-        message: 'You can not create withdrawal request in a week',
-        success: false,
-      });
-    }
-    ************* */
+    const result = await this.service.create(docToCreate);
 
     //------------------------------------
-    // TODO : MUST : Send Notification to Admin that a withdrawal request is created
+    // Send Notification to Admin that a withdrawal request is created
     //------------------------------------
     
     await enqueueWebNotification(
@@ -141,12 +126,10 @@ export class WithdrawalRequstController extends GenericController<
       null, // receiverId // as we send notification to admin
       TRole.admin, // receiverRole
       TNotificationType.withdrawal, // type
-      null, // linkFor
-      null // linkId
+      result._id, // idOfType
+      null, // linkFor queryParamKey
+      null // linkId queryParamValue
     );
-
-
-    const result = await this.service.create(docToCreate);
 
     sendResponse(res, {
       code: StatusCodes.OK,
@@ -198,16 +181,10 @@ export class WithdrawalRequstController extends GenericController<
     let balanceBeforeTransaction : number ;
     let balanceAfterTransaction : number ; 
     let wallet;
+    
     //------------------------------------
     // Deduct amount from  Doctor / Patient's wallet
     //------------------------------------
-    // if(withdrawalRequst.walletId){
-    //   const wallet = await Wallet.findById(withdrawalRequst.walletId);
-    //   if(wallet){
-    //     wallet.amount -= withdrawalRequst.requestedAmount;
-    //     await wallet.save();
-    //   }
-    // }else 
       
     if (withdrawalRequst.userId){
       wallet = await Wallet.findOne({
@@ -258,11 +235,10 @@ export class WithdrawalRequstController extends GenericController<
       (req?.user as IUser)?.userId as string, // senderId
       withdrawalRequst.userId, // receiverId
       null, // receiverRole
-      TNotificationType.payment, // type // 🎨 this is for wallet page routing 
-      null, // linkFor // TODO : MUST : need to talk with nirob vai
+      TNotificationType.payment, // type // 🎨 this is for wallet page routing
+      walletTransactionHistory._id, // id of type 
+      null, // linkFor 
       null, // linkId
-      // TTransactionFor.TrainingProgramPurchase, // referenceFor
-      // purchaseTrainingProgram._id // referenceId
     );
 
     sendResponse(res, {

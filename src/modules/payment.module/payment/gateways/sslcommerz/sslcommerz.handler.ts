@@ -101,18 +101,30 @@ export const validateAfterSuccessfulTransaction = async (req: Request, res: Resp
             }
         });
 
+        let startPrice :number = parseInt(updatedBooking?.startPrice); // TODO : MUST : Fix korte hobe 
+        let tenPercentOfStartPrice:number = parseFloat(startPrice) * 0.1;
+
+        // TODO : MUST : Wallet e koto percent taka add korte hobe provider er jonno sheta calculate korte hobe
+
+        let finalAmountToAddProvidersWallet : number = parseFloat(amount) - parseFloat(tenPercentOfStartPrice);
+
     
         const wallet : IWallet = await Wallet.findOne({ userId:updatedBooking.providerId });
         const balanceBeforeTransaction = wallet.amount;
-        const balanceAfterTransaction = wallet.amount + amount;
+        const balanceAfterTransaction = wallet.amount + finalAmountToAddProvidersWallet;
 
 
         // add money to the Providers wallet .. 
         const updatedWallet :IWallet = await Wallet.findOneAndUpdate(
             { userId:updatedBooking.providerId },
-            { $inc: { amount: parseFloat(amount) } },
+            { $inc: { 
+                amount: parseFloat(finalAmountToAddProvidersWallet),
+                totalBalance: parseFloat(amount)
+                } 
+            },
             { new: true }
         );
+
 
         // also create wallet transaction history for provider
         await WalletTransactionHistory.create(

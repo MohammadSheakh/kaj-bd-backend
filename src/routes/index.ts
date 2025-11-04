@@ -11,7 +11,6 @@ import { UserRoutes } from '../modules/user.module/user/user.route';
 import { WalletTransactionHistoryRoute } from '../modules/wallet.module/walletTransactionHistory/walletTransactionHistory.route';
 import { BankInfoRoute } from '../modules/wallet.module/bankInfo/bankInfo.route';
 import { WithdrawalRequstRoute } from '../modules/wallet.module/withdrawalRequst/withdrawalRequst.route';
-import { ServiceProvider } from '../modules/service.module/serviceProvider/serviceProvider.model';
 import { ServiceProviderRoute } from '../modules/service.module/serviceProvider/serviceProvider.route';
 import { ServiceCategoryRoute } from '../modules/service.module/serviceCategory/serviceCategory.route';
 import { ServiceBookingRoute } from '../modules/service.module/serviceBooking/serviceBooking.route';
@@ -19,7 +18,6 @@ import { ReviewRoute } from '../modules/service.module/review/review.route';
 import { ContactUsRoute } from '../modules/settings.module/contactUs/contactUs.route';
 import { SettingsRoutes } from '../modules/settings.module/settings/settings.routes';
 import { AdditionalCostRoute } from '../modules/service.module/additionalCost/additionalCost.route';
-
 
 // import { ChatRoutes } from '../modules/chat/chat.routes';
 // import { MessageRoutes } from '../modules/message/message.routes';

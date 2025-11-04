@@ -3,6 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import ApiError from '../../../errors/ApiError';
 import { PaginateOptions } from '../../../types/paginate';
 import { IUpdateUserInfo, IUser } from './user.interface';
+import { IUser as IUserFromToken } from '../../token/token.interface';
 import { User } from './user.model';
 import { sendAdminOrSuperAdminCreationEmail } from '../../../helpers/emailService';
 import { GenericService } from '../../_generic-module/generic.services';
@@ -30,6 +31,7 @@ import {
   isSameDay,
 } from 'date-fns';
 import { TWalletTransactionHistory, TWalletTransactionStatus } from '../../wallet.module/walletTransactionHistory/walletTransactionHistory.constant';
+import { TRole } from '../../../middlewares/roles';
 
 
 interface IAdminOrSuperAdminPayload {
@@ -74,13 +76,33 @@ export class UserService extends GenericService<typeof User, IUser> {
   //--------------------------------- kaj bd
   // User | Profile | 06-01 | get profile information of a user 
   //---------------------------------
-  getProfileInformationOfAUser = async (id: string) => {
+  getProfileInformationOfAUser = async (loggedInUser: IUserFromToken) => {
     //-- name, email, phoneNumber from User table ..
     //-- location, dob and gender from UserProfile table
+
+    //-- serviceName and rating from Service Provider Or Service Provider Details table
+
+
+    const id = loggedInUser.userId
+
     const user = await User.findById(id).select('name email phoneNumber').lean();
     const userProfile =  await UserProfile.findOne({
       userId: id
     }).select('location dob gender').lean();
+
+    if(loggedInUser.role == TRole.provider){
+      
+      console.log("as provider ... ", loggedInUser.role)
+
+      const serviceProvider = await ServiceProvider.findOne({
+        providerId: id
+      }).select('serviceName rating').lean();
+      return {
+        ...user,
+        ...userProfile,
+        ...serviceProvider
+      };
+    }
 
     return {
       ...user,
@@ -274,13 +296,15 @@ export class UserService extends GenericService<typeof User, IUser> {
       name: data.name,
       email: data.email,
       phoneNumber: data.phoneNumber
-    })
+    },{ new: true }).lean()
 
-    const updateUserProfile:IUserProfile = await UserProfile.find(
+    const updateUserProfile:IUserProfile = await UserProfile.findOne(
       {
         userId: id
       }
     );
+
+    
     
     if(data.location){
       // Translate multiple properties dynamically
@@ -298,7 +322,7 @@ export class UserService extends GenericService<typeof User, IUser> {
 
     return {
       ...updateUser,
-      ...res
+      ...res.toObject()
     };
   };
 
@@ -314,7 +338,7 @@ export class UserService extends GenericService<typeof User, IUser> {
     return result;
   }
 
-  //---------------------------------suplify
+  //---------------------------------kaj bd
   //  Admin | User Management With Statistics
   //---------------------------------
   async getAllWithAggregation(
@@ -354,11 +378,11 @@ export class UserService extends GenericService<typeof User, IUser> {
     
 
         // Step 4: Filter by profile approval status if specified
-        ...(profileFilter.approvalStatus ? [{
-            $match: {
-                'profileInfo.approvalStatus': profileFilter.approvalStatus
-            }
-        }] : []),
+        // ...(profileFilter.providerApprovalStatus ? [{
+        //     $match: {
+        //         'profileInfo.approvalStatus': profileFilter.providerApprovalStatus
+        //     }
+        // }] : []),
 
 
         // Step 5: Project the required fields
@@ -367,16 +391,15 @@ export class UserService extends GenericService<typeof User, IUser> {
                 _id: 1,
                 name: 1,
                 email: 1,
+                phoneNumber: 1,
                 role: 1,
-                subscriptionType: 1,
                 profileId: 1,
                 createdAt: 1,
-                updatedAt: 1,
                 // Add approval status from profile
-                approvalStatus: '$profileInfo.approvalStatus',
+                dob: '$profileInfo.dob',
                 // Optionally include other profile fields
-                profileCreatedAt: '$profileInfo.createdAt',
-                profileUpdatedAt: '$profileInfo.updatedAt'
+                gender: '$profileInfo.gender',
+                location: '$profileInfo.location'
             }
         },
         
@@ -393,25 +416,25 @@ export class UserService extends GenericService<typeof User, IUser> {
 
 
     // 📈⚙️ OPTIMIZATION: Get role-based statistics first
-    const statisticsPipeline = [
-        {
-            $group: {
-                _id: '$role',
-                count: { $sum: 1 }
-            }
-        }
-    ];
+    // const statisticsPipeline = [
+    //     {
+    //         $group: {
+    //             _id: '$role',
+    //             count: { $sum: 1 }
+    //         }
+    //     }
+    // ];
     
-    // Get statistics
-    const roleStats = await User.aggregate(statisticsPipeline);
+    // // Get statistics
+    // const roleStats = await User.aggregate(statisticsPipeline);
     
-    // Transform stats into the required format
-    const statistics = {
-        totalUser: roleStats.reduce((sum, stat) => sum + stat.count, 0),
-        totalDoctor: roleStats.find(stat => stat._id === 'doctor')?.count || 0,
-        totalSpecialist: roleStats.find(stat => stat._id === 'specialist')?.count || 0,
-        totalPatient: roleStats.find(stat => stat._id === 'patient')?.count || 0
-    };
+    // // Transform stats into the required format
+    // const statistics = {
+    //     totalUser: roleStats.reduce((sum, stat) => sum + stat.count, 0),
+    //     totalDoctor: roleStats.find(stat => stat._id === 'doctor')?.count || 0,
+    //     totalSpecialist: roleStats.find(stat => stat._id === 'specialist')?.count || 0,
+    //     totalPatient: roleStats.find(stat => stat._id === 'patient')?.count || 0
+    // };
 
     // Use pagination service for aggregation
      const res =
@@ -422,7 +445,116 @@ export class UserService extends GenericService<typeof User, IUser> {
     );
 
     return {
-      statistics,
+      // statistics,
+      ...res
+    }
+  }
+
+
+  //--------------------------------- kaj bd
+  //  Admin | Provider Management With Statistics
+  //---------------------------------
+  async getAllWithAggregationV2(
+      filters: any, // Partial<INotification> // FixMe : fix type
+      options: PaginateOptions,
+      // profileFilter: any = {}
+    ) {
+
+
+    // 📈⚙️ OPTIMIZATION:
+    const pipeline = [
+        
+        // Step 2: Lookup profile information
+        {
+            $lookup: {
+                from: 'userprofiles', // Collection name (adjust if different)
+                localField: 'profileId',
+                foreignField: '_id',
+                as: 'profileInfo'
+            }
+        },
+        
+        // Step 3: Unwind profile array (convert array to object)
+        {
+            $unwind: {
+                path: '$profileInfo',
+                preserveNullAndEmptyArrays: true // Keep users without profiles
+            }
+        },
+
+
+        // 2. Lookup front-side certificate attachments
+        {
+          $lookup: {
+            from: 'attachments',
+            localField: 'profileInfo.frontSideCertificateImage',
+            foreignField: '_id',
+            as: 'frontAttachments'
+          }
+        },
+        // 3. Lookup back-side
+        {
+          $lookup: {
+            from: 'attachments',
+            localField: 'profileInfo.backSideCertificateImage',
+            foreignField: '_id',
+            as: 'backAttachments'
+          }
+        },
+        // 4. Lookup face images
+        {
+          $lookup: {
+            from: 'attachments',
+            localField: 'profileInfo.faceImageFromFrontCam',
+            foreignField: '_id',
+            as: 'faceAttachments'
+          }
+        },
+
+
+        // Step 5: Project the required fields
+        {
+            $project: {
+                _id: 1,
+                name: 1,
+                email: 1,
+                phoneNumber: 1,
+                role: 1,
+                profileId: 1,
+                createdAt: 1,
+                // Add approval status from profile
+                dob: '$profileInfo.dob',
+                // Optionally include other profile fields
+                gender: '$profileInfo.gender',
+                location: '$profileInfo.location',
+                // frontSideCertificateImage: '$profileInfo.frontSideCertificateImage',
+                // backSideCertificateImage: '$profileInfo.backSideCertificateImage',
+                // faceImageFromFrontCam: '$profileInfo.faceImageFromFrontCam'
+
+                frontSideCertificateImage: {
+                  $map: { input: '$frontAttachments', as: 'att', in: '$$att.attachment' }
+                },
+                backSideCertificateImage: {
+                  $map: { input: '$backAttachments', as: 'att', in: '$$att.attachment' }
+                },
+                faceImageFromFrontCam: {
+                  $map: { input: '$faceAttachments', as: 'att', in: '$$att.attachment' }
+                }
+            }
+        },
+    ];
+
+
+    // Use pagination service for aggregation
+     const res =
+      await PaginationService.aggregationPaginate(
+      User, 
+      pipeline,
+      options
+    );
+
+    return {
+      // statistics,
       ...res
     }
   }

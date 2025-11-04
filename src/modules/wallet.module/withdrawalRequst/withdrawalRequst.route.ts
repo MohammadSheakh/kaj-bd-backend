@@ -94,12 +94,12 @@ router.route('/').get(
   controller.getAll
 );
 
-
 //--------------------------------- 
-// Specialist / Doctor  | Wallet | Create withdrawal request
+// 06-06
+// Provider  | Wallet | Create withdrawal request
 //---------------------------------
 router.route('/').post(
-  auth(TRole.doctor, TRole.specialist),
+  auth(TRole.provider),
   validateRequest(validation.createWithdrawalRequstValidationSchema),
   controller.create
 );

@@ -1,3 +1,4 @@
+//@ts-ignore
 import { StatusCodes } from 'http-status-codes';
 import { Review } from './review.model';
 import { ICreateReview, IReview } from './review.interface';
@@ -8,6 +9,9 @@ import { ServiceBooking } from '../serviceBooking/serviceBooking.model';
 import { IServiceBooking } from '../serviceBooking/serviceBooking.interface';
 import { TBookingStatus } from '../serviceBooking/serviceBooking.constant';
 import { TLanguage } from '../../../enums/language';
+import { ServiceProvider } from '../serviceProvider/serviceProvider.model';
+//@ts-ignore
+import mongoose from 'mongoose';
 
 export class ReviewService extends GenericService<
   typeof Review,
@@ -47,6 +51,52 @@ export class ReviewService extends GenericService<
     });
     
     await newReview.save();
+
+    // totalRating: Number,    // sum of all ratings
+    // ratingCount: Number,    // number of reviews
+    // averageRating: Number   // (totalRating / ratingCount), kept for performance
+
+    const result = await Review.aggregate([
+      {
+        $match: {
+          serviceProviderDetailsId: new mongoose.Types.ObjectId(userId),
+          isDeleted: false
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          totalRating: { $sum: '$rating' },
+          ratingCount: { $sum: 1 }
+        }
+      }
+    ]);
+
+    console.log("result : ", result);
+
+    // if (result.length === 0) {
+    //   return {
+    //     ratingCount: 0,
+    //     averageRating: 0
+    //   };
+    // }
+
+    if(result.length !== 0){
+      const { totalRating, ratingCount } = result[0];
+
+      console.log('totalRating', totalRating, ' ⚡⚡ ratingCount', ratingCount);
+      
+      const averageRating = ratingCount > 0 
+        ? parseFloat((totalRating / ratingCount).toFixed(2)) 
+        : 0;
+
+      await ServiceProvider.findByIdAndUpdate(
+        existingBooking.providerDetailsId,
+        {
+          rating: averageRating,
+        }
+      )
+    }
 
     // 6. Update Booking TODO : MUST : mongo db transaction add korte hobe 
     existingBooking.hasReview = true;

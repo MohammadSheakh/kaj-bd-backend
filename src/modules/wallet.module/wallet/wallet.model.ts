@@ -13,10 +13,15 @@ const WalletSchema = new Schema<IWallet>(
       type: Schema.Types.ObjectId,
       ref: 'User',
     },
-    amount: {
+    amount: { // this is withdrawal balance
       type: Number,
       default: 0,
       required: [false, 'amount is not required'],
+    },
+    totalBalance: { // it includes admin part also
+      type: Number,
+      default: 0,
+      required: [false, 'totalBalance is not required'],
     },
     currency:{
       type: String,

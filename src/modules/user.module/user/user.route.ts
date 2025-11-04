@@ -30,21 +30,27 @@ const router = express.Router();
 // const taskService = new TaskService();
 const controller = new UserController();
 
-//--------------------------------- suplify
-// Admin : User Management With Statistics
+//--------------------------------- kaj-bd
+// Admin | 03-01 | Get All Users from Users Table 
 //---------------------------------
-//
 router.route('/paginate').get(
   auth(TRole.admin),
-  validateFiltersForQuery(optionValidationChecking(['_id',
-    'name',
-    'email',
-    'role',
-    'subscriptionType',
-    'approvalStatus',
-    ...paginationOptions])),
+  validateFiltersForQuery(optionValidationChecking(['_id', 'name', 'createdAt', ...paginationOptions])),
   controller.getAllWithPaginationV2
 );
+
+// TODO : MUST : Get all providers who are not approved .. 
+
+//--------------------------------- kaj-bd
+// Admin | 03-01 | Get All Users from Users Table 
+//---------------------------------
+router.route('/paginate/for-provider').get(
+  auth(TRole.admin),
+  validateFiltersForQuery(optionValidationChecking(['_id', 'name', 'createdAt', ...paginationOptions])),
+  controller.getAllWithPaginationV3
+);
+
+
 
 //--------------------------------- suplify
 // Specialist | Get Profile Information as logged in user 
@@ -96,7 +102,7 @@ router.route('/home-page/for-provider').get(
 // User | Profile | 06-01 | get profile information of a user 
 //---------------------------------
 router.route('/profile-info').get(
-  auth(TRole.user),
+  auth(TRole.user, TRole.provider),
   controller.getProfileInformationOfAUser
 )
 
@@ -108,6 +114,13 @@ router.route('/profile-info').get(
  * @desc Update profile information of a user
  *----------------------------------------------*/
 router.route('/profile-info').put(
+  auth(TRole.user, TRole.provider),
+  // validateRequest(validation.updateProfileInfoValidationSchema), // TODO : MUST : add validation
+  controller.updateProfileInformationOfAUser
+)
+
+
+router.route('/profile-picture').put(
   auth(TRole.user),
   // validateRequest(validation.updateProfileInfoValidationSchema), // TODO : MUST : add validation
   controller.updateProfileInformationOfAUser

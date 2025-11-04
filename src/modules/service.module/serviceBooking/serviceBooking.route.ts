@@ -59,14 +59,11 @@ router.route('/paginate').get(
   controller.getAllWithPaginationV2
 );
 
-
-
 //-------------------------------------------
-// FROM HOME  | NEED TO TEST | 
 // Admin | 06-01 | Get all service booking for work tracker
 //-------------------------------------------
-router.route('/paginate').get(
-  auth(TRole.user),
+router.route('/paginate/for-admin').get(
+  auth(TRole.commonAdmin),
   validateFiltersForQuery(optionValidationChecking(['_id','status', ...paginationOptions])),
   // getLoggedInUserAndSetReferenceToUser('userId'),
   setQueryOptions({
@@ -138,9 +135,6 @@ router.route('/:id').get(
   controller.getByIdV2
 );
 */
-
-
-
 
 //-------------------------------------------
 // Provider | 03-05 Home | get booking details with user  information

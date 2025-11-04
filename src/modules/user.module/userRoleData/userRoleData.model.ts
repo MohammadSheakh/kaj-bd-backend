@@ -11,10 +11,6 @@ const UserRoleDataSchema = new Schema<IUserRoleData>(
       ref: 'User',
       required: [true, 'User ID is required'],
     },
-    // roleType: { // i dont think we need roleType
-    //   type: String,
-    //   required: [true, 'Role type is required'],
-    // },
     adminStatus: {
       type: String,
       enum: [

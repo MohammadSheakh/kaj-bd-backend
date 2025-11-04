@@ -196,7 +196,15 @@ export class ServiceProviderController extends GenericController<
     });
   });
 
+  getServiceProviderDetailsAndNIDImagesFromUserProfile = catchAsync(async (req: Request, res: Response) => {
+    const response = await this.serviceProviderService.detailsAndNIDImagesFromUserProfile((req.user as IUser).userId as string);
 
+    sendResponse(res, {
+      code: StatusCodes.OK,
+      data: response,
+      message: `${this.modelName} retrieved successfully`,
+    });
+  })
 
   // add more methods here if needed or override the existing ones 
 }

@@ -9,6 +9,8 @@ import auth from '../../../middlewares/auth';
 //@ts-ignore
 import multer from "multer";
 import { TRole } from '../../../middlewares/roles';
+import { setQueryOptions } from '../../../middlewares/setQueryOptions';
+import { getLoggedInUserAndSetReferenceToUser } from '../../../middlewares/getLoggedInUserAndSetReferenceToUser';
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
@@ -34,12 +36,26 @@ const controller = new WalletTransactionHistoryController();
 // Specialist | get all transaction history with wallet balance 
 //---------------------------------
 router.route('/paginate').get(
-  auth(TRole.specialist),
+  auth(TRole.provider),
   validateFiltersForQuery(optionValidationChecking(['_id', 'walletId', ...paginationOptions])),
   controller.getAllWithPagination
 );
 
-//--------------------------------
+router.route('/paginate-with-wallet').get(
+  auth(TRole.provider),
+  validateFiltersForQuery(optionValidationChecking(['_id', 'walletId', ...paginationOptions])),
+  getLoggedInUserAndSetReferenceToUser('userId'),
+  setQueryOptions({ // this will work on transaction history
+    populate: [
+      { path: 'attachments', select: 'attachment' },
+    ],
+    select: '-isDeleted -createdAt -updatedAt'
+  }),
+  controller.getAllWithWallet
+);
+
+
+//-------------------------------- Suplify
 // Specialist | Get Overview of Earnings
 //---------------------------------
 router.route('/overview').get(

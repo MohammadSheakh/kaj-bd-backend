@@ -56,6 +56,14 @@ router.route('/paginate').get(
 );
 
 //---------------------------------  
+// Provider | 06-03 | get a service provider's documents for profile section also Images from userProfile 
+//---------------------------------
+router.route('/details-with-nid').get(
+  auth(TRole.provider),
+  controller.getServiceProviderDetailsAndNIDImagesFromUserProfile
+);
+
+//---------------------------------  
 // User | 03-06 get a service provider's details with reviews
 // for  (FIG : User | 03-06) book service now button for providerId pass --> "providerId._userId"
 //---------------------------------
@@ -71,6 +79,9 @@ router.route('/:id').get(
 router.route('/profile/:id').get(
   controller.getProfileDetails
 );
+
+
+
 
 router.route('/update/:id').put(
   //auth('common'),

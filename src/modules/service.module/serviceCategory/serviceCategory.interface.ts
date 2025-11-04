@@ -30,7 +30,8 @@ export interface ICreateServiceCategory{
 
 export interface IUpdateServiceCategory{
   attachments?: string[];
-  name: string | IServiceCategory['name'] // TODO : add more fields .. 
+  name: string | IServiceCategory['name'] ;
+  isVisible : boolean
 }
 
 export interface IServiceCategoryModel extends Model<IServiceCategory> {

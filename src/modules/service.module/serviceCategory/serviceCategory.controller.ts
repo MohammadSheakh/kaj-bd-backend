@@ -62,7 +62,7 @@ export class ServiceCategoryController extends GenericController<
       );
     }
 
-    const data : ICreateServiceCategory = req.body;
+    const data : IUpdateServiceCategory = req.body;
     
 
     if(data.name){
