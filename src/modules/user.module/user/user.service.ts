@@ -32,6 +32,7 @@ import {
 } from 'date-fns';
 import { TWalletTransactionHistory, TWalletTransactionStatus } from '../../wallet.module/walletTransactionHistory/walletTransactionHistory.constant';
 import { TRole } from '../../../middlewares/roles';
+import { Banner } from '../../banner/banner.model';
 
 
 interface IAdminOrSuperAdminPayload {
@@ -600,7 +601,7 @@ export class UserService extends GenericService<typeof User, IUser> {
 
 
   async getCategoriesAndPopularProvidersForUser() {
-    const [categories, providers] = await Promise.all([
+    const [categories, providers, banners] = await Promise.all([
       ServiceCategory.find({ isDeleted: false, isVisible: true })
         .limit(9)
         .select('name attachments').populate({
@@ -619,6 +620,11 @@ export class UserService extends GenericService<typeof User, IUser> {
           path: 'attachmentsForGallery attachmentsForCoverPhoto',
           select: 'attachment attachmentType',
         }),
+
+      Banner.find({ isDeleted: false }).limit(5).select('attachments').populate({
+        path: 'attachments',
+        select: 'attachment',
+      }),  
     ]);
 
 
@@ -628,7 +634,7 @@ export class UserService extends GenericService<typeof User, IUser> {
     //   name: lang ? cat.name[lang] : cat.name
     // }));
 
-    return { categories, providers };
+    return { categories, providers, banners };
   }
 }
 

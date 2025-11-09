@@ -30,6 +30,31 @@ export class GenericService<ModelType, InterfaceType> {
   async getAll() {
     return await this.model.find({isDeleted : false}).select('-__v');
   }
+
+  async getAllV2(populateOptions?: (string | any)[], select?: string) {
+    let query = this.model.find().select(select);
+    
+    if (populateOptions && populateOptions.length > 0) {
+        
+        // Check if it's the old format (array of strings)
+        if (typeof populateOptions[0] === 'string') {
+            // query = query.select(populateOptions[0]);
+            populateOptions.forEach(field => {
+                query = query.populate(field as string);
+            });
+        } else {
+            populateOptions.forEach(option => {
+                query = query.populate(option);
+            });
+        }
+    }
+    
+    const object = await query.select('-__v');
+    if (!object) {
+        return null;
+    }
+    return object;
+  }
   
   async getAllWithPagination(
     filters: any, // Partial<INotification> // FixMe : fix type

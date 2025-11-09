@@ -18,6 +18,7 @@ import { ReviewRoute } from '../modules/service.module/review/review.route';
 import { ContactUsRoute } from '../modules/settings.module/contactUs/contactUs.route';
 import { SettingsRoutes } from '../modules/settings.module/settings/settings.routes';
 import { AdditionalCostRoute } from '../modules/service.module/additionalCost/additionalCost.route';
+import { BannerRoute } from '../modules/banner/banner.route';
 
 // import { ChatRoutes } from '../modules/chat/chat.routes';
 // import { MessageRoutes } from '../modules/message/message.routes';
@@ -40,7 +41,12 @@ const apiRoutes = [
   ////////////////////// Created By Mohammad Sheakh
 
 
-
+  ///////////////////////////////////////// Payment Transaction
+  { // 🟢
+    path: '/banners',
+    route: BannerRoute,
+  },
+  
   ///////////////////////////////////////// Payment Transaction
   { // 🟢
     path: '/payment-transactions',

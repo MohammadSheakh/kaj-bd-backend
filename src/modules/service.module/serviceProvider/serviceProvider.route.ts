@@ -63,7 +63,7 @@ router.route('/details-with-nid').get(
   controller.getServiceProviderDetailsAndNIDImagesFromUserProfile
 );
 
-//---------------------------------  
+//--------------------------------- ⚔️💪🏔️
 // User | 03-06 get a service provider's details with reviews
 // for  (FIG : User | 03-06) book service now button for providerId pass --> "providerId._userId"
 //---------------------------------

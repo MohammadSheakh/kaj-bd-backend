@@ -1,19 +1,23 @@
 //@ts-ignore
 import express from 'express';
-import * as validation from './demo.validation';
-import { DemoController} from './demo.controller';
-import { IDemo } from './demo.interface';
+import * as validation from './banner.validation';
+import { BannerController} from './banner.controller';
+import { IBanner } from './banner.interface';
 import { validateFiltersForQuery } from '../../middlewares/queryValidation/paginationQueryValidationMiddleware';
 import validateRequest from '../../shared/validateRequest';
 import auth from '../../middlewares/auth';
 //@ts-ignore
 import multer from "multer";
+import { TRole } from '../../middlewares/roles';
+import { imageUploadPipelineForCreateBanner } from './banner.middleware';
+import { setQueryOptions } from '../../middlewares/setQueryOptions';
+import { defaultExcludes } from '../../constants/queryOptions';
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 const router = express.Router();
 
-export const optionValidationChecking = <T extends keyof IDemo | 'sortBy' | 'page' | 'limit' | 'populate'>(
+export const optionValidationChecking = <T extends keyof IBanner | 'sortBy' | 'page' | 'limit' | 'populate'>(
   filters: T[]
 ) => {
   return filters;
@@ -27,9 +31,8 @@ const paginationOptions: Array<'sortBy' | 'page' | 'limit' | 'populate'> = [
 ];
 
 // const taskService = new TaskService();
-const controller = new DemoController();
+const controller = new BannerController();
 
-//
 router.route('/paginate').get(
   //auth('common'),
   validateFiltersForQuery(optionValidationChecking(['_id', ...paginationOptions])),
@@ -49,19 +52,27 @@ router.route('/update/:id').put(
 
 //[🚧][🧑‍💻✅][🧪] // 🆗
 router.route('/').get(
-  auth('commonAdmin'),
-  controller.getAll
+  // auth(TRole.admin),
+  setQueryOptions({
+    populate: [
+      { path: 'attachments', select: 'attachment' },
+    ],
+    select: `${defaultExcludes}`
+  }),
+  controller.getAllV2//getAll
 );
 
-//[🚧][🧑‍💻✅][🧪] // 🆗
-router.route('/create').post(
-  // [
-  //   upload.fields([
-  //     { name: 'attachments', maxCount: 15 }, // Allow up to 5 cover photos
-  //   ]),
-  // ],
-  auth('common'),
-  validateRequest(validation.createHelpMessageValidationSchema),
+/** ----------------------------------------------
+   * @role Admin
+   * @Section Unknown
+   * @module |
+   * @figmaIndex 0-0
+   * @desc create banner from admin dashboard for users home page .. 
+   * 
+   *----------------------------------------------*/
+router.route('/').post(
+  // auth(TRole.commonAdmin),
+  ...imageUploadPipelineForCreateBanner,
   controller.create
 );
 
@@ -79,4 +90,4 @@ router.route('/softDelete/:id').put(
 //[🚧][🧑‍💻✅][🧪] // 🆗
 
 
-export const DemoRoute = router;
+export const BannerRoute = router;

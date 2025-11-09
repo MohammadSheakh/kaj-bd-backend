@@ -1,19 +1,18 @@
 //@ts-ignore
 import { model, Schema } from 'mongoose';
-import { IDemo, IDemoModel } from './demo.interface';
+import { IBanner, IBannerModel } from './banner.interface';
 import paginate from '../../common/plugins/paginate';
 
-
-const demoSchema = new Schema<IDemo>(
+const BannerSchema = new Schema<IBanner>(
   {
-    userId: { //🔗
-      type: Schema.Types.ObjectId,
-      ref: 'User',
-    },
-    message: {
-      type: String,
-      required: [true, 'dateOfBirth is required'],
-    },
+    attachments: 
+    [//🔗🖼️
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Attachment',
+        required: [false, 'attachments is not required'],
+      }
+    ],
     isDeleted: {
       type: Boolean,
       required: [false, 'isDeleted is not required'],
@@ -23,9 +22,9 @@ const demoSchema = new Schema<IDemo>(
   { timestamps: true }
 );
 
-demoSchema.plugin(paginate);
+BannerSchema.plugin(paginate);
 
-demoSchema.pre('save', function (next) {
+BannerSchema.pre('save', function (next) {
   // Rename _id to _projectId
   // this._taskId = this._id;
   // this._id = undefined;  // Remove the default _id field
@@ -35,15 +34,15 @@ demoSchema.pre('save', function (next) {
 });
 
 // Use transform to rename _id to _projectId
-demoSchema.set('toJSON', {
+BannerSchema.set('toJSON', {
   transform: function (doc, ret, options) {
-    ret._demoId = ret._id; // Rename _id to _subscriptionId
+    ret._BannerId = ret._id; // Rename _id to _subscriptionId
     delete ret._id; // Remove the original _id field
     return ret;
   },
 });
 
-export const Demo = model<
-  IDemo,
-  IDemoModel
->('Demo', demoSchema);
+export const Banner = model<
+  IBanner,
+  IBannerModel
+>('Banner', BannerSchema);

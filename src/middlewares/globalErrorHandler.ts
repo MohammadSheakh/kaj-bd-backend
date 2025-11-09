@@ -7,6 +7,13 @@ import { errorLogger } from '../shared/logger';
 import { IErrorMessage } from '../types/errors.types';
 import { config } from '../config';
 import handleCastError from '../errors/handleCastError';
+import handleMulterError from '../errors/handleMulterError';
+//@ts-ignore
+import multer from "multer";
+import handleJWTError from '../errors/handleJWTError';
+import handleAxiosError from '../errors/handleAxiosError';
+import handleSyntaxError from '../errors/handleSyntaxError';
+import handleMongooseServerError from '../errors/handleMongooseServerError';
 
 const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
   // Log error
@@ -41,6 +48,15 @@ const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
     message = simplifiedError.message;
     errorMessages = simplifiedError.errorMessages;
   }
+
+  // ✅ Handle Multer errors (file upload)
+  else if (error instanceof multer.MulterError) {
+    const simplifiedError = handleMulterError(error);
+    code = simplifiedError.code;
+    message = simplifiedError.message;
+    errorMessages = simplifiedError.errorMessages;
+  }
+
   // Handle ValidationError (e.g., Mongoose)
   else if (error.name === 'ValidationError') {
     const simplifiedError = handleValidationError(error);
@@ -59,6 +75,38 @@ const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
       .join(', ')}`;
     errorMessages = simplifiedError.errorMessages;
   }
+   // ✅ JWT token errors
+  else if (
+    error.name === 'JsonWebTokenError' ||
+    error.name === 'TokenExpiredError'
+  ) {
+    const simplifiedError = handleJWTError(error);
+    code = simplifiedError.code;
+    message = simplifiedError.message;
+    errorMessages = simplifiedError.errorMessages;
+  }
+  // ✅ Axios or network errors
+  else if (error.isAxiosError) {
+    const simplifiedError = handleAxiosError(error);
+    code = simplifiedError.code;
+    message = simplifiedError.message;
+    errorMessages = simplifiedError.errorMessages;
+  }
+  // ✅ SyntaxError (invalid JSON in body)
+  else if (error instanceof SyntaxError && 'body' in error) {
+    const simplifiedError = handleSyntaxError(error);
+    code = simplifiedError.code;
+    message = simplifiedError.message;
+    errorMessages = simplifiedError.errorMessages;
+  }
+  // ✅ Mongoose/MongoServerError (general DB failure)
+  else if (error.name === 'MongoServerError') {
+    const simplifiedError = handleMongooseServerError(error);
+    code = simplifiedError.code;
+    message = simplifiedError.message;
+    errorMessages = simplifiedError.errorMessages;
+  }
+
   // Handle ApiError (custom error type)
   else if (error instanceof ApiError) {
     code = error.code;

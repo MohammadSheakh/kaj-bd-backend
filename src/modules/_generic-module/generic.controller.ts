@@ -8,12 +8,7 @@ import { StatusCodes } from 'http-status-codes';
 import { Request, Response} from 'express';
 import { GenericService } from './generic.services';
 import omit from '../../shared/omit';
-import { AttachmentService } from '../attachments/attachment.service';
-import { TFolderName } from '../../enums/folderNames';
 
-// Import your generic service
-
-// Define a generic controller
 export class GenericController<ModelType, InterfaceType> {
   service: GenericService<ModelType, InterfaceType>  
   modelName: string;
@@ -24,9 +19,7 @@ export class GenericController<ModelType, InterfaceType> {
   }
 
   create = catchAsync(async (req: Request, res: Response) => {
-    console.log("ℹ️hit generic controller");
-    
-    const data = req.body;
+    const data:InterfaceType = req.body;
     const result = await this.service.create(data);
 
     sendResponse(res, {
@@ -37,34 +30,6 @@ export class GenericController<ModelType, InterfaceType> {
     });
   });
 
-  createWithAttachments = catchAsync(async (req: Request, res: Response) => {
-    const data = req.body;
-
-    let attachments = [];
-      
-    if (req.files && req.files.attachments) {
-    attachments.push(
-        ...(await Promise.all(
-        req.files.attachments.map(async file => {
-            const attachmenId = await new AttachmentService().uploadSingleAttachment(
-                file, // file to upload 
-                TFolderName.common, // folderName
-            );
-            return attachmenId;
-        })
-        ))
-    );
-    }
-
-    const result = await this.service.create(data);
-
-    sendResponse(res, {
-      code: StatusCodes.OK,
-      data: result,
-      message: `${this.modelName} created successfully`,
-      success: true,
-    });
-  });
 
   // Get all items  //[🚧][🧑‍💻✅][🧪] // 🆗
   getAll = catchAsync(async (req: Request, res: Response) => {
@@ -156,6 +121,32 @@ export class GenericController<ModelType, InterfaceType> {
       code: StatusCodes.OK,
       data: result,
       message: `${this.modelName} retrieved successfully`,
+    });
+  });
+
+  getAllV2 = catchAsync(async (req: Request, res: Response) => {
+
+    // ✅ Default values
+    let populateOptions: (string | { path: string; select: string }[]) = [];
+    let select = '-isDeleted -createdAt -updatedAt -__v';
+
+    // ✅ If middleware provided overrides → use them
+    if (req.queryOptions) {
+      if (req.queryOptions.populate) {
+        populateOptions = req.queryOptions.populate;
+      }
+      if (req.queryOptions.select) {
+        select = req.queryOptions.select;
+      }
+    }
+
+    const result = await this.service.getAllV2(populateOptions, select);
+
+    sendResponse(res, {
+      code: StatusCodes.OK,
+      data: result,
+      message: `All ${this.modelName}s`,
+      success: true,
     });
   });
 

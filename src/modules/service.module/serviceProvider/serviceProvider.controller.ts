@@ -178,6 +178,39 @@ export class ServiceProviderController extends GenericController<
     const result = await this.service.getById(id, populateOptions, select);
 
     const reviews = await Review.find({ serviceProviderDetailsId: id }); // TODO : MUST : 
+
+    const reviewCountPerRating = await Review.aggregate([
+      {
+        $match: {
+          serviceProviderDetailsId: id,
+          isDeleted: false
+        }
+      },
+      {
+        $group: {
+          _id: "$rating",
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          rating: "$_id",
+          count: 1
+        }
+      },
+      {
+        $sort: { rating: 1 } // Sort by rating ascending (1 → 5)
+      }
+    ]);
+
+    // Ensure all ratings (1–5) exist, even if count = 0
+    const fullResult = [1, 2, 3, 4, 5].map(rating => {
+      const found = reviewCountPerRating.find(r => r.rating === rating);
+      return { rating, count: found ? found.count : 0 };
+    });
+
+
     
     if (!result) {
       throw new ApiError(
@@ -190,7 +223,8 @@ export class ServiceProviderController extends GenericController<
       code: StatusCodes.OK,
       data: {
         result,
-        reviews
+        reviews,
+        fullResult
       },
       message: `${this.modelName} retrieved successfully`,
     });
