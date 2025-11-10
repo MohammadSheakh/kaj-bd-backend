@@ -40,9 +40,14 @@ export class UserController extends GenericController<
     });
   });
 
-//---------------------------------
-// Specialist | Get Profile Information as logged in user 
-//---------------------------------
+
+  /** ---------------------------------------------- kaj Bd
+   * @role Admin
+   * @Section Settings
+   * @module |
+   * @figmaIndex 08-01
+   * @desc Get Profile Information as logged in user
+   *----------------------------------------------*/
   getById = catchAsync(async (req: Request, res: Response) => {
     const id = (req.user as IUser).userId;
 
@@ -58,7 +63,7 @@ export class UserController extends GenericController<
       }
     ];
 
-    const select = 'name profileImage';
+    const select = 'name profileImage email phoneNumber';
 
     const result = await this.service.getById(id, populateOptions, select);
 

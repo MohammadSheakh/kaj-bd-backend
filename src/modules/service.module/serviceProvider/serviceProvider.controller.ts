@@ -17,6 +17,8 @@ import { User } from '../../user.module/user/user.model';
 import { defaultExcludes } from '../../../constants/queryOptions';
 import ApiError from '../../../errors/ApiError';
 import { Review } from '../review/review.model';
+//@ts-ignore
+import mongoose from 'mongoose';
 
 //-----------------------------
 // ServiceProvider means Service Provider Details
@@ -159,14 +161,6 @@ export class ServiceProviderController extends GenericController<
 
     // INFO: is it possible to optimize this more ?
     const populateOptions = [
-      // 'providerId',
-      // {
-      //   path: 'profileId',
-      //   select: '-attachments -__v', // TODO MUST : when create profile .. must initiate address and description
-      //   // populate: {
-      //   //   path: 'profileId',
-      //   // }
-      // },
       {
         path: 'providerId',
         select: 'name profileImage',
@@ -182,7 +176,7 @@ export class ServiceProviderController extends GenericController<
     const reviewCountPerRating = await Review.aggregate([
       {
         $match: {
-          serviceProviderDetailsId: id,
+          serviceProviderDetailsId: new mongoose.Types.ObjectId(id),
           isDeleted: false
         }
       },
@@ -204,14 +198,12 @@ export class ServiceProviderController extends GenericController<
       }
     ]);
 
-    // Ensure all ratings (1–5) exist, even if count = 0
+    // Ensure all ratings (1–5) exist, even if count = 0 // 🧮
     const fullResult = [1, 2, 3, 4, 5].map(rating => {
       const found = reviewCountPerRating.find(r => r.rating === rating);
       return { rating, count: found ? found.count : 0 };
     });
 
-
-    
     if (!result) {
       throw new ApiError(
         StatusCodes.NOT_FOUND,
