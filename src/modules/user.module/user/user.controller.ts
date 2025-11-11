@@ -220,6 +220,8 @@ export class UserController extends GenericController<
     const filters =  omit(req.query, ['sortBy', 'limit', 'page', 'populate']); ;
     const options = pick(req.query, ['sortBy', 'limit', 'page', 'populate']);
 
+    /*-------------------------- We done this part in service ..  using matchStage
+
     const query = {};
 
     // Create a copy of filter without isPreview to handle separately
@@ -239,7 +241,9 @@ export class UserController extends GenericController<
       }
     }
 
-    const result = await this.userService.getAllWithAggregationV2(query, options/*, profileFilter*/);
+    */
+
+    const result = await this.userService.getAllWithAggregationV2(filters, /*query,*/ options/*, profileFilter*/);
 
     sendResponse(res, {
       code: StatusCodes.OK,

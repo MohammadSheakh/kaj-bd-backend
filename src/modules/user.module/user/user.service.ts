@@ -461,27 +461,121 @@ export class UserService extends GenericService<typeof User, IUser> {
       // profileFilter: any = {}
     ) {
 
+   /*-----------------------------------------   
+   const matchStage: any = {};
 
+   // TODO : MUST : created At filter add korte hobe ..
+
+    // Dynamically apply filters
+    for (const key in filters) {
+      if (filters[key] !== '' && filters[key] !== null && filters[key] !== undefined) {
+        if (key === 'name') {
+          matchStage[key] = { $regex: filters[key], $options: 'i' }; // Case-insensitive search
+        } else if (Array.isArray(filters[key])) {
+          // Allow multiple values, e.g. role=['admin','user']
+          matchStage[key] = { $in: filters[key] };
+        } else {
+          matchStage[key] = filters[key];
+        }
+      }
+    }
+    --------------------------------------------*/
+
+    const userMatchStage: any = {};
+    userMatchStage.createdAt = {};
+    const roleDataMatchStage: any = {};
+
+    // Dynamically apply filters
+    for (const key in filters) {
+
+      console.log(`key :: [${key}]`);
+      // console.log("filters ::", filters)
+      // console.log("value ::", filters[key])
+
+      const value = filters[key];
+
+      if (value === '' || value === null || value === undefined) continue;
+
+      // --- Match for Users collection ---
+      if (['name', 'email', 'phoneNumber', 'role', '_id', 'from', 'to'].includes(key)) {
+        if (key === 'name') {
+          userMatchStage[key] = { $regex: value, $options: 'i' }; // case-insensitive
+        }  // --- (optional) Handle date filtering ---
+        else if (key.trim() === "from") {
+          userMatchStage.createdAt.$gte = new Date(filters[key]);
+        }
+        else if (key == 'to') {
+          userMatchStage.createdAt.$lte = new Date(filters[key]);
+        }
+        else if (Array.isArray(value)) {
+          userMatchStage[key] = { $in: value };
+        } else {
+          userMatchStage[key] = value;
+        }
+      }
+
+      // --- Match for userroledatas (joined collection) ---
+      else if (key === 'providerApprovalStatus') {
+        if (Array.isArray(value)) {
+          roleDataMatchStage['userRoleDataInfo.providerApprovalStatus'] = { $in: value };
+        } else {
+          roleDataMatchStage['userRoleDataInfo.providerApprovalStatus'] = value;
+        }
+      }
+      
+    }
+
+    if (Object.keys(userMatchStage.createdAt).length === 0) {
+      delete userMatchStage.createdAt;
+    }
+
+    console.log("userMatchStage :: ", userMatchStage)
+   
     // 📈⚙️ OPTIMIZATION:
     const pipeline = [
-        
+      
+      // ✅ Step 1: Filter users before lookup
+      // { $match: matchStage },
+      { $match: userMatchStage },
+
         // Step 2: Lookup profile information
         {
-            $lookup: {
-                from: 'userprofiles', // Collection name (adjust if different)
-                localField: 'profileId',
-                foreignField: '_id',
-                as: 'profileInfo'
-            }
+          $lookup: {
+            from: 'userprofiles', // Collection name (adjust if different)
+            localField: 'profileId',
+            foreignField: '_id',
+            as: 'profileInfo'
+          }
         },
         
         // Step 3: Unwind profile array (convert array to object)
         {
-            $unwind: {
-                path: '$profileInfo',
-                preserveNullAndEmptyArrays: true // Keep users without profiles
-            }
+          $unwind: {
+            path: '$profileInfo',
+            preserveNullAndEmptyArrays: true // Keep users without profiles
+          }
         },
+
+        //--------- look up user role data for providerApprovalStatus -----
+        {
+          $lookup: {
+            from: 'userroledatas', // Collection name (adjust if different)
+            localField: '_id',
+            foreignField: 'userId',
+            as: 'userRoleDataInfo'
+          }
+        },
+        
+        // Step 3: Unwind profile array (convert array to object)
+        {
+          $unwind: {
+            path: '$userRoleDataInfo',
+            preserveNullAndEmptyArrays: true // Keep users without profiles
+          }
+        },
+
+        // ✅ Step 4: Match joined userRoleDataInfo fields
+        ...(Object.keys(roleDataMatchStage).length > 0 ? [{ $match: roleDataMatchStage }] : []),
 
 
         // 2. Lookup front-side certificate attachments
@@ -528,6 +622,7 @@ export class UserService extends GenericService<typeof User, IUser> {
                 // Optionally include other profile fields
                 gender: '$profileInfo.gender',
                 location: '$profileInfo.location',
+                providerApprovalStatus: '$userRoleDataInfo.providerApprovalStatus',  // -------------
                 // frontSideCertificateImage: '$profileInfo.frontSideCertificateImage',
                 // backSideCertificateImage: '$profileInfo.backSideCertificateImage',
                 // faceImageFromFrontCam: '$profileInfo.faceImageFromFrontCam'

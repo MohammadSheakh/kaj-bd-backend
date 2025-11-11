@@ -11,6 +11,7 @@ import validateRequest from '../../../shared/validateRequest';
 const UPLOADS_FOLDER = 'uploads/users';
 const upload = fileUploadHandler(UPLOADS_FOLDER);
 import * as validation from './user.validation';
+import { setRequstFilterAndValue } from '../../../middlewares/setRequstFilterAndValue';
 
 export const optionValidationChecking = <T extends keyof IUser | 'sortBy' | 'page' | 'limit' | 'populate'>(
   filters: T[]
@@ -36,6 +37,7 @@ const controller = new UserController();
 router.route('/paginate').get(
   auth(TRole.admin),
   validateFiltersForQuery(optionValidationChecking(['_id', 'name', 'createdAt', ...paginationOptions])),
+  setRequstFilterAndValue('role', 'user'),
   controller.getAllWithPaginationV2
 );
 
@@ -46,7 +48,10 @@ router.route('/paginate').get(
 //---------------------------------
 router.route('/paginate/for-provider').get(
   auth(TRole.admin),
-  validateFiltersForQuery(optionValidationChecking(['_id', 'name', 'createdAt', ...paginationOptions])),
+  // providerApprovalStatus must pass kora lagbe .. 
+  // from and to is for date range filter
+  validateFiltersForQuery(optionValidationChecking(['_id', 'name', 'email', 'phoneNumber','role', 'providerApprovalStatus', 'from', 'to', ...paginationOptions])),
+  setRequstFilterAndValue('role', 'provider'),
   controller.getAllWithPaginationV3
 );
 
