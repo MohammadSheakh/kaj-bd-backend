@@ -51,7 +51,7 @@ router.route('/paginate/for-provider').get(
   // providerApprovalStatus must pass kora lagbe .. 
   // from and to is for date range filter
   validateFiltersForQuery(optionValidationChecking(['_id', 'name', 'email', 'phoneNumber','role', 'providerApprovalStatus', 'from', 'to', ...paginationOptions])),
-  setRequstFilterAndValue('role', 'provider'),
+  // setRequstFilterAndValue('role', 'provider'),
   controller.getAllWithPaginationV3
 );
 

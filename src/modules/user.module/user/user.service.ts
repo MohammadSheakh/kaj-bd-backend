@@ -488,10 +488,6 @@ export class UserService extends GenericService<typeof User, IUser> {
     // Dynamically apply filters
     for (const key in filters) {
 
-      console.log(`key :: [${key}]`);
-      // console.log("filters ::", filters)
-      // console.log("value ::", filters[key])
-
       const value = filters[key];
 
       if (value === '' || value === null || value === undefined) continue;
@@ -509,6 +505,8 @@ export class UserService extends GenericService<typeof User, IUser> {
         }
         else if (Array.isArray(value)) {
           userMatchStage[key] = { $in: value };
+        }else if (key == '_id') {
+          userMatchStage[key] = new mongoose.Types.ObjectId(value);
         } else {
           userMatchStage[key] = value;
         }
@@ -648,6 +646,12 @@ export class UserService extends GenericService<typeof User, IUser> {
       pipeline,
       options
     );
+
+
+    console.log("res :: ", res)
+
+
+
 
     return {
       // statistics,
