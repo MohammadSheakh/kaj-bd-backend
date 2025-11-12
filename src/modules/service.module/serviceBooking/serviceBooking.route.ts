@@ -65,15 +65,13 @@ router.route('/paginate').get(
 router.route('/paginate/for-admin').get(
   auth(TRole.commonAdmin),
   validateFiltersForQuery(optionValidationChecking(['_id','status', ...paginationOptions])),
-  // getLoggedInUserAndSetReferenceToUser('userId'),
   setQueryOptions({
     populate: [
       { path: 'providerDetailsId', select: 'serviceName rating' },
       { path: 'userId', select: 'name profileImage role phoneNumber' },
       { path: 'providerId', select: 'name profileImage role phoneNumber' },
     ],
-    select: `address bookingDateTime startPrice hasReview status`// address bookingDateTime startPrice
-    // ${defaultExcludes} // also select completion date ... 
+    select: `address bookingDateTime startPrice hasReview status`
   }),
   // service provider er rating show kora lagbe 
   controller.getAllWithPaginationV2
