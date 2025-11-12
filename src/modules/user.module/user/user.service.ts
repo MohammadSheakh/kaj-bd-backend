@@ -342,15 +342,13 @@ export class UserService extends GenericService<typeof User, IUser> {
   //---------------------------------kaj bd
   //  Admin | User Management With Statistics
   //---------------------------------
-  async getAllWithAggregation(
-      filters: any, // Partial<INotification> // FixMe : fix type
+  async getAllWithAggregationWithStatistics(
+      filters: any, 
       options: PaginateOptions,
-      // profileFilter: any = {}
     ) {
 
        // Separate general filters and profile-specific filters
   const generalFilters = omit(filters, ['approvalStatus']); // Exclude profile-specific fields
-  const profileFilter = pick(filters, ['approvalStatus']);  // Extract profile-specific fields
       
     // 📈⚙️ OPTIMIZATION:
     const pipeline = [
@@ -375,17 +373,6 @@ export class UserService extends GenericService<typeof User, IUser> {
             }
         },
 
-        //  { $match: { 'profileInfo.approvalStatus': profileFilter.approvalStatus } },
-    
-
-        // Step 4: Filter by profile approval status if specified
-        // ...(profileFilter.providerApprovalStatus ? [{
-        //     $match: {
-        //         'profileInfo.approvalStatus': profileFilter.providerApprovalStatus
-        //     }
-        // }] : []),
-
-
         // Step 5: Project the required fields
         {
             $project: {
@@ -403,39 +390,28 @@ export class UserService extends GenericService<typeof User, IUser> {
                 location: '$profileInfo.location'
             }
         },
-        
-        // Step 6: Handle users without profiles (set default approval status)
-        // {
-        //     $addFields: {
-        //         approvalStatus: {
-        //             $ifNull: ['$approvalStatus', 'pending'] // Default status for users without profiles
-        //         }
-        //     }
-        // }
     ];
 
-
-
     // 📈⚙️ OPTIMIZATION: Get role-based statistics first
-    // const statisticsPipeline = [
-    //     {
-    //         $group: {
-    //             _id: '$role',
-    //             count: { $sum: 1 }
-    //         }
-    //     }
-    // ];
+    const statisticsPipeline = [
+        {
+            $group: {
+                _id: '$role',
+                count: { $sum: 1 }
+            }
+        }
+    ];
     
     // // Get statistics
-    // const roleStats = await User.aggregate(statisticsPipeline);
+    const roleStats = await User.aggregate(statisticsPipeline);
     
     // // Transform stats into the required format
-    // const statistics = {
-    //     totalUser: roleStats.reduce((sum, stat) => sum + stat.count, 0),
-    //     totalDoctor: roleStats.find(stat => stat._id === 'doctor')?.count || 0,
-    //     totalSpecialist: roleStats.find(stat => stat._id === 'specialist')?.count || 0,
-    //     totalPatient: roleStats.find(stat => stat._id === 'patient')?.count || 0
-    // };
+    const statistics = {
+        totalUser: roleStats.reduce((sum, stat) => sum + stat.count, 0),
+        totalDoctor: roleStats.find(stat => stat._id === 'doctor')?.count || 0,
+        totalSpecialist: roleStats.find(stat => stat._id === 'specialist')?.count || 0,
+        totalPatient: roleStats.find(stat => stat._id === 'patient')?.count || 0
+    };
 
     // Use pagination service for aggregation
      const res =
@@ -446,19 +422,113 @@ export class UserService extends GenericService<typeof User, IUser> {
     );
 
     return {
-      // statistics,
+      statistics,
+      ...res
+    }
+  }
+
+  //---------------------------------kaj bd
+  //  Admin | User Management
+  //---------------------------------
+  async getAllWithAggregation(
+      filters: any, // Partial<INotification> // FixMe : fix type
+      options: PaginateOptions,
+      // profileFilter: any = {}
+    ) {
+
+    const userMatchStage: any = {};
+
+    userMatchStage.createdAt = {};
+
+
+    // Dynamically apply filters
+    for (const key in filters) {
+      const value = filters[key];
+      if (value === '' || value === null || value === undefined) continue;
+      // --- Match for Users collection ---
+      if (['_id', 'from', 'to', 'role', 'name'].includes(key)) {
+        if (key == '_id') {
+          userMatchStage[key] = new mongoose.Types.ObjectId(value);
+        }else if (key.trim() === "from") {
+          userMatchStage.createdAt.$gte = new Date(filters[key]);
+        }
+        else if (key == 'to') {
+          userMatchStage.createdAt.$lte = new Date(filters[key]);
+        }else if (key === 'name') {
+          userMatchStage[key] = { $regex: value, $options: 'i' }; // case-insensitive
+        }
+        else {
+          userMatchStage[key] = value;
+        }
+      }
+    }  
+
+    if (Object.keys(userMatchStage.createdAt).length === 0) {
+      delete userMatchStage.createdAt;
+    }
+
+    // 📈⚙️ OPTIMIZATION:
+    const pipeline = [
+      // ✅ Step 1: Filter users before lookup
+      { $match: userMatchStage },
+
+      // Step 2: Lookup profile information
+      {
+          $lookup: {
+              from: 'userprofiles', // Collection name (adjust if different)
+              localField: 'profileId',
+              foreignField: '_id',
+              as: 'profileInfo'
+          }
+      },
+      
+      // Step 3: Unwind profile array (convert array to object)
+      {
+          $unwind: {
+              path: '$profileInfo',
+              preserveNullAndEmptyArrays: true // Keep users without profiles
+          }
+      },
+
+      // Step 5: Project the required fields
+      {
+          $project: {
+              _id: 1,
+              name: 1,
+              email: 1,
+              phoneNumber: 1,
+              role: 1,
+              profileId: 1,
+              createdAt: 1,
+              // Add approval status from profile
+              dob: '$profileInfo.dob',
+              // Optionally include other profile fields
+              gender: '$profileInfo.gender',
+              location: '$profileInfo.location'
+          }
+      },        
+    ];
+
+    // Use pagination service for aggregation
+     const res =
+      await PaginationService.aggregationPaginate(
+      User, 
+      pipeline,
+      options
+    );
+
+    return {
       ...res
     }
   }
 
 
   //--------------------------------- kaj bd
-  //  Admin | Provider Management With Statistics
+  //  Admin | Provider Management
   //---------------------------------
   async getAllWithAggregationV2(
-      filters: any, // Partial<INotification> // FixMe : fix type
+      filters: any,
       options: PaginateOptions,
-      // profileFilter: any = {}
     ) {
 
    /*-----------------------------------------   

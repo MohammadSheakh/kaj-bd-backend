@@ -32,11 +32,21 @@ const router = express.Router();
 const controller = new UserController();
 
 //--------------------------------- kaj-bd
-// Admin | 03-01 | Get All Users from Users Table 
+// Admin | 02-01 | Get All Users from Users Table With Statistics
 //---------------------------------
 router.route('/paginate').get(
   auth(TRole.admin),
   validateFiltersForQuery(optionValidationChecking(['_id', 'name', 'createdAt', ...paginationOptions])),
+  setRequstFilterAndValue('role', 'user'),
+  controller.getAllWithPaginationV2WithStatistics
+);
+
+//--------------------------------- kaj-bd
+// Admin | 03-01 | Get All Users from Users Table
+//---------------------------------
+router.route('/paginate/for-user').get(
+  auth(TRole.admin),
+  validateFiltersForQuery(optionValidationChecking(['_id', 'name', 'createdAt', 'from', 'to', ...paginationOptions])),
   setRequstFilterAndValue('role', 'user'),
   controller.getAllWithPaginationV2
 );
@@ -44,7 +54,7 @@ router.route('/paginate').get(
 // TODO : MUST : Get all providers who are not approved .. 
 
 //--------------------------------- kaj-bd
-// Admin | 03-01 | Get All Users from Users Table 
+// Admin | 04-01 | Get All Providers from Users Table 
 //---------------------------------
 router.route('/paginate/for-provider').get(
   auth(TRole.admin),

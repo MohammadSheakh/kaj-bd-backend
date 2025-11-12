@@ -167,6 +167,7 @@ export class UserController extends GenericController<
     });
   });
 
+
   //---------------------------------
   // 🥇 This Is for User Pagination
   //---------------------------------
@@ -174,9 +175,23 @@ export class UserController extends GenericController<
     const filters =  omit(req.query, ['sortBy', 'limit', 'page', 'populate']); ;
     const options = pick(req.query, ['sortBy', 'limit', 'page', 'populate']);
 
-    // Pass approvalStatus filter separately for profile filtering
-    // const profileFilter = req.query.approvalStatus ? { approvalStatus: req.query.approvalStatus } : {};
+    const result = await this.userService.getAllWithAggregation(filters, options);
 
+    sendResponse(res, {
+      code: StatusCodes.OK,
+      data: result,
+      message: `All ${this.modelName} with pagination`,
+      success: true,
+    });
+  });
+
+  //---------------------------------
+  // 🥇 This Is for User Pagination
+  //---------------------------------
+  getAllWithPaginationV2WithStatistics = catchAsync(async (req: Request, res: Response) => {
+    const filters =  omit(req.query, ['sortBy', 'limit', 'page', 'populate']); ;
+    const options = pick(req.query, ['sortBy', 'limit', 'page', 'populate']);
+    
     const query = {};
 
     // Create a copy of filter without isPreview to handle separately
@@ -198,10 +213,7 @@ export class UserController extends GenericController<
 
     const select = 'name email phoneNumber createdAt'; 
 
-    // const result = await this.service.getAllWithPagination(query, options, populateOptions , select );
-
-    const result = await this.userService.getAllWithAggregation(query, options/*, profileFilter*/);
-
+    const result = await this.userService.getAllWithAggregationWithStatistics(query, options/*, profileFilter*/);
 
     sendResponse(res, {
       code: StatusCodes.OK,
