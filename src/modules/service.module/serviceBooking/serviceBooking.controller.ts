@@ -315,5 +315,38 @@ export class ServiceBookingController extends GenericController<
     });
   })
 
+  getWithAdditionalCostsForAdmin = catchAsync(async (req: Request, res: Response) => {
+    const loggedInUser = (req.user as IUser);
+    // const result = await this.service.getWithAdditionalCosts(req.params.id, loggedInUser);
+
+    const serviceBooking = await ServiceBooking.findById(req.params.id).select(defaultExcludes).populate([
+        {
+          path: 'userId',
+          select: 'name profileImage'
+        },  
+        {
+          path: 'providerId',
+          select: 'name profileImage'
+        },
+        {
+          path: 'attachments',
+          select: 'attachment'
+        },
+      ]
+    ); // its booking id
+    const additionalCosts = await AdditionalCost.find({
+      serviceBookingId: req.params.id
+    }).select(defaultExcludes);
+
+    sendResponse(res, {
+      code: StatusCodes.OK,
+      data: {
+        serviceBooking,
+        additionalCosts,
+      },
+      message: `${this.modelName} updated successfully`,
+    });
+  })
+
   // add more methods here if needed or override the existing ones 
 }

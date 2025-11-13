@@ -121,18 +121,15 @@ router.route('/with-costs-summary/:id').get(
   // controller.getById
   controller.getWithAdditionalCosts
 );
-/*
-router.route('/:id').get(
-  auth(TRole.user),
-  setQueryOptions({
-    populate: [],
-    select: `startPrice address bookingDateTime status paymentTransactionId`
-    // ${defaultExcludes}
-  }),
-  // controller.getById
-  controller.getByIdV2
+
+//-------------------------------------------
+// Admin | 06-03 bookings | show details of service booking With Cost Summary If Completed 
+//-------------------------------------------
+router.route('/with-costs-summary/for-admin/:id').get(
+  auth(TRole.commonAdmin),
+  controller.getWithAdditionalCostsForAdmin
 );
-*/
+
 
 //-------------------------------------------
 // Provider | 03-05 Home | get booking details with user  information
