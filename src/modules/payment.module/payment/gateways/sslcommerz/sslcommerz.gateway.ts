@@ -77,7 +77,7 @@ export class SSLGateway implements PaymentGateway {
             // }
 
             finalAmount = isBookingExist.startPrice;
-
+            
             console.log('finalAmount :: ', finalAmount);
 
             const additionalCosts : IAdditionalCost | null = await AdditionalCost.find({

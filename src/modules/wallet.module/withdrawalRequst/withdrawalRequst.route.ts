@@ -53,13 +53,12 @@ router.route('/paginate').get(
 
 
 //---------------------------------
-// Admin | 07-01 Show All Withdraw Request .. which status is requested
+// Admin | 07-01 Show All Withdraw Request .. which status is requested .. filter by from and to date
 //---------------------------------
-// TODO : MUST :  last month and last 3 month filter add korte hobe  
 router.route('/paginate/for-admin').get(
   auth(TRole.admin),
-  validateFiltersForQuery(optionValidationChecking(['_id', 'status', ...paginationOptions])),
-  // setRequstFilterAndValue('status', TWithdrawalRequst.requested), // requested 
+  validateFiltersForQuery(optionValidationChecking(['_id', 'status', 'from', 'to', ...paginationOptions])),
+  // setRequstFilterAndValue('status', TWithdrawalRequst.requested), // requested
   setQueryOptions({
     populate: [
       { path: 'proofOfPayment', select: 'attachment', /* populate: { path : ""} */ },

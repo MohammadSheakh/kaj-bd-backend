@@ -14,6 +14,7 @@ export enum TNotificationType {
     // SubscriptionPlan = 'SubscriptionPlan',
     serviceBooking = 'serviceBooking',
     withdrawal = 'withdrawal',
+    rejectWithdrawal = 'rejectWithdrawal',
     payment = 'payment',
     system = 'system',
     newUser = 'newUser'

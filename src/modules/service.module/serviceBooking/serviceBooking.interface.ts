@@ -29,6 +29,8 @@ export interface IServiceBooking {
   // otherPartsPrice: number;
   totalCost: number;
 
+  adminPercentageOfStartPrice : number;
+
   hasReview: Boolean;
 
   paymentTransactionId?: Types.ObjectId;

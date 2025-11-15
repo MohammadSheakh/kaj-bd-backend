@@ -21,6 +21,8 @@ import mongoose from 'mongoose';
 import { UserProvider } from '../../userProvider/userProvider.model';
 import { IAdditionalCost } from '../additionalCost/additionalCost.interface';
 import { AdditionalCost } from '../additionalCost/additionalCost.model';
+import { AdminPercentage } from '../../adminPercentage/adminPercentage.model';
+import { IAdminPercentage } from '../../adminPercentage/adminPercentage.interface';
 
 // const serviceProviderService = new ServiceProviderService();
 
@@ -80,6 +82,10 @@ export class ServiceBookingService extends GenericService<
       providerId: data.providerId
     });
 
+    const adminPercentage:IAdminPercentage = await AdminPercentage.findOne({
+      isDeleted: false,
+    });
+
     if (!serviceProviderData) {
       throw new ApiError(StatusCodes.BAD_REQUEST, 'No service provider details found for selected service');
     }
@@ -122,6 +128,7 @@ export class ServiceBookingService extends GenericService<
     // check in this booking time is available or not .. 
     //------------------------------------  we create another endpoint for that 
 
+  
     //⚠️ TODO : need Interface Segregation Principle (ISP)
     const serviceBookingDTO:IServiceBooking = {
       address: addressObj,
@@ -137,6 +144,7 @@ export class ServiceBookingService extends GenericService<
       paymentTransactionId : null,
       paymentStatus: TPaymentStatus.unpaid,
       paymentMethod: null,
+      adminPercentageOfStartPrice: serviceProviderData.startPrice * (parseInt(adminPercentage?.percentage) / 100)
     }
 
     console.log('serviceBookingDTO', serviceBookingDTO);

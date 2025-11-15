@@ -63,6 +63,7 @@ const WithdrawalRequstSchema = new Schema<IWithdrawalRequst>(
         TWithdrawalRequst.failed,
         TWithdrawalRequst.processing,
         TWithdrawalRequst.requested,
+        TWithdrawalRequst.rejected,
       ],
     },
     proofOfPayment:[//🔗🖼️

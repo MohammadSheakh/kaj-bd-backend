@@ -106,6 +106,13 @@ const ServiceBookingSchema = new Schema<IServiceBooking>(
       required: [false, 'Total cost is not required'],
       min: 0,
     },
+
+    adminPercentageOfStartPrice: { // required true or false .. need to think 
+      type: Number,
+      required: [false, 'Admin percentage is not required'],
+      min: 0,
+    },
+
     //--------------------
     paymentTransactionId: { //🔗 Same as PaymentId of kappes
       type: Schema.Types.ObjectId,

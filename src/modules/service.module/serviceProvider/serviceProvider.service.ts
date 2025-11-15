@@ -19,10 +19,13 @@ export class ServiceProviderService extends GenericService<
   detailsAndNIDImagesFromUserProfile = async (userProfileId: string) => {
     const serviceProvider = await ServiceProvider.findOne({
       providerId: userProfileId,
-    }).select('serviceName yearsOfExperience startPrice').populate({
+    })
+    .select('serviceName yearsOfExperience startPrice introOrBio description')
+    .populate({
       path: "serviceCategoryId",
       select: "name"
-    }).lean();
+    })
+    .lean();
 
     console.log('serviceProvider: ', serviceProvider);
 

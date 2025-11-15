@@ -19,6 +19,7 @@ import { ContactUsRoute } from '../modules/settings.module/contactUs/contactUs.r
 import { SettingsRoutes } from '../modules/settings.module/settings/settings.routes';
 import { AdditionalCostRoute } from '../modules/service.module/additionalCost/additionalCost.route';
 import { BannerRoute } from '../modules/banner/banner.route';
+import { AdminPercentageRoute } from '../modules/adminPercentage/adminPercentage.route';
 
 // import { ChatRoutes } from '../modules/chat/chat.routes';
 // import { MessageRoutes } from '../modules/message/message.routes';
@@ -73,7 +74,11 @@ const apiRoutes = [
   //   route: DoctorPatientScheduleBookingRoute,
   // },
 
-  ///////////////////////////////////////////// Person Relationships
+  ///////////////////////////////////////////// Admin Percentage
+  {
+    path: '/admin-percentage',
+    route: AdminPercentageRoute,
+  },
   
   ///////////////////////////////////////////// Service Booking
   {

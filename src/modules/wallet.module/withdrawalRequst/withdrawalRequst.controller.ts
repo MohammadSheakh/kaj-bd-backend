@@ -13,7 +13,7 @@ import sendResponse from '../../../shared/sendResponse';
 import { BankInfo } from '../bankInfo/bankInfo.model';
 import { Wallet } from '../wallet/wallet.model';
 import { IWallet } from '../wallet/wallet.interface';
-import { TWithdrawalRequst } from './withdrawalRequst.constant';
+import { TRequstStatus, TWithdrawalRequst } from './withdrawalRequst.constant';
 import { processFiles } from '../../../helpers/processFilesToUpload';
 import { TFolderName } from '../../../enums/folderNames';
 import { User } from '../../user.module/user/user.model';
@@ -169,8 +169,39 @@ export class WithdrawalRequstController extends GenericController<
       });
     }
 
-    // console.log("proofOfPayment 👈", proofOfPayment);
-    // console.log("proofOfPayment 👈 type of :: ", typeof proofOfPayment);
+    if(req.body.status.toString() === TRequstStatus.reject.toString()){
+
+      //------------------------------------
+      // Send Notification to Provider that a withdrawal request is rejected
+      //------------------------------------
+      await enqueueWebNotification(
+        `$${withdrawalRequst.requestedAmount} Withdrawal request is rejected by admin`,
+        (req?.user as IUser)?.userId as string, // senderId
+        withdrawalRequst.userId, // receiverId
+        null, // receiverRole
+        TNotificationType.rejectWithdrawal, // type // 🎨 this is for wallet page routing
+        null, // id of type 
+        null, // linkFor 
+        null, // linkId
+      );
+
+      withdrawalRequst.status = TWithdrawalRequst.rejected;
+      withdrawalRequst.processedAt = new Date();
+
+      // TODO : FEAT : admin can also add a simple note .. which shows why he reject this request .. for better user experience
+
+      const updated =  await withdrawalRequst.save();
+
+      return sendResponse(res, {
+        code: StatusCodes.OK,
+        data: null,
+        message: `${this.modelName} is rejected`,
+        success: true,
+      });
+    }
+
+
+    console.log("⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡")
 
     withdrawalRequst.proofOfPayment = proofOfPayment[0];
     withdrawalRequst.status = TWithdrawalRequst.completed;
@@ -284,6 +315,43 @@ export class WithdrawalRequstController extends GenericController<
         result,
         walletAmount
       },
+      message: `All ${this.modelName} with pagination`,
+      success: true,
+    });
+  });
+
+  //---------------------------------
+  //  Admin | Get all withdrawal Requst Within From To created date  
+  //---------------------------------
+  getAllWithPaginationV2 = catchAsync(async (req: Request, res: Response) => {
+    //const filters = pick(req.query, ['_id', 'title']); // now this comes from middleware in router
+    const filters =  omit(req.query, ['sortBy', 'limit', 'page', 'populate']);
+    const options = pick(req.query, ['sortBy', 'limit', 'page', 'populate']);
+
+    // ✅ Default values
+    let populateOptions: (string | { path: string; select: string }[]) = [];
+    let select = '-isDeleted -createdAt -updatedAt -__v';
+
+    // ✅ If middleware provided overrides → use them
+    if (req.queryOptions) {
+      if (req.queryOptions.populate) {
+        populateOptions = req.queryOptions.populate;
+      }
+      if (req.queryOptions.select) {
+        select = req.queryOptions.select;
+      }
+    }
+
+    filters.createdAt = {
+      $gte: req.body.from,
+      $lte: req.body.to
+    }
+
+    const result = await this.service.getAllWithPagination(filters, options, populateOptions , select );
+
+    sendResponse(res, {
+      code: StatusCodes.OK,
+      data: result,
       message: `All ${this.modelName} with pagination`,
       success: true,
     });

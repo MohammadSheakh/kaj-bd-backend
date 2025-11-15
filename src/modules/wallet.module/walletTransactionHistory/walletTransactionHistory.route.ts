@@ -32,23 +32,27 @@ const paginationOptions: Array<'sortBy' | 'page' | 'limit' | 'populate'> = [
 // const taskService = new TaskService();
 const controller = new WalletTransactionHistoryController();
 
-//---------------------------------
-// Specialist | get all transaction history with wallet balance 
-//---------------------------------
 router.route('/paginate').get(
   auth(TRole.provider),
   validateFiltersForQuery(optionValidationChecking(['_id', 'walletId', ...paginationOptions])),
   controller.getAllWithPagination
 );
 
+
+/** ---------------------------------------------- Suplify , Kaj Bd
+ * @role Service Provider
+ * @Section Profile -> Wallet
+ * @module Wallet | Wallet Transaction History
+ * @figmaIndex 06-05
+ * @desc 
+ * 
+ *----------------------------------------------*/
 router.route('/paginate-with-wallet').get(
   auth(TRole.provider),
   validateFiltersForQuery(optionValidationChecking(['_id', 'walletId', ...paginationOptions])),
   getLoggedInUserAndSetReferenceToUser('userId'),
   setQueryOptions({ // this will work on transaction history
-    populate: [
-      { path: 'attachments', select: 'attachment' },
-    ],
+    populate: [],
     select: '-isDeleted -createdAt -updatedAt'
   }),
   controller.getAllWithWallet

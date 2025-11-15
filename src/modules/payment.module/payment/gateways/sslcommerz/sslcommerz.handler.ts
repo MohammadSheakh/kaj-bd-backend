@@ -91,6 +91,8 @@ export const validateAfterSuccessfulTransaction = async (req: Request, res: Resp
             gatewayResponse: sslData,
         });
 
+        console.log("newPayment :: -> ", newPayment);
+
         // Update LabTestBooking
         const updatedBooking :IServiceBooking =  await ServiceBooking.findByIdAndUpdate(referenceId, {
             $set: {
@@ -101,13 +103,17 @@ export const validateAfterSuccessfulTransaction = async (req: Request, res: Resp
             }
         });
 
+        console.log("updatedBooking :: -> ", updatedBooking);
+
         let startPrice :number = parseInt(updatedBooking?.startPrice); // TODO : MUST : Fix korte hobe 
-        let tenPercentOfStartPrice:number = parseFloat(startPrice) * 0.1;
+        console.log("startPrice :: -> ", startPrice);
+        let adminsPercentOfStartPrice:number = parseFloat(updatedBooking?.adminPercentageOfStartPrice);
 
-        // TODO : MUST : Wallet e koto percent taka add korte hobe provider er jonno sheta calculate korte hobe
+        console.log("adminsPercentOfStartPrice :: -> ", adminsPercentOfStartPrice);
 
-        let finalAmountToAddProvidersWallet : number = parseFloat(amount) - parseFloat(tenPercentOfStartPrice);
+        let finalAmountToAddProvidersWallet : number = parseFloat(amount) - parseFloat(adminsPercentOfStartPrice);
 
+        console.log("finalAmountToAddProvidersWallet :: -> ", finalAmountToAddProvidersWallet);
     
         const wallet : IWallet = await Wallet.findOne({ userId:updatedBooking.providerId });
         const balanceBeforeTransaction = wallet.amount;
@@ -118,12 +124,14 @@ export const validateAfterSuccessfulTransaction = async (req: Request, res: Resp
         const updatedWallet :IWallet = await Wallet.findOneAndUpdate(
             { userId:updatedBooking.providerId },
             { $inc: { 
-                amount: parseFloat(finalAmountToAddProvidersWallet),
-                totalBalance: parseFloat(amount)
+                    amount: parseFloat(finalAmountToAddProvidersWallet),
+                    totalBalance: parseFloat(amount)
                 } 
             },
             { new: true }
         );
+
+        console.log("updatedWallet :: -> ", updatedWallet);
 
 
         // also create wallet transaction history for provider
@@ -187,7 +195,7 @@ export const validateAfterSuccessfulTransaction = async (req: Request, res: Resp
 
         // Redirect to success page
         // res.redirect(`${config.frontend.url}/payment/success?booking_id=${referenceId}`);
-        res.redirect(`http://localhost:6733/`);
+        res.redirect(`http://localhost:6737/`);
         
     } catch (error) {
         console.error('SSL Success Handler Error:', error);
