@@ -28,6 +28,7 @@ import { TCurrency } from '../../../enums/payment';
 import omit from '../../../shared/omit';
 import pick from '../../../shared/pick';
 import { TTransactionFor } from '../../../constants/TTransactionFor';
+import ApiError from '../../../errors/ApiError';
 
 export class WithdrawalRequstController extends GenericController<
   typeof WithdrawalRequst,
@@ -342,10 +343,32 @@ export class WithdrawalRequstController extends GenericController<
       }
     }
 
-    filters.createdAt = {
-      $gte: req.body.from,
-      $lte: req.body.to
+    // filters.createdAt = {
+    //   $gte: new Date(req.body.from),
+    //   $lte: new Date(req.body.to)
+    // }
+
+    if (req.query.from && req.query.to) {
+      // const from = `${req.query.from}T00:00:00.000Z`;
+      // const to   = `${req.query.to}T23:59:59.999Z`;
+
+      const fromDate = new Date(req.query.from);
+      const toDate = new Date(req.query.to);
+
+      if (isNaN(fromDate.getTime()) || isNaN(toDate.getTime())) {
+        throw new ApiError(400, "Invalid date format. Use YYYY-MM-DD");
+      }
+
+      filters.createdAt = {
+        $gte: fromDate,
+        $lte: toDate
+      };
     }
+
+    delete filters.from;
+    delete filters.to;
+
+    console.log(filters);
 
     const result = await this.service.getAllWithPagination(filters, options, populateOptions , select );
 

@@ -9,14 +9,14 @@ const paginate = <T>(schema: Schema<T>) => {
     filter: FilterQuery<T>,
     options: PaginateOptions,
     populateOptions?: string[] | PopulateOption[], // any,
-    dontWantToInclude?: string | string[]
+    selectFields?: string | string[]
   ): Promise<PaginateResult<T>> {
     const limit = options.limit ?? 10; // ?? 10 //  Number.MAX_SAFE_INTEGER
     const page = options.page ?? 1;
     const skip = (page - 1) * limit;
     const sort = options.sortBy ?? 'createdAt';
     const countPromise = this.countDocuments(filter).exec();
-    let query = this.find(filter).select(dontWantToInclude).sort(sort).skip(skip).limit(limit);
+    let query = this.find(filter).select(selectFields).sort(sort).skip(skip).limit(limit);
     // TODO : This gives us exact Match .. we have to add partial match ..
 
     if (populateOptions && populateOptions.length > 0) {

@@ -40,12 +40,15 @@ const auth = (...roles: TRole[]/******** Previously it was string[] */) =>
       if (!user) {
         throw new ApiError(StatusCodes.BAD_REQUEST, 'User not found.');
       } 
-      else if (!user.isEmailVerified) {
-        throw new ApiError(
-          StatusCodes.BAD_REQUEST,
-          'Your account is not email verified. please verify your email'
-        );
-      } // TODO : MUST FIX for Kaj Bd 
+      //------------------- As per khairul vai .. he is not designed this verification page .. 
+      // else if (!user.isEmailVerified) {
+      //   throw new ApiError(
+      //     StatusCodes.BAD_REQUEST,
+      //     'Your account is not email verified. please verify your email'
+      //   );
+      // } 
+      
+      // TODO : MUST FIX for Kaj Bd 
       // else if (user.role !== 'patient' && userProfile.approvalStatus == TApprovalStatus.pending){
       //     throw new ApiError(
       //     StatusCodes.BAD_REQUEST,

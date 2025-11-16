@@ -62,6 +62,9 @@ export class GenericService<ModelType, InterfaceType> {
     populateOptions?: any,
     select ? : string | string[]
   ) {
+
+    console.log('Service received filters:', JSON.stringify(filters, null, 2));
+
     const result = await this.model.paginate(filters, options, populateOptions, select);
     
     return result;
