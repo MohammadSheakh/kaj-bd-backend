@@ -13,6 +13,7 @@ import { setRequstFilterAndValue } from '../../../middlewares/setRequstFilterAnd
 import { TWithdrawalRequst } from './withdrawalRequst.constant';
 import { setQueryOptions } from '../../../middlewares/setQueryOptions';
 import { getLoggedInUserAndSetReferenceToUser } from '../../../middlewares/getLoggedInUserAndSetReferenceToUser';
+import { filterByDateRange } from '../../../middlewares/filterByDateRange';
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
@@ -58,7 +59,7 @@ router.route('/paginate').get(
 router.route('/paginate/for-admin').get(
   auth(TRole.admin),
   validateFiltersForQuery(optionValidationChecking(['_id', 'status', 'from', 'to', ...paginationOptions])),
-  // setRequstFilterAndValue('status', TWithdrawalRequst.requested), // requested
+  filterByDateRange(),
   setQueryOptions({
     populate: [
       { path: 'proofOfPayment', select: 'attachment', /* populate: { path : ""} */ },

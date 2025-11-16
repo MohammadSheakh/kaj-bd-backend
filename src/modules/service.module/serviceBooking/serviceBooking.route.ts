@@ -16,6 +16,7 @@ import { checkLoggedInUsersPermissionToManipulateModel } from '../../../middlewa
 import { checkProviderCanAcceptBooking, checkProviderCanCancelBooking, checkProviderCanMakeInProgressOfThisBooking, checkProviderCanMakeRequestForPaymentOfThisBooking, checkUserCanCancelBooking, imageUploadPipelineForUpdateServiceBooking, imageUploadPipelineForUpdateServiceCategory } from './serviceBooking.middleware';
 import { allowOnlyFields } from '../../../middlewares/allowOnlyFields';
 import { TBookingStatus } from './serviceBooking.constant';
+import { filterByDateRange } from '../../../middlewares/filterByDateRange';
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
@@ -64,7 +65,8 @@ router.route('/paginate').get(
 //-------------------------------------------
 router.route('/paginate/for-admin').get(
   auth(TRole.commonAdmin),
-  validateFiltersForQuery(optionValidationChecking(['_id','status', ...paginationOptions])),
+  validateFiltersForQuery(optionValidationChecking(['_id','status', 'from', 'to', ...paginationOptions])),
+  filterByDateRange(),
   setQueryOptions({
     populate: [
       { path: 'providerDetailsId', select: 'serviceName rating' },

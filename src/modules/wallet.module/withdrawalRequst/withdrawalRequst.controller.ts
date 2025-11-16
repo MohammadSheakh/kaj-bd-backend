@@ -321,6 +321,7 @@ export class WithdrawalRequstController extends GenericController<
     });
   });
 
+  /*------------------------------------------------------
   //---------------------------------
   //  Admin | Get all withdrawal Requst Within From To created date  
   //---------------------------------
@@ -342,18 +343,26 @@ export class WithdrawalRequstController extends GenericController<
         select = req.queryOptions.select;
       }
     }
+    console.log(filters);
+    const result = await this.service.getAllWithPagination(filters, options, populateOptions , select );
 
-    // filters.createdAt = {
-    //   $gte: new Date(req.body.from),
-    //   $lte: new Date(req.body.to)
-    // }
+    sendResponse(res, {
+      code: StatusCodes.OK,
+      data: result,
+      message: `All ${this.modelName} with pagination`,
+      success: true,
+    });
+  });
+  -------------------------------------------------------*/
 
+  /*----------------------------------- for getAllWithPaginationV2 ...  we add this thing to middleware
+    
     if (req.query.from && req.query.to) {
-      // const from = `${req.query.from}T00:00:00.000Z`;
-      // const to   = `${req.query.to}T23:59:59.999Z`;
+      const from = `${req.query.from}T00:00:00.000Z`;
+      const to   = `${req.query.to}T23:59:59.999Z`;
 
-      const fromDate = new Date(req.query.from);
-      const toDate = new Date(req.query.to);
+      const fromDate = new Date(from);
+      const toDate = new Date(to);
 
       if (isNaN(fromDate.getTime()) || isNaN(toDate.getTime())) {
         throw new ApiError(400, "Invalid date format. Use YYYY-MM-DD");
@@ -368,17 +377,7 @@ export class WithdrawalRequstController extends GenericController<
     delete filters.from;
     delete filters.to;
 
-    console.log(filters);
-
-    const result = await this.service.getAllWithPagination(filters, options, populateOptions , select );
-
-    sendResponse(res, {
-      code: StatusCodes.OK,
-      data: result,
-      message: `All ${this.modelName} with pagination`,
-      success: true,
-    });
-  });
+    ---------------------------------------*/
 
 
   // add more methods here if needed or override the existing ones 
