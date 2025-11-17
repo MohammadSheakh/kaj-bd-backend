@@ -28,6 +28,10 @@ import { ICreateUser } from './auth.constants';
 import { UserRoleDataService } from '../user.module/userRoleData/userRoleData.service';
 import { TProviderApprovalStatus } from '../user.module/userRoleData/userRoleData.constant';
 import { IUser } from '../user.module/user/user.interface';
+import { IServiceProvider } from '../service.module/serviceProvider/serviceProvider.interface';
+import { ServiceProvider } from '../service.module/serviceProvider/serviceProvider.model';
+import { IUserRoleData } from '../user.module/userRoleData/userRoleData.interface';
+import { UserRoleData } from '../user.module/userRoleData/userRoleData.model';
 const eventEmitterForUpdateUserProfile = new EventEmitter(); // functional way
 const eventEmitterForCreateWallet = new EventEmitter();
 
@@ -168,7 +172,7 @@ const login = async (email: string,
   fcmToken? : string,
   deviceInfo?: { deviceType?: string, deviceName?: string }
 ) => {
-  const user = await User.findOne({ email }).select('+password');
+  const user:IUser = await User.findOne({ email }).select('+password');
   if (!user) {
     throw new ApiError(StatusCodes.UNAUTHORIZED, 'Invalid credentials');
   }
@@ -260,9 +264,47 @@ const login = async (email: string,
     
   -------------------*/
 
+  let isServiceProviderDetailsFound : boolean = false;
+  if(user.role == TRole.provider){
+    console.log("user.role == provider");
+    const serviceProviderDetails : IServiceProvider | null = await ServiceProvider.findOne({
+      providerId : user._id,
+    })
+    
+    if(serviceProviderDetails){
+      isServiceProviderDetailsFound = true;
+    }
+  }
+
+  let providerApprovalStatusFromUsersRoleData = null
+
+  let usersRoleData : IUserRoleData | null = await UserRoleData.findOne({
+    userId :  user._id,
+  }).select("providerApprovalStatus");
+
+  if(usersRoleData){
+    providerApprovalStatusFromUsersRoleData = usersRoleData.providerApprovalStatus;
+  }
+
+  if(providerApprovalStatusFromUsersRoleData == TProviderApprovalStatus.reject){
+    throw new ApiError(StatusCodes.FORBIDDEN, 'Admin rejected this profile.');
+  }
+
+  if(providerApprovalStatusFromUsersRoleData == TProviderApprovalStatus.requested){
+    throw new ApiError(StatusCodes.FORBIDDEN, 'Please Wait For Admins Approval.');
+  }
+
+  // approval status pending or approved hoile login korte parbe ..
+  // register korar pore pending thakbe .. karon .. jate providerDetailsForm Fill up 
+  // korte pare .. 
+  // providerDetailsForm Fill up korle .. approvalStatus "requested" hoye jabe ..
+  // er pore provider ar login korte parbe na .. etai hocche flow .. 
+
   return {
     userWithoutPassword,
     tokens,
+    isServiceProviderDetailsFound,
+    providerApprovalStatusFromUsersRoleData
   };
 };
 

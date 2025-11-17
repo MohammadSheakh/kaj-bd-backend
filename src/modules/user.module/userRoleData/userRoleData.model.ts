@@ -24,7 +24,8 @@ const UserRoleDataSchema = new Schema<IUserRoleData>(
       enum: [
         TProviderApprovalStatus.accept,
         TProviderApprovalStatus.reject,
-        TProviderApprovalStatus.pending
+        TProviderApprovalStatus.pending,
+        TProviderApprovalStatus.requested,
       ],
     },
     approvedAt: {

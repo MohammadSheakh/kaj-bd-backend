@@ -8,4 +8,5 @@ export enum TProviderApprovalStatus {
   accept = 'accept',
   reject = 'reject',
   pending = 'pending',
+  requested = 'requested'
 }

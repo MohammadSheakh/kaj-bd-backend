@@ -33,6 +33,9 @@ import {
 import { TWalletTransactionHistory, TWalletTransactionStatus } from '../../wallet.module/walletTransactionHistory/walletTransactionHistory.constant';
 import { TRole } from '../../../middlewares/roles';
 import { Banner } from '../../banner/banner.model';
+import { IServiceProvider } from '../../service.module/serviceProvider/serviceProvider.interface';
+import { UserRoleData } from '../userRoleData/userRoleData.model';
+import { IUserRoleData } from '../userRoleData/userRoleData.interface';
 
 
 interface IAdminOrSuperAdminPayload {
@@ -731,43 +734,40 @@ export class UserService extends GenericService<typeof User, IUser> {
     }
   }
 
+  /*--------------------
+  suplify, kaj bd :: 
+  ---------------------*/
   async changeApprovalStatusByUserId(userId: string, approvalStatus: string): Promise<any> {
     
-    const populateOptions = 
-    [
+    let usersRoleData : IUserRoleData | null = await UserRoleData.findOne({
+      userId,
+    }).select("providerApprovalStatus");
+
+    let serviceProviderDetails : IServiceProvider | null = await ServiceProvider.findOne({
+      providerId : userId,
+    }).select("providerApprovalStatus");
+
+    console.log("usersRoleData : ", usersRoleData);
+    console.log("serviceProvidesDetails : ", serviceProviderDetails);
+
+    let updateRoleData = await UserRoleData.findByIdAndUpdate(
+      usersRoleData?._id,
       {
-        path: 'profileId',
-        select: 'approvalStatus attachments',
+        providerApprovalStatus : approvalStatus
       }
-    ];
-
-    const select = 'name email profileImage role profileId';
-
-    // Find the user by ID
-    const user = await this.getById(userId, populateOptions, select);
-    if (!user) {
-      throw new ApiError(StatusCodes.NOT_FOUND, 'User not found');
-    }
-
-    // Ensure the user has a profileId
-    if (!user.profileId) {
-      throw new ApiError(StatusCodes.BAD_REQUEST, 'User does not have an associated profile');
-    }
-
-    // Update the approvalStatus in the UserProfile
-    const updatedProfile = await UserProfile.findByIdAndUpdate(
-      user.profileId,
-      { approvalStatus },
-      { new: true }
     );
 
-    user.profileId = updatedProfile
+    let updateServiceProviderDetails = await ServiceProvider.findByIdAndUpdate(
+      serviceProviderDetails?._id,
+      {
+        providerApprovalStatus : approvalStatus
+      }
+    );
 
-    if (!updatedProfile) {
-      throw new ApiError(StatusCodes.NOT_FOUND, 'User profile not found');
-    }
-
-    return user//updatedProfile;
+    return {
+      updateRoleData,
+      updateServiceProviderDetails
+    };
   }
 
 

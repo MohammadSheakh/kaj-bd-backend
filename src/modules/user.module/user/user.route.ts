@@ -91,7 +91,7 @@ router.route('/profile/for-admin').get(
 //---------------------------------
 router.route('/change-approval-status').put(
   auth(TRole.admin),
-  validateRequest(validation.changeApprovalStatusValidationSchema),
+  // validateRequest(validation.changeApprovalStatusValidationSchema),
   controller.changeApprovalStatusByUserId
 )
 
