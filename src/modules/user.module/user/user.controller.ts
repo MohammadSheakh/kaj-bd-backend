@@ -213,7 +213,7 @@ export class UserController extends GenericController<
 
     const select = 'name email phoneNumber createdAt'; 
 
-    const result = await this.userService.getAllWithAggregationWithStatistics(query, options/*, profileFilter*/);
+    const result = await this.userService.getAllWithAggregationWithStatistics(query, options, req.user.userId/*, profileFilter*/);
 
     sendResponse(res, {
       code: StatusCodes.OK,

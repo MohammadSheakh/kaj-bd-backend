@@ -37,6 +37,20 @@ import { IServiceProvider } from '../../service.module/serviceProvider/servicePr
 import { UserRoleData } from '../userRoleData/userRoleData.model';
 import { IUserRoleData } from '../userRoleData/userRoleData.interface';
 
+//@ts-ignore
+import {
+  startOfDay,
+  // startOfWeek,
+  // startOfMonth,
+  // startOfYear,
+  startOfQuarter,
+  endOfWeek,
+  endOfMonth,
+  subWeeks,
+  subMonths,
+  subDays,
+} from 'date-fns';
+
 
 interface IAdminOrSuperAdminPayload {
   email: string;
@@ -349,7 +363,7 @@ export class UserService extends GenericService<typeof User, IUser> {
       filters: any, 
       options: PaginateOptions,
       userId: String, // logged in User .. For this case .. Admin Id
-      year : String,
+      
     ) {
 
        // Separate general filters and profile-specific filters
@@ -412,13 +426,72 @@ export class UserService extends GenericService<typeof User, IUser> {
     //------- calculate this months and last months providers count
     // also calculate percentage { (newVal - oldVal) / old } * 100
     // result minus means decreased , positive means increment
-
     //------ do same thing for user also .. 
 
+    async function calculateCurrentAndLastMonthsUserCountByRole(role : string) {
+        const now = new Date();
+        const monthStart = startOfMonth(now);
+
+        const lastMonthStart = startOfMonth(subMonths(now, 1));
+        const lastMonthEnd = endOfMonth(subMonths(now, 1));
+
+        const baseQuery = { isDeleted: false, role };
+        
+            const [
+              thisMonthEarnings,
+              lastMonthEarnings,
+            ] = await Promise.all([
+              
+              // This month earnings
+              User.aggregate([
+                { $match: { ...baseQuery, createdAt: { $gte: monthStart } } },
+                {
+                  $group: {
+                    _id: null,
+                    // total: { $sum: '$amount' },
+                    count: { $sum: 1 },
+                  },
+                },
+              ]),
+        
+              // Last month earnings
+              User.aggregate([
+                {
+                  $match: {
+                    ...baseQuery,
+                    createdAt: { $gte: lastMonthStart, $lte: lastMonthEnd },
+                  },
+                },
+                {
+                  $group: {
+                    _id: null,
+                    // total: { $sum: '$amount' },
+                    count: { $sum: 1 },
+                  },
+                },
+              ]),
+            ]);
+        
+            // Calculate growth percentages
+            
+            
+            const thisMonthTotal = thisMonthEarnings[0]?.count || 0;
+            const lastMonthTotal = lastMonthEarnings[0]?.count || 0;
+            const monthlyGrowth =
+              lastMonthTotal > 0
+                ? ((thisMonthTotal - lastMonthTotal) / lastMonthTotal) * 100
+                : 0;
+
+        return {
+            thisMonthTotal,
+            lastMonthTotal,
+            monthlyGrowth
+        };
+    }
 
     //------- get all revenue for admin .. 
-
-
+    
+    const walletIdOfUser:IUser = await User.findById(userId).select('walletId')
 
     async function getTotalRevenueByMonths(year:string) {
         
@@ -427,7 +500,7 @@ export class UserService extends GenericService<typeof User, IUser> {
         const totalTransactionsByMonth = await WalletTransactionHistory.aggregate([
             {
                 $match: {
-                    userId,
+                    walletId : walletIdOfUser.walletId,
                     isDeleted: false,
                     createdAt: {
                         $gte: new Date(targetYear, 0, 1), // Start of current year
@@ -441,11 +514,27 @@ export class UserService extends GenericService<typeof User, IUser> {
                         month: { $month: "$createdAt" },
                         year: { $year: "$createdAt" }
                     },
+                    total: { $sum: '$amount' },
                     count: { $sum: 1 }
                 }
             },
             {
                 $sort: { "_id.month": 1 }
+            }
+        ]);
+
+        const totalTransactionsAmountForAdmin = await WalletTransactionHistory.aggregate([
+            {
+                $match: {
+                    walletId : walletIdOfUser.walletId,
+                    isDeleted: false,
+                    
+                }
+            },
+            {
+                $group: {
+                    total: { $sum: '$amount' },
+                }
             }
         ]);
 
@@ -455,13 +544,15 @@ export class UserService extends GenericService<typeof User, IUser> {
         
         const result = monthNames.map((name, index) => ({
             month: name,
-            count: 0
+            count: 0,
+            amount : 0,
         }));
 
         // Fill in actual counts
         totalTransactionsByMonth.forEach(item => {
             const monthIndex = item._id.month - 1; // MongoDB months are 1-indexed
             result[monthIndex].count = item.count;
+            result[monthIndex].amount = item.total;
         });
 
         // Calculate average report count
@@ -475,9 +566,11 @@ export class UserService extends GenericService<typeof User, IUser> {
     }
 
 
-    const [totalRevenueByMonth]
+    const [totalRevenueByMonth, currentAndLastMonthUserCount, currentAndLastMonthProviderCount]
      = await Promise.all([
-      await getTotalRevenueByMonths(year as string)  // TODO: eta test korte hobe thik result dicche kina
+      await getTotalRevenueByMonths(filters?.year as string),  // TODO: eta test korte hobe thik result dicche kina
+      await calculateCurrentAndLastMonthsUserCountByRole("user"),
+      await calculateCurrentAndLastMonthsUserCountByRole("provider")
     ])
 
 
@@ -505,6 +598,8 @@ export class UserService extends GenericService<typeof User, IUser> {
     return {
       statistics,
       totalRevenueByMonth,
+      currentAndLastMonthUserCount,
+      currentAndLastMonthProviderCount,
       ...res
     }
   }
