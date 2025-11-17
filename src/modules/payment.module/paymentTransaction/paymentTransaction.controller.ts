@@ -170,18 +170,7 @@ export class PaymentTransactionController extends GenericController<
     const options = pick(req.query, ['sortBy', 'limit', 'page', 'populate']);
 
     const populateOptions: (string | {path: string, select: string}[]) = [
-      // {
-      //   path: 'personId',
-      //   select: 'name ' 
-      // },
-      // 'personId'
-      // {
-      //   path: 'conversationId',
-      //   select: 'lastMessage updatedAt',
-      //   populate: {
-      //     path: 'lastMessage',
-      //   }
-      // }
+      
     ];
 
     const select = '-isDeleted -createdAt -updatedAt -__v -gatewayResponse'; 
@@ -200,23 +189,11 @@ export class PaymentTransactionController extends GenericController<
   // Dev | Get all payment transactions with Gateway Response for debug
   //----------------------------
   getAllWithPaginationForDev = catchAsync(async (req: Request, res: Response) => {
-    //const filters = pick(req.query, ['_id', 'title']); // now this comes from middleware in router
     const filters =  omit(req.query, ['sortBy', 'limit', 'page', 'populate']); ;
     const options = pick(req.query, ['sortBy', 'limit', 'page', 'populate']);
 
     const populateOptions: (string | {path: string, select: string}[]) = [
-      // {
-      //   path: 'personId',
-      //   select: 'name ' 
-      // },
-      // 'personId'
-      // {
-      //   path: 'conversationId',
-      //   select: 'lastMessage updatedAt',
-      //   populate: {
-      //     path: 'lastMessage',
-      //   }
-      // }
+      
     ];
 
     const select = '-isDeleted -createdAt -updatedAt -__v'; 
@@ -231,8 +208,8 @@ export class PaymentTransactionController extends GenericController<
     });
   });
 
-  //---------------------------
-  // Admin | Get comprehensive earnings overview
+  //--------------------------- suplify - kaj bd 
+  // Admin | Get comprehensive earnings overview 
   //----------------------------
   getEarningsOverview = catchAsync(async (req: Request, res: Response) => {
     const result = await this.paymentTransactionService.getEarningsOverview();

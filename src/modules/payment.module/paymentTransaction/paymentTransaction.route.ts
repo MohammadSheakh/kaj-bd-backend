@@ -36,7 +36,7 @@ router.route('/').get((req, res) => {
   console.log("🟢 test page");
 });
 
-//---------------------------------
+//---------------------------------  suplify - kaj bd 
 // Admin | get all payment transaction with pagination
 //---------------------------------
 router.route('/paginate').get(
@@ -74,7 +74,7 @@ router.route('/paginate/dev').get(
   controller.getAllWithPaginationForDev
 );
 
-//--------------------------------
+//-------------------------------- suplify - kaj bd 
 // Admin | Get Overview of Earnings
 //---------------------------------
 router.route('/overview/admin').get(

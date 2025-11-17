@@ -348,6 +348,8 @@ export class UserService extends GenericService<typeof User, IUser> {
   async getAllWithAggregationWithStatistics(
       filters: any, 
       options: PaginateOptions,
+      userId: String, // logged in User .. For this case .. Admin Id
+      year : String,
     ) {
 
        // Separate general filters and profile-specific filters
@@ -405,15 +407,91 @@ export class UserService extends GenericService<typeof User, IUser> {
         }
     ];
     
-    // // Get statistics
+    // lets calculate total revenue for admin
+
+    //------- calculate this months and last months providers count
+    // also calculate percentage { (newVal - oldVal) / old } * 100
+    // result minus means decreased , positive means increment
+
+    //------ do same thing for user also .. 
+
+
+    //------- get all revenue for admin .. 
+
+
+
+    async function getTotalRevenueByMonths(year:string) {
+        
+        const targetYear = parseInt(year, 10) || new Date().getFullYear();
+        
+        const totalTransactionsByMonth = await WalletTransactionHistory.aggregate([
+            {
+                $match: {
+                    userId,
+                    isDeleted: false,
+                    createdAt: {
+                        $gte: new Date(targetYear, 0, 1), // Start of current year
+                        $lt: new Date(targetYear + 1, 0, 1) // Start of next year
+                    }
+                }
+            },
+            {
+                $group: {
+                    _id: {
+                        month: { $month: "$createdAt" },
+                        year: { $year: "$createdAt" }
+                    },
+                    count: { $sum: 1 }
+                }
+            },
+            {
+                $sort: { "_id.month": 1 }
+            }
+        ]);
+
+        // Create array with all 12 months initialized to 0
+        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                           'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        
+        const result = monthNames.map((name, index) => ({
+            month: name,
+            count: 0
+        }));
+
+        // Fill in actual counts
+        totalTransactionsByMonth.forEach(item => {
+            const monthIndex = item._id.month - 1; // MongoDB months are 1-indexed
+            result[monthIndex].count = item.count;
+        });
+
+        // Calculate average report count
+        const totalReports = result.reduce((sum, month) => sum + month.count, 0);
+        // const averageReportCount = totalReports / 12;
+
+        return {
+            monthlyData: result,
+            // averageReportCount: parseFloat(averageReportCount.toFixed(2))
+        };
+    }
+
+
+    const [totalRevenueByMonth]
+     = await Promise.all([
+      await getTotalRevenueByMonths(year as string)  // TODO: eta test korte hobe thik result dicche kina
+    ])
+
+
+
+    // Get statistics
     const roleStats = await User.aggregate(statisticsPipeline);
     
-    // // Transform stats into the required format
+    // Transform stats into the required format
     const statistics = {
-        totalUser: roleStats.reduce((sum, stat) => sum + stat.count, 0),
-        totalDoctor: roleStats.find(stat => stat._id === 'doctor')?.count || 0,
-        totalSpecialist: roleStats.find(stat => stat._id === 'specialist')?.count || 0,
-        totalPatient: roleStats.find(stat => stat._id === 'patient')?.count || 0
+        // totalUser: roleStats.reduce((sum, stat) => sum + stat.count, 0),
+        totalUser: roleStats.find(stat => stat._id === 'user')?.count || 0,
+        totalProviders: roleStats.find(stat => stat._id === 'provider')?.count || 0,
+        totalSubAdmin: roleStats.find(stat => stat._id === 'subAdmin')?.count || 0,
+        totalAdmin: roleStats.find(stat => stat._id === 'admin')?.count || 0,
     };
 
     // Use pagination service for aggregation
@@ -426,6 +504,7 @@ export class UserService extends GenericService<typeof User, IUser> {
 
     return {
       statistics,
+      totalRevenueByMonth,
       ...res
     }
   }

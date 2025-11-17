@@ -102,7 +102,7 @@ export class PaymentTransactionService extends GenericService<
 
   }
 
-   // Get comprehensive earnings overview
+  // Get comprehensive earnings overview --- suplify -- kaz bd 
   async getEarningsOverview() {
     const now = new Date();
     const todayStart = startOfDay(now);
