@@ -33,3 +33,25 @@ export const imageUploadPipelineForCreateServiceProviderInformation = [
     },
   ]),
 ];
+
+//---------------------------
+// 🥇 we move image upload thing to controller to middleware level
+//---------------------------
+export const imageUploadPipelineForUpdateAttachmentsOfServiceProvider = [
+  [
+    upload.fields([
+      { name: 'attachmentsForGallery', maxCount: 10 }, // Allow up to 1 cover photo
+    ]),
+  ],
+  processUploadedFilesForUpdate([
+    {
+      name: 'attachmentsForGallery',
+      folder: TFolderName.serviceProviderDetails,
+      required: false, // optional
+      allowedMimeTypes: ['image/jpeg', 'image/png'], // , 'application/pdf'
+    }
+  ]),
+];
+
+
+

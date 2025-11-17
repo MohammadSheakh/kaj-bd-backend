@@ -12,7 +12,7 @@ import auth from '../../../middlewares/auth';
 //@ts-ignore
 import multer from "multer";
 import { TRole } from '../../../middlewares/roles';
-import { imageUploadPipelineForCreateServiceProviderInformation } from './serviceProvider.middleware';
+import { imageUploadPipelineForCreateServiceProviderInformation, imageUploadPipelineForUpdateAttachmentsOfServiceProvider } from './serviceProvider.middleware';
 import { setRequestFiltersV2 } from '../../../middlewares/setRequstFilterAndValue';
 import { TProviderApprovalStatus } from '../../user.module/userRoleData/userRoleData.constant';
 import { setQueryOptions } from '../../../middlewares/setQueryOptions';
@@ -104,6 +104,21 @@ router.route('/').post(
   ...imageUploadPipelineForCreateServiceProviderInformation, //🥇
   // validateRequest(validation.createHelpMessageValidationSchema), // TODO add validation
   controller.create
+);
+
+
+/** ----------------------------------------------
+   * @role Provider
+   * @Section Profile -> Documents
+   * @module UserProfile |
+   * @figmaIndex 06-03
+   * @desc to upload images for service providers gallery
+   * 
+   *----------------------------------------------*/
+router.route('/upload-attachments').put(
+  auth(TRole.provider),
+  ...imageUploadPipelineForUpdateAttachmentsOfServiceProvider, //🥇
+  controller.uploadAttachments
 );
 
 router.route('/delete/:id').delete(

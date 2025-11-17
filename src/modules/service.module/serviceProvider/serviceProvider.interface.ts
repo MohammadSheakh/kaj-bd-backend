@@ -61,6 +61,10 @@ export interface IUpdateProfileDTO{
   backSideCertificateImage : string // from processUploadedFilesForCreate middleware
 }
 
+export interface IUploadAttachmentsForGalleryDTO{
+  attachmentsForGallery : string // from imageUploadPipelineForUpdateAttachmentsOfServiceProvider middleware
+}
+
 export interface IServiceProviderModel extends Model<IServiceProvider> {
   paginate: (
     query: Record<string, any>,

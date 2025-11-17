@@ -4,7 +4,7 @@ import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { GenericController } from '../../_generic-module/generic.controller';
 import { ServiceProvider } from './serviceProvider.model';
-import { ICreateServiceProvider, ICreateServiceProviderDTO, IServiceProvider, IUpdateProfileDTO } from './serviceProvider.interface';
+import { ICreateServiceProvider, ICreateServiceProviderDTO, IServiceProvider, IUpdateProfileDTO, IUploadAttachmentsForGalleryDTO } from './serviceProvider.interface';
 import { ServiceProviderService } from './serviceProvider.service';
 import catchAsync from '../../../shared/catchAsync';
 import sendResponse from '../../../shared/sendResponse';
@@ -123,6 +123,45 @@ export class ServiceProviderController extends GenericController<
     });
   });
 
+  uploadAttachments = catchAsync(async (req: Request, res: Response) => {
+    
+    // first we have to get serviceProviderDetails
+    const serviceProviderDetailsId = req.query.serviceProviderDetailsId;
+
+    const serviceProviderDetails : IServiceProvider | null = await ServiceProvider.findOne({
+      _id: serviceProviderDetailsId
+    });
+
+    // TODO : ARCH : 
+    // if any images are uploaded that pick that .. otherwise upload the existing ones
+    
+    // const updatedServiceProvidersProfile : IUploadAttachmentsForGalleryDTO= {
+    //   attachmentsForGallery :  req.uploadedFiles.attachmentsForGallery ?? serviceProviderDetails?.attachmentsForGallery
+    // }
+
+
+    const updatedServiceProvidersProfile : IUploadAttachmentsForGalleryDTO= {
+      attachmentsForGallery :  [ ...req.uploadedFiles.attachmentsForGallery,...serviceProviderDetails?.attachmentsForGallery]
+    }
+
+   
+    const [updatedServiceProviderDetails] = await Promise.all([
+       
+       ServiceProvider.findOneAndUpdate(
+        { _id: serviceProviderDetailsId },
+          updatedServiceProvidersProfile,
+        { new: true }
+      )
+    ]);
+
+    sendResponse(res, {
+      code: StatusCodes.OK,
+      data: updatedServiceProviderDetails,
+      message: `Images uploaded successfully for service providers attachments section`,
+      success: true,
+    });
+
+  })
 
   getProfileDetails = catchAsync(async(req: Request, res: Response) => {
     const id = req.params.id;
