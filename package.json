@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/server.js",
-    "seeder": "ts-node src/utils/seeder.ts",
+    "seeder": "ts-node --transpile-only src/utils/seeder.ts",
     "dev": "ts-node-dev --respawn --transpile-only src/serverV2.ts",
     "stripe": "stripe listen --forward-to=http://172.26.89.58:6731/api/v1/stripe/webhook",
     "dev:stripe": "concurrently \"ts-node-dev --respawn --transpile-only src/server.ts\" \"npm run stripe\"",

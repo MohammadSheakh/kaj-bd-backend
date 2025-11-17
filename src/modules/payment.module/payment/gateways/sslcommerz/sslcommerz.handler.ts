@@ -18,6 +18,8 @@ import { IWallet } from "../../../../wallet.module/wallet/wallet.interface";
 import { TWalletTransactionHistory, TWalletTransactionStatus } from "../../../../wallet.module/walletTransactionHistory/walletTransactionHistory.constant";
 import { TCurrency } from "../../../../../enums/payment";
 import { TTransactionFor } from "../../../../../constants/TTransactionFor";
+import { User } from "../../../../user.module/user/user.model";
+import { IUser } from "../../../../user.module/user/user.interface";
 
 // ===================================
 // SSL COMMERZ SUCCESS HANDLER 
@@ -43,10 +45,6 @@ export const validateAfterSuccessfulTransaction = async (req: Request, res: Resp
         // Validate the transaction
         const isValidTransaction = await paymentTransactionService.validateSSLTransaction(sslData.val_id);
         
-        // if (!isValidTransaction) {
-        //     throw new ApiError(StatusCodes.BAD_REQUEST, 'Invalid transaction');
-        // }
-
         if (!isValidTransaction || !isValidTransaction.valid) {
             throw new ApiError(StatusCodes.BAD_REQUEST, 'Invalid transaction');
         }
@@ -91,9 +89,7 @@ export const validateAfterSuccessfulTransaction = async (req: Request, res: Resp
             gatewayResponse: sslData,
         });
 
-        console.log("newPayment :: -> ", newPayment);
-
-        // Update LabTestBooking
+        // Update Booking
         const updatedBooking :IServiceBooking =  await ServiceBooking.findByIdAndUpdate(referenceId, {
             $set: {
                 status: TBookingStatus.completed, // finally we make this status completed .. 
@@ -103,24 +99,52 @@ export const validateAfterSuccessfulTransaction = async (req: Request, res: Resp
             }
         });
 
-        console.log("updatedBooking :: -> ", updatedBooking);
-
         let startPrice :number = parseInt(updatedBooking?.startPrice); // TODO : MUST : Fix korte hobe 
-        console.log("startPrice :: -> ", startPrice);
-        let adminsPercentOfStartPrice:number = parseFloat(updatedBooking?.adminPercentageOfStartPrice);
-
-        console.log("adminsPercentOfStartPrice :: -> ", adminsPercentOfStartPrice);
+        
+        let adminsPercentOfStartPrice:number = parseFloat(updatedBooking?.adminPercentageOfStartPrice); // we need to add this money to admin's wallet
 
         let finalAmountToAddProvidersWallet : number = parseFloat(amount) - parseFloat(adminsPercentOfStartPrice);
 
-        console.log("finalAmountToAddProvidersWallet :: -> ", finalAmountToAddProvidersWallet);
-    
         const wallet : IWallet = await Wallet.findOne({ userId:updatedBooking.providerId });
         const balanceBeforeTransaction = wallet.amount;
         const balanceAfterTransaction = wallet.amount + finalAmountToAddProvidersWallet;
 
 
-        // add money to the Providers wallet .. 
+        // add money to Admins wallet ----------------------------------------
+        const admin:IUser = await User.findOne({ role: TRole.admin });
+
+        const adminWallet : IWallet = await Wallet.findOne({ userId : admin._id });
+        const balanceBeforeTransactionForAdmin = adminWallet.amount;
+        const balanceAfterTransactionForAdmin = adminWallet.amount + adminsPercentOfStartPrice;
+
+        const updatedAdminWallet :IWallet = await Wallet.findOneAndUpdate(
+            { userId:admin._id },
+            { $inc: { 
+                    amount: parseFloat(adminsPercentOfStartPrice),
+                    totalBalance: parseFloat(adminsPercentOfStartPrice) // we actually dont need to add this 
+                } 
+            },
+            { new: true }
+        );
+
+        // also create wallet transaction history for admin
+        await WalletTransactionHistory.create(
+            {
+                walletId:updatedAdminWallet._id,
+                paymentTransactionId: newPayment._id,
+                type : TWalletTransactionHistory.credit,
+                amount : parseFloat(adminsPercentOfStartPrice),
+                currency : TCurrency.bdt,
+                status : TWalletTransactionStatus.completed,
+                referenceFor : TTransactionFor.ServiceBooking,
+                referenceId : updatedBooking._id,
+                balanceBefore: balanceBeforeTransactionForAdmin,
+                balanceAfter: balanceAfterTransactionForAdmin
+            },
+        );
+
+
+        // add money to the Providers wallet .. ------------------------------------------
         const updatedWallet :IWallet = await Wallet.findOneAndUpdate(
             { userId:updatedBooking.providerId },
             { $inc: { 
@@ -131,16 +155,13 @@ export const validateAfterSuccessfulTransaction = async (req: Request, res: Resp
             { new: true }
         );
 
-        console.log("updatedWallet :: -> ", updatedWallet);
-
-
         // also create wallet transaction history for provider
         await WalletTransactionHistory.create(
             { 
                 walletId:updatedWallet._id,
                 paymentTransactionId: newPayment._id,
                 type : TWalletTransactionHistory.credit,
-                amount : parseFloat(amount),
+                amount : parseFloat(finalAmountToAddProvidersWallet),
                 currency : TCurrency.bdt,
                 status : TWalletTransactionStatus.completed,
                 referenceFor : TTransactionFor.ServiceBooking,
@@ -151,7 +172,6 @@ export const validateAfterSuccessfulTransaction = async (req: Request, res: Resp
         );
 
         // Send notification to admin and provider about the money received ..
-
         await enqueueWebNotification(
             `BDT ${amount} is added to your wallet for Booking ${referenceId} TnxId : ${newPayment._id}`,
             updatedBooking.userId, // senderId
@@ -195,7 +215,12 @@ export const validateAfterSuccessfulTransaction = async (req: Request, res: Resp
 
         // Redirect to success page
         // res.redirect(`${config.frontend.url}/payment/success?booking_id=${referenceId}`);
-        res.redirect(`http://localhost:6737/`);
+        
+        //------------ This is for SSL Commerze success page
+        // res.redirect(`http://localhost:6737/`); -- as we are in ubuntu
+
+        res.redirect(config.backend.baseUrl);
+        
         
     } catch (error) {
         console.error('SSL Success Handler Error:', error);

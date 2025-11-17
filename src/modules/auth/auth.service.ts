@@ -247,6 +247,19 @@ const login = async (email: string,
 
   const { password, ...userWithoutPassword } = user.toObject();
 
+  /*-----------------
+    now we need to check if logged in user is provider .. 
+    if provider .. then we return isFilledUp and approvalStatus
+    is Filled Up should be boolean .. 
+    true or false .. 
+
+    and if providerApprovalStatus 
+    is "requested" wating for approval..
+    "reject"   show rejection page that admin rejected this profile
+    "pending"  can log in .. just for 
+    
+  -------------------*/
+
   return {
     userWithoutPassword,
     tokens,

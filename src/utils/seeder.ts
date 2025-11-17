@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import { User } from '../modules/user.module/user/user.model';
 import { UserProfile } from '../modules/user.module/userProfile/userProfile.model';
 import { TSubscription } from '../enums/subscription';
+import { Wallet } from '../modules/wallet.module/wallet/wallet.model';
 // Load environment variables
 dotenv.config();
 
@@ -19,6 +20,7 @@ const usersData = [
     isDeleted: false,
     isResetPassword:false,
     failedLoginAttempts : 0,
+    deletedAt: null,
   },
 ];
 
@@ -35,22 +37,35 @@ const dropDatabase = async () => {
 // Function to seed users
 const seedUsers = async () => {
   try {
-    await User.deleteMany({});
-    await UserProfile.deleteMany({});
+    //----------------  we dont need to delete this User and UserProfile
+    // await User.deleteMany({});
+    // await UserProfile.deleteMany({});
 
     for (const userData of usersData) {
       // 1. Create UserProfile
       const userProfile = await UserProfile.create({
+        gender: "male",
         acceptTOC: true,
+        dob: "2025-10-04T00:00:00Z",
+        // Note: if your schema requires userId, you'll need to update it later
+      });
+
+      const usersWallet = await Wallet.create({
+        amount : 0,
         // Note: if your schema requires userId, you'll need to update it later
       });
 
       // 2. Create User with profileId
-      await User.create({
+      const user = await User.create({
         ...userData, 
         profileId: userProfile._id,
+        walletId: usersWallet._id,
       });
 
+
+      // If UsersWallet requires userId, update it now:
+      await Wallet.findByIdAndUpdate(usersWallet._id, { userId: user._id });
+    
       // 3. If UserProfile requires userId, update it now:
       // await UserProfile.findByIdAndUpdate(userProfile._id, { userId: user._id });
     }
@@ -79,7 +94,7 @@ const connectToDatabase = async () => {
 const seedDatabase = async () => {
   try {
     await connectToDatabase();
-    await dropDatabase();
+    // await dropDatabase();
     await seedUsers();
     console.log('--------------> Database seeding completed <--------------');
   } catch (err) {
