@@ -51,6 +51,27 @@ router.route('/paginate/for-user').get(
   controller.getAllWithPaginationV2
 );
 
+//--------------------------------- kaj-bd
+// Admin | 00-01 | Get All SubAdmin from Users Table
+//---------------------------------
+router.route('/paginate/for-sub-admin').get(
+  auth(TRole.admin),
+  validateFiltersForQuery(optionValidationChecking(['_id', 'name', 'createdAt', 'from', 'to', ...paginationOptions])),
+  setRequstFilterAndValue('role', 'subAdmin'),
+  controller.getAllWithPaginationV2
+);
+
+//--------------------------------- fertie | kaj-bd
+// Admin | 00-02 | Create Sub Admin and send invitation email 
+//---------------------------------
+router.post(
+  "/send-invitation-link-to-admin-email",
+  auth(TRole.admin),
+  validateRequest(validation.sendInvitationToBeAdminValidationSchema),
+  controller.sendInvitationLinkToAdminEmail
+);
+
+
 // TODO : MUST : Get all providers who are not approved .. 
 
 //--------------------------------- kaj-bd

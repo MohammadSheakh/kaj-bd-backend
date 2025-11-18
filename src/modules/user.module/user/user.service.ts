@@ -57,6 +57,7 @@ interface IAdminOrSuperAdminPayload {
   password: string;
   role: string;
   message?: string;
+  isEmailVerified : boolean;
 }
 
 export class UserService extends GenericService<typeof User, IUser> {

@@ -11,6 +11,10 @@ import { IUser } from '../../token/token.interface';
 import omit from '../../../shared/omit';
 import pick from '../../../shared/pick';
 import { UserProfile } from '../userProfile/userProfile.model';
+import { TokenService } from '../../token/token.service';
+import { AuthService } from '../../auth/auth.service';
+import ApiError from '../../../errors/ApiError';
+import { TRole } from '../../../middlewares/roles';
 
 const userService = new UserService();
 
@@ -81,6 +85,57 @@ export class UserController extends GenericController<
     });
   });
 
+
+  // send Invitation Link for a admin
+  sendInvitationLinkToAdminEmail = catchAsync(async (req:Request, res:Response) => {
+
+    const user = await User.findOne({ email : req.body.email });
+
+    /**
+     *
+     * req.body.email er email jodi already taken
+     * if ----
+     * then we check isEmailVerified .. if false .. we make that true
+     *
+     * if isDeleted true then we make it false
+     *
+     * else ---
+     *  we create new admin and send email
+     *
+     */
+
+    if (user && user.isEmailVerified === true) {
+      throw new ApiError(StatusCodes.BAD_REQUEST, 'Email already taken');
+    } else if (user && user.isDeleted === true) {
+      user.isDeleted = false;
+      await user.save();
+    } else if (user && user.isEmailVerified === false) {
+      user.isEmailVerified = true;
+      await user.save();
+      const token = await TokenService.createVerifyEmailToken(user);
+      
+    } else {
+      // create new user
+      if (req.body.role == TRole.subAdmin) {
+
+        console.log("⚡ Hit because req.body.role = TRole.subAdmin");
+
+        const res = await this.userService.createAdminOrSuperAdmin({
+          email: req.body.email,
+          password: req.body.password,
+          role: req.body.role,
+          isEmailVerified: true,
+          name: req.body.name,
+        });
+
+        return sendResponse(res, {
+          code: StatusCodes.OK,
+          data: null,
+          message: 'New admin created and invitation link sent successfully',
+        });
+      }
+    }
+  });
 
 //---------------------------------
 // Admin | Get Profile Information by Id  to approve doctor / specialist 

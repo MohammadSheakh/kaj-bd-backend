@@ -32,18 +32,23 @@ const auth = (...roles: TRole[]/******** Previously it was string[] */) =>
       req.user = verifyUser;
 
       // Step 4: Check if the user exists and is active
-      const user:IUser = await User.findById(verifyUser.userId);
-      // TODO : MUST :: now userProfile does not contain information about approvalStatus and status 
+      const user:IUser = await User.findById(verifyUser?.userId);
+      // TODO : MUST :: now userProfile does not contain information about approvalStatus and status
+      
+      if (!user) {
+        // user not found
+        throw new ApiError(StatusCodes.UNAUTHORIZED, 'You are not authorized.');
+      }
+      
       // SO ... FIx this .. 
-      const userProfile : IUserProfile = await UserProfile.findById(user.profileId);
+      const userProfile : IUserProfile = await UserProfile.findById(user?.profileId);
 
       if(!userProfile){
-        throw new ApiError(StatusCodes.BAD_REQUEST, 'User profile not found. Please Log In again.');
+        // User profile not found. Please Log In again.
+        throw new ApiError(StatusCodes.BAD_REQUEST, 'You are not authorized.');
       }
 
-      if (!user) {
-        throw new ApiError(StatusCodes.BAD_REQUEST, 'User not found.');
-      } 
+       
       //------------------- As per khairul vai .. he is not designed this verification page .. 
       // else if (!user.isEmailVerified) {
       //   throw new ApiError(

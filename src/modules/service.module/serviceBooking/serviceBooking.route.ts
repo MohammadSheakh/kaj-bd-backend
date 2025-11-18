@@ -20,9 +20,6 @@ import { filterByDateRange } from '../../../middlewares/filterByDateRange';
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-// additional register general 
-// mahfujur rahman khan  
-
 const router = express.Router();
 
 export const optionValidationChecking = <T extends keyof IServiceBooking | 'sortBy' | 'page' | 'limit' | 'populate'>(
@@ -73,7 +70,7 @@ router.route('/paginate/for-admin').get(
       { path: 'userId', select: 'name profileImage role phoneNumber' },
       { path: 'providerId', select: 'name profileImage role phoneNumber' },
     ],
-    select: `address bookingDateTime startPrice hasReview status`
+    select: `address bookingDateTime completionDate startPrice hasReview status`
   }),
   // service provider er rating show kora lagbe 
   controller.getAllWithPaginationV2
@@ -145,9 +142,7 @@ router.route('/user-details/:id').get(
       populate: { path: 'profileId', select: 'gender location' }
     }],
     select: `startPrice address bookingDateTime status`
-    // ${defaultExcludes}
   }),
-  // controller.getById
   controller.getByIdV2
 );
 
