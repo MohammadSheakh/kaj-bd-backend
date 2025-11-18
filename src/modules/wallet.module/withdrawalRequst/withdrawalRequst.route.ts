@@ -63,6 +63,7 @@ router.route('/paginate/for-admin').get(
   setQueryOptions({
     populate: [
       { path: 'proofOfPayment', select: 'attachment', /* populate: { path : ""} */ },
+      { path: 'userId', select: 'name profileImage email phoneNumber', /* populate: { path : ""} */ },
     ],
     select: '-isDeleted -createdAt -updatedAt -__v'
   }),

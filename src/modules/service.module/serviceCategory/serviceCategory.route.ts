@@ -36,7 +36,7 @@ const controller = new ServiceCategoryController();
 // Admin / SubAdmin / User | 05-01 Get all service with isVisible flag
 //---------------------------------
 router.route('/paginate').get(
-  validateFiltersForQuery(optionValidationChecking(['_id', ...paginationOptions])),
+  validateFiltersForQuery(optionValidationChecking(['_id', 'isDeleted', ...paginationOptions])),
   setQueryOptions({
     populate: [
       { path: 'attachments', select: 'attachment' },

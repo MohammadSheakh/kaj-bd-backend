@@ -63,7 +63,6 @@ export class ServiceCategoryController extends GenericController<
     }
 
     const data : IUpdateServiceCategory = req.body;
-    
 
     if(data.name){
       const [nameObj] : [IServiceCategory['name']]  = await Promise.all([
@@ -75,10 +74,11 @@ export class ServiceCategoryController extends GenericController<
     const serviceCategoryDTO:IUpdateServiceCategory = {
       attachments : req.uploadedFiles.attachments?.[0] ?? existingCategory?.attachments,
       name: data.name ? data.name : existingCategory.name,
+      isVisible : data.isVisible,
     }
 
+    const updatedObject = await this.service.updateById(req.params.id, serviceCategoryDTO);
 
-    const updatedObject = await this.service.updateById(req.params.id, req.body);
     if (!updatedObject) {
       throw new ApiError(
         StatusCodes.NOT_FOUND,

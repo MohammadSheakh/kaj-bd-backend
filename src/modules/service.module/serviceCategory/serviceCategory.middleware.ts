@@ -35,7 +35,7 @@ export const imageUploadPipelineForUpdateServiceCategory = [
     {
       name: 'attachments',
       folder: TFolderName.trainingProgram,
-      required: true, // optional
+      required: false, // optional
       allowedMimeTypes: ['image/jpeg', 'image/png'], // , 'application/pdf'
     },
   ]),

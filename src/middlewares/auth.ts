@@ -37,6 +37,10 @@ const auth = (...roles: TRole[]/******** Previously it was string[] */) =>
       // SO ... FIx this .. 
       const userProfile : IUserProfile = await UserProfile.findById(user.profileId);
 
+      if(!userProfile){
+        throw new ApiError(StatusCodes.BAD_REQUEST, 'User profile not found. Please Log In again.');
+      }
+
       if (!user) {
         throw new ApiError(StatusCodes.BAD_REQUEST, 'User not found.');
       } 
