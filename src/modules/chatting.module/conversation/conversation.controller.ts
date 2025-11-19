@@ -13,7 +13,7 @@ import { IConversation } from './conversation.interface';
 import { ConversationType, TParticipants } from './conversation.constant';
 import { MessagerService } from '../message/message.service';
 import { IMessage } from '../message/message.interface';
-import { User } from '../../user/user.model';
+import { User } from '../../user.module/user/user.model';
 import omit from '../../../shared/omit';
 import pick from '../../../shared/pick';
 //@ts-ignore

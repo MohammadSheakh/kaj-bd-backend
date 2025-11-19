@@ -1,5 +1,7 @@
+//@ts-ignore
 import { Model, Types } from 'mongoose';
 import { PaginateOptions, PaginateResult } from '../../../types/paginate';
+//@ts-ignore
 import { RoleType } from './message.constant';
 
 export interface IMessage {

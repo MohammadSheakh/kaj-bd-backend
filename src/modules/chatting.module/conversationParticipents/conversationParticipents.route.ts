@@ -1,9 +1,10 @@
+//@ts-ignore
 import express from 'express';
 import { validateFiltersForQuery } from '../../../middlewares/queryValidation/paginationQueryValidationMiddleware';
 import { ConversationParticipentsController } from './conversationParticipents.controller';
 import { IConversationParticipents } from './conversationParticipents.interface';
 import auth from '../../../middlewares/auth';
-
+//@ts-ignore
 import multer from "multer";
 import { TRole } from '../../../middlewares/roles';
 const storage = multer.memoryStorage();

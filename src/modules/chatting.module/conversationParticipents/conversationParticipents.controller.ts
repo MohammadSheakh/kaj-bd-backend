@@ -1,3 +1,4 @@
+//@ts-ignore
 import { StatusCodes } from "http-status-codes";
 import sendResponse from "../../../shared/sendResponse";
 import { GenericController } from "../../_generic-module/generic.controller";
@@ -8,8 +9,10 @@ import {  ConversationParticipentsService } from "./conversationParticipents.ser
 import pick from "../../../shared/pick";
 import omit from "../../../shared/omit";
 import catchAsync from "../../../shared/catchAsync";
+//@ts-ignore
 import { Request, Response } from "express";
 import { Conversation } from "../conversation/conversation.model";
+//@ts-ignore
 import mongoose from "mongoose";
 
 const conversationParticipentsService = new ConversationParticipentsService();
