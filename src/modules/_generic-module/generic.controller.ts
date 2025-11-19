@@ -78,7 +78,7 @@ export class GenericController<ModelType, InterfaceType> {
 
   getAllWithPaginationV2 = catchAsync(async (req: Request, res: Response) => {
     //const filters = pick(req.query, ['_id', 'title']); // now this comes from middleware in router
-    const filters =  omit(req.query, ['sortBy', 'limit', 'page', 'populate']); ;
+    const filters =  omit(req.query, ['sortBy', 'limit', 'page', 'populate']);
     const options = pick(req.query, ['sortBy', 'limit', 'page', 'populate']);
 
     // ✅ Default values
@@ -125,6 +125,7 @@ export class GenericController<ModelType, InterfaceType> {
   });
 
   getAllV2 = catchAsync(async (req: Request, res: Response) => {
+    const filters =  omit(req.query, ['sortBy', 'limit', 'page', 'populate']);
 
     // ✅ Default values
     let populateOptions: (string | { path: string; select: string }[]) = [];
@@ -140,7 +141,7 @@ export class GenericController<ModelType, InterfaceType> {
       }
     }
 
-    const result = await this.service.getAllV2(populateOptions, select);
+    const result = await this.service.getAllV2(filters, populateOptions, select);
 
     sendResponse(res, {
       code: StatusCodes.OK,

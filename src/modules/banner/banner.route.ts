@@ -12,6 +12,7 @@ import { TRole } from '../../middlewares/roles';
 import { imageUploadPipelineForCreateBanner } from './banner.middleware';
 import { setQueryOptions } from '../../middlewares/setQueryOptions';
 import { defaultExcludes } from '../../constants/queryOptions';
+import { setRequestFiltersV2, setRequstFilterAndValue } from '../../middlewares/setRequstFilterAndValue';
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
@@ -36,7 +37,10 @@ const controller = new BannerController();
 router.route('/paginate').get(
   //auth('common'),
   validateFiltersForQuery(optionValidationChecking(['_id', ...paginationOptions])),
-  controller.getAllWithPagination
+  setRequestFiltersV2({
+    isDeleted: false,
+  }),
+  controller.getAllWithPaginationV2
 );
 
 router.route('/:id').get(
@@ -58,6 +62,9 @@ router.route('/').get(
       { path: 'attachments', select: 'attachment' },
     ],
     select: `${defaultExcludes}`
+  }),
+  setRequestFiltersV2({
+    isDeleted: false,
   }),
   controller.getAllV2//getAll
 );

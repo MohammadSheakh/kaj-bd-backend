@@ -31,8 +31,9 @@ export class GenericService<ModelType, InterfaceType> {
     return await this.model.find({isDeleted : false}).select('-__v');
   }
 
-  async getAllV2(populateOptions?: (string | any)[], select?: string) {
-    let query = this.model.find().select(select);
+
+  async getAllV2(filter?: any, populateOptions?: (string | any)[], select?: string) {
+    let query = this.model.find(filter).select(select);
     
     if (populateOptions && populateOptions.length > 0) {
         
