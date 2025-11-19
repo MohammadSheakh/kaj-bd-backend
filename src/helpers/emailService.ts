@@ -82,6 +82,12 @@ const sendResetPasswordEmail = async (to: string, otp: string) => {
   await sendEmail({ to, subject, html });
 };
 
+/** ---------------------------------------------- Fertie | Kaz Bd
+   * @role Admin
+   * @Section Create Sub Admin
+   * @desc We send email after creating sub admin .. 
+   * 
+   *----------------------------------------------*/
 const sendAdminOrSuperAdminCreationEmail = async (
   email: string,
   role: string,
@@ -92,7 +98,7 @@ const sendAdminOrSuperAdminCreationEmail = async (
   const html = `
     <div style="width: 45%; margin: 0 auto; font-family: Arial, sans-serif; padding: 20px; color: #333; border: 1px solid #ccc; border-radius: 20px;">
       <div style="text-align: center; margin-bottom: 20px;">
-        <img src="https://raw.githubusercontent.com/rakibislam2233/Image-Server/refs/heads/main/mentor-services.png" alt="Logo" style="width: 200px; margin-bottom: 20px;" />
+        <img src="${config.backend.shobhoyUrl}uploads/logoForEmail/logo.png" alt="Logo" style="width: 200px; margin-bottom: 20px;" />
         <h1 style="color: #1B9AAA;">Congratulations! You are now an ${role}</h1>
         <p style="font-size: 16px;">You have been granted ${role} access to the system. Use the credentials below to log in:</p>
       </div>

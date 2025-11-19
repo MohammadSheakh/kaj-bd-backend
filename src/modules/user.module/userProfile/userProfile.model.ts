@@ -27,7 +27,7 @@ const userProfileSchema = new Schema<IUserProfile>({
     ],
     dob: {
         type: Date,
-        required: [true, 'Dob is required'],
+        required: [false, 'Dob is not required'],
     },
     gender: {
         type: String,
@@ -35,12 +35,12 @@ const userProfileSchema = new Schema<IUserProfile>({
             TGender.male,
             TGender.female,
         ],
-        required: [true, 'Gender is required'],
+        required: [false, 'Gender is not required'],
         default: TGender.male,
     },
     acceptTOC:{ // for specialist
         type: Boolean,
-        required: [true, 'acceptTOC is required'],
+        required: [false, 'acceptTOC is not required'],
     },
     location: {
         bn: {

@@ -120,18 +120,18 @@ export class UserController extends GenericController<
 
         console.log("⚡ Hit because req.body.role = TRole.subAdmin");
 
-        const res = await this.userService.createAdminOrSuperAdmin({
+        const response = await this.userService.createAdminOrSuperAdmin({
           email: req.body.email,
           password: req.body.password,
           role: req.body.role,
-          isEmailVerified: true,
           name: req.body.name,
+          phoneNumber: req.body.phoneNumber,
         });
 
-        return sendResponse(res, {
+        sendResponse(res, {
           code: StatusCodes.OK,
-          data: null,
-          message: 'New admin created and invitation link sent successfully',
+          data: response,
+          message: `New admin created and invitation link sent successfully`,
         });
       }
     }

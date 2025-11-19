@@ -50,14 +50,16 @@ import {
   subMonths,
   subDays,
 } from 'date-fns';
+import { TAdminStatus } from '../userRoleData/userRoleData.constant';
 
 
 interface IAdminOrSuperAdminPayload {
   email: string;
   password: string;
+  name : string;
   role: string;
   message?: string;
-  isEmailVerified : boolean;
+  phoneNumber : string;
 }
 
 export class UserService extends GenericService<typeof User, IUser> {
@@ -68,26 +70,43 @@ export class UserService extends GenericService<typeof User, IUser> {
   createAdminOrSuperAdmin = async (payload: IAdminOrSuperAdminPayload): Promise<IUser> => {
 
     const existingUser = await User.findOne({ email: payload.email });
+
     if (existingUser) {
       throw new ApiError(StatusCodes.BAD_REQUEST, 'This email already exists');
     }
-    const result = new User({
-      first_name: 'New',
-      last_name: ` ${payload.role === 'admin' ? 'Admin' : 'Super Admin'}`,
+
+    const createProfile:IUserProfile = await UserProfile.create({
+      acceptTOC: true
+    })
+
+     
+    const result:IUser = await User.create({
+      name: payload.name,
       email: payload.email,
       password: payload.password,
       role: payload.role,
+      isEmailVerified: true,
+      phoneNumber: payload.phoneNumber,
+      profileId: createProfile._id
     });
 
-    await result.save();
+    await UserProfile.create({
+      adminStatus: TAdminStatus.active,
+      userId: result._id,
+    })
+
+
     //send email for the new admin or super admin via email service
-    // todo
+    
     sendAdminOrSuperAdminCreationEmail(
       payload.email,
       payload.role,
       payload.password,
       payload.message
     );
+
+
+    console.log("---- hit ----");
 
     return result;
   };
