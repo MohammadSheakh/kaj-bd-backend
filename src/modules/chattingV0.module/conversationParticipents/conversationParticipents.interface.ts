@@ -7,7 +7,6 @@ export interface IConversationParticipents {
   // _taskId: undefined | Types.ObjectId;
   _id?: Types.ObjectId; // undefined |  Types.ObjectId |
   userId : Types.ObjectId; //🔗
-  userName : string;  // its for search conversation by name .. for better search performance ....  
   conversationId: Types.ObjectId; //🔗
   joinedAt : Date;
   role : TParticipants; //🧩 // can be doctor | specialist | patient | admin

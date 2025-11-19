@@ -46,7 +46,33 @@ const conversationSchema = new Schema<IConversation>(
       type: Date,
       required: [false, 'lastMessageCreatedAt is required'],
     },
-  
+    /***********
+    groupBio: {
+      type: String,
+      default: null, // Optional group bio
+    },
+    groupAdmins: {
+      type: [Schema.Types.ObjectId],
+      default: [],
+      ref: 'User', // Reference to User model
+    },
+    unreadCountes: {
+      type: Object, // Dynamic structure for unread counts
+      default: {}, // Initialize as an empty object
+    },
+    blockedUsers: {
+      type: [Schema.Types.ObjectId], // Users who are blocked
+      default: [],
+      ref: 'User',
+    },
+    
+    deletedFor: {
+      type: [Schema.Types.ObjectId], // Users who have deleted the chat
+      default: [],
+      ref: 'User',
+    },
+    ********* */
+    
     isDeleted: {
       type: Boolean,
       required: [false, 'isDeleted is not required'],

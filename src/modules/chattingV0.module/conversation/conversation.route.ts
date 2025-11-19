@@ -1,10 +1,8 @@
-//@ts-ignore
 import express from 'express';
 import { validateFiltersForQuery } from '../../../middlewares/queryValidation/paginationQueryValidationMiddleware';
 import { ConversationController } from './conversation.controller';
 import { IConversation } from './conversation.interface';
 import auth from '../../../middlewares/auth';
-//@ts-ignore
 import multer from "multer";
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -29,11 +27,15 @@ const paginationOptions: Array<'sortBy' | 'page' | 'limit' | 'populate'> = [
 // const taskService = new TaskService();
 const controller = new ConversationController();
 
+
+
+//
 router.route('/paginate').get(
-  auth(TRole.common),
-  validateFiltersForQuery(optionValidationChecking(['_id', 'creatorId', ...paginationOptions])),
-  controller.getAllConversationByUserIdWithPagination
+  //auth('common'),
+  validateFiltersForQuery(optionValidationChecking(['_id', 'creatorId', 'siteId', ...paginationOptions])),
+  controller.getAllWithPagination
 );
+
 
 router.route('/:id').get(
   // auth('common'),
@@ -93,9 +95,9 @@ router.route('/participants/remove').delete(
 );
 
 //[🚧][🧑‍💻✅][🧪] // 🆗
-router.route('/participants/other').get(
-  auth(TRole.common),
-  controller.showOtherParticipantOfConversation
+router.route('/participants/all').get(
+  //auth('common'),
+  controller.showParticipantsOfExistingConversation
 );
 
 /*************
@@ -109,6 +111,15 @@ router.route('trigger-cron').get(
 // router.route('/get-all-message/:conversationId').get(
 //   controllerV2.getAllMessagesOfAConversation
 // )
+
+
+  //--------------------------------- 
+  // ( Dashboard ) | Admin :: getAllConversationAndItsParticipantsBySiteId
+  //---------------------------------
+  router.route('/by/siteId').get(
+  //auth('common'),
+  controller.getAllConversationAndItsParticipantsBySiteId
+);
 
 
 export const ConversationRoute = router;

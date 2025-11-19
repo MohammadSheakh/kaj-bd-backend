@@ -13,7 +13,7 @@ import { IConversation } from './conversation.interface';
 import { ConversationType, TParticipants } from './conversation.constant';
 import { MessagerService } from '../message/message.service';
 import { IMessage } from '../message/message.interface';
-import { User } from '../../user/user.model';
+import { User } from '../../user.module/user/user.model';
 import omit from '../../../shared/omit';
 import pick from '../../../shared/pick';
 //@ts-ignore
@@ -32,6 +32,75 @@ export class ConversationController extends GenericController<typeof Conversatio
   constructor() {
     super(new ConversationService(), 'Conversation');
   }
+
+  // override // 1️⃣
+  getAllWithPagination = catchAsync(async (req: Request, res: Response) => {
+    //const filters = pick(req.query, ['_id', 'title']); // now this comes from middleware in router
+    const filters =  omit(req.query, ['sortBy', 'limit', 'page', 'populate']); ;
+    const options = pick(req.query, ['sortBy', 'limit', 'page', 'populate']);
+
+    const populateOptions: (string | {path: string, select: string}[]) = [
+      // {
+      //   path: 'personId',
+      //   select: 'name role' // name 
+      // },
+      // 'personId'
+      
+    ];
+
+    let dontWantToInclude = '-groupName -groupProfilePicture -groupBio -groupAdmins -blockedUsers -deletedFor -isDeleted -updatedAt -createdAt -__v'; // Specify fields to exclude from the result
+    
+    const result = await this.service.getAllWithPagination(filters, options,populateOptions,dontWantToInclude);
+
+    sendResponse(res, {
+      code: StatusCodes.OK,
+      data: result,
+      message: `All ${this.modelName} with pagination`,
+      success: true,
+    });
+  });
+
+  //---------------------------------
+  // ( Dashboard ) | Admin :: getAllConversationAndItsParticipantsBySiteId
+  //---------------------------------
+  getAllConversationAndItsParticipantsBySiteId = catchAsync(
+    async (req: Request, res: Response) => {
+      const { siteId } = req.query;
+
+      const conversations = await Conversation.find({
+        siteId: siteId,
+        isDeleted: false, 
+      }).select('-__v -type -updatedAt -lastMessage -deletedFor -groupAdmins -blockedUsers -groupBio -groupProfilePicture -groupName').populate(
+        {
+          path: 'siteId',
+          select: 'name'
+        }
+      )
+
+      // now we have to get all participants of each conversation
+
+      const conversationsWithParticipants = await Promise.all(
+        conversations.map(async (conversation) => {
+          const participants = await conversationParticipantsService.getByConversationIdForAdminDashboard(
+            conversation._id
+          );
+          
+          return {
+            ...conversation.toObject(),
+            participants,
+          };
+        })
+      );
+
+      sendResponse(res, {
+        code: StatusCodes.OK,
+        data: conversationsWithParticipants,
+        message: `All conversations with participants for siteId: ${siteId}`,
+        success: true,
+      });
+    }
+  );
+
 
   //---------------------------------
   // Claude 
@@ -172,7 +241,7 @@ export class ConversationController extends GenericController<typeof Conversatio
 
       // Add participants
       for (const participant of participants) {
-        const user = await User.findById(participant).select('role name');
+        const user = await User.findById(participant).select('role');
 
         if (!user) {
           throw new ApiError(
@@ -184,7 +253,6 @@ export class ConversationController extends GenericController<typeof Conversatio
         const participantResult: IConversationParticipents =
           await conversationParticipantsService.create({
             userId: participant,
-            userName : user.name,
             conversationId: result._id,
             role: user.role === TParticipants.admin ? TParticipants.admin : TParticipants.member,
             joinedAt: new Date(),
@@ -274,15 +342,6 @@ export class ConversationController extends GenericController<typeof Conversatio
       if (participants.length > 0) {
         for (const participantId of participants) {
           if (participantId !== req.user.userId) {
-
-            const user = await User.findById(participantId).select('role name');
-            if (!user) {
-              throw new ApiError(
-                StatusCodes.NOT_FOUND,
-                `User with id ${participantId} not found`
-              );
-            }
-
             const existingParticipant =
             await conversationParticipantsService.getByUserIdAndConversationId(
               participantId,
@@ -298,7 +357,6 @@ export class ConversationController extends GenericController<typeof Conversatio
             if (existingParticipant.length == 0) {
               await conversationParticipantsService.create({
                 userId: participantId,
-                userName : user.name,
                 conversationId: conversation?._id,
                 role: req.user.role === TParticipants.admin ? TParticipants.admin : TParticipants.member,
                 joinedAt: new Date(),
@@ -324,10 +382,7 @@ export class ConversationController extends GenericController<typeof Conversatio
     }
   );
 
-  /*-─────────────────────────────────
-    |  React Developer says .. for other participants he needs this 
-    └──────────────────────────────────*/
-  showOtherParticipantOfConversation = catchAsync(
+  showParticipantsOfExistingConversation = catchAsync(
     async (req: Request, res: Response) => {
       const { conversationId } = req.query;
 
@@ -343,7 +398,7 @@ export class ConversationController extends GenericController<typeof Conversatio
         throw new ApiError(StatusCodes.NOT_FOUND, 'Conversation not found');
       }
 
-      const res1:IConversationParticipents[] = await conversationParticipantsService.getByConversationId(
+      const res1 = await conversationParticipantsService.getByConversationId(
         conversationId
       );
 
@@ -354,11 +409,10 @@ export class ConversationController extends GenericController<typeof Conversatio
         );
       }
 
-      const filterd = res1.filter((participent: any) => participent.userId._id.toString() !== req.user.userId.toString())
-
+      // 🔥🔥 Multiple er jonno o handle korte hobe .. single er jonno o handle korte hobe ..
       sendResponse(res, {
         code: StatusCodes.OK,
-        data: filterd,
+        data: res1,
         message: `Participents found successfully to this ${this.modelName}.. ${conversationId}`,
         success: true,
       });
@@ -413,32 +467,6 @@ export class ConversationController extends GenericController<typeof Conversatio
       });
     }
   );
-
-  /*-─────────────────────────────────
-    |  React Developer says .. for get all conversations by logged in userId socket is not needed 
-    |  he needs REST API
-    |  But Flutter Dev can implement this feature using socket 
-    └──────────────────────────────────*/
-  getAllConversationByUserIdWithPagination = catchAsync(async (req: Request, res: Response) => {
-    // {page: number, limit: number, search?: string} = req.query as any;
-    const conversationData = {
-      page: req.query.page,  // number,
-      limit: req.query.limit, //number, 
-      search: req.query.search //string
-    }
-
-    const response = await conversationParticipantsService.getAllConversationByUserIdWithPagination(
-      req.user.userId,
-      conversationData,
-    )
-
-    sendResponse(res, {
-        code: StatusCodes.OK,
-        data: response,
-        message: `All ${this.modelName} by userId with pagination`,
-        success: true,
-      });
-  })
 
   // add more methods here if needed or override the existing ones
 }

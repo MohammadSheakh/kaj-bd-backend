@@ -148,30 +148,27 @@ export class MessageController extends GenericController<typeof Message, IMessag
           message: `${this.modelName} created successfully`,
           success: true,
         });
-    });
+      });
 
-    /*-─────────────────────────────────
-    |  React Developer says .. for get all message socket is not needed 
-    |  he need REST API
-    |  But Flutter Dev can implement this feature using socket 
-    └──────────────────────────────────*/
     getAllWithPagination = catchAsync(async (req: Request, res: Response) => {
         //const filters = pick(req.query, ['_id', 'title']); // now this comes from middleware in router
         const filters =  omit(req.query, ['sortBy', 'limit', 'page', 'populate']); ;
         const options = pick(req.query, ['sortBy', 'limit', 'page', 'populate']);
 
-        const populateOptions: (string | {path: string, select: string}[]) = [
-          {
-            path: 'senderId',
-            select: 'name profileImage'
-          },
-          {
-            path: 'attachments',
-            select: 'attachment profileImage'
-          }
-        ];
-
-        options.sortBy = options.sortBy || '-createdAt';
+         const populateOptions: (string | {path: string, select: string}[]) = [
+            {
+              path: 'senderId',
+              select: 'name role profileImage' // name 
+            },
+            {
+              path: 'conversationId',
+              select: 'canConversate siteId' // name 
+            },
+            {
+              path: 'attachments',
+              select: 'attachment'
+            }
+          ];
 
 
         let select = ''; // Specify fields to exclude from the result
@@ -186,7 +183,32 @@ export class MessageController extends GenericController<typeof Message, IMessag
         });
     });
 
-  
+    // 🟢 i think we dont need this .. because we need pagination in this case .. and pagination 
+    // is already implemented ..  
+    getAllMessageByConversationId = catchAsync(
+        async (req: Request, res: Response) => {
+            const { conversationId } = req.query;
+            if (!conversationId) {
+                return sendResponse(res, {
+                    code: StatusCodes.BAD_REQUEST,
+                    message: "Conversation ID is required",
+                    success: false,
+                });
+            }
+
+            const result = await this.messageService.getAllByConversationId(
+                conversationId.toString()
+            );
+
+            sendResponse(res, {
+                code: StatusCodes.OK,
+                data: result,
+                message: `${this.modelName} fetched successfully`,
+                success: true,
+            });
+        }
+    );
+
     // add more methods here if needed or override the existing ones    
 }
 

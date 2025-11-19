@@ -232,8 +232,14 @@ export class MessageControllerV2 extends GenericController<typeof Message, IMess
 
         let select = ''; // Specify fields to exclude from the result
         // -createdAt
-        const result = await this.service.getAllWithPagination(filters, options,populateOptions, select);
+        let result = await this.service.getAllWithPagination(filters, options,populateOptions, select);
 
+
+        console.log("result :: ", result);
+
+        // Check if reverse is requested in query parameters
+        result = result.results.reverse();
+        
         sendResponse(res, {
         code: StatusCodes.OK,
         data: result,
