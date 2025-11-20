@@ -322,11 +322,11 @@ export class ServiceBookingController extends GenericController<
     const serviceBooking = await ServiceBooking.findById(req.params.id).select(defaultExcludes).populate([
         {
           path: 'userId',
-          select: 'name profileImage'
+          select: 'name profileImage role'
         },  
         {
           path: 'providerId',
-          select: 'name profileImage'
+          select: 'name profileImage role'
         },
         {
           path: 'attachments',

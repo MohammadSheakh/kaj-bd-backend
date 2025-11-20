@@ -153,10 +153,7 @@ export class WithdrawalRequstController extends GenericController<
      * ------TODO : MUST : add mongo db transaction here
      * ***** */
 
-    //📈⚙️ OPTIMIZATION: Process both file types in parallel
-    const [proofOfPayment] = await Promise.all([
-      processFiles(req.files?.proofOfPayment, TFolderName.wallet)
-    ]);
+    
 
     const withdrawalRequstId = req.params.id;
 
@@ -166,6 +163,23 @@ export class WithdrawalRequstController extends GenericController<
       return sendResponse(res, {
         code: StatusCodes.BAD_REQUEST,
         message: 'No withdrawalRequst Found',
+        success: false,
+      });
+    }
+
+    if(withdrawalRequst.status.toString() == TWithdrawalRequst.rejected.toString()){
+      console.log("withdrawalRequst.status.toString() :: ",withdrawalRequst.status.toString())
+      return sendResponse(res, {
+        code: StatusCodes.BAD_REQUEST,
+        message: 'Withdrawal Request is already rejected',
+        success: false,
+      });
+    }
+
+    if(withdrawalRequst.status.toString() == TWithdrawalRequst.completed.toString()){
+      return sendResponse(res, {
+        code: StatusCodes.BAD_REQUEST,
+        message: 'Withdrawal Request is already accepted',
         success: false,
       });
     }
@@ -195,14 +209,16 @@ export class WithdrawalRequstController extends GenericController<
 
       return sendResponse(res, {
         code: StatusCodes.OK,
-        data: null,
+        data: updated,
         message: `${this.modelName} is rejected`,
         success: true,
       });
     }
 
-
-    console.log("⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡")
+    //📈⚙️ OPTIMIZATION: Process both file types in parallel
+    const [proofOfPayment] = await Promise.all([
+      processFiles(req.files?.proofOfPayment, TFolderName.wallet)
+    ]);
 
     withdrawalRequst.proofOfPayment = proofOfPayment[0];
     withdrawalRequst.status = TWithdrawalRequst.completed;
@@ -223,9 +239,9 @@ export class WithdrawalRequstController extends GenericController<
         userId : withdrawalRequst.userId
       });
 
-      console.log("log: wallet.amount => ", typeof wallet.amount,"~~~", wallet.amount);
-      console.log("log: withdrawalRequst.requestedAmount => ", typeof withdrawalRequst.requestedAmount , "~~~", withdrawalRequst.requestedAmount);
-      console.log("log: wallet.amount - withdrawalRequst.requestedAmount  result => ", wallet.amount - withdrawalRequst.requestedAmount);
+      // console.log("log: wallet.amount => ", typeof wallet.amount,"~~~", wallet.amount);
+      // console.log("log: withdrawalRequst.requestedAmount => ", typeof withdrawalRequst.requestedAmount , "~~~", withdrawalRequst.requestedAmount);
+      // console.log("log: wallet.amount - withdrawalRequst.requestedAmount  result => ", wallet.amount - withdrawalRequst.requestedAmount);
 
       if(wallet){
 

@@ -17,7 +17,9 @@ const allRoles: Record<Role, string[]> = {
   subAdmin: ['subAdmin', 'common', 'commonAdmin'],
 };
 
-const Roles = Object.keys(allRoles) as Array<keyof typeof allRoles>;
+// const Roles = Object.keys(allRoles) as Array<keyof typeof allRoles>;
+
+const Roles = ["provider", "user", "admin", "subAdmin"] as const;
 
 // Map the roles to their corresponding rights
 const roleRights = new Map<Role, string[]>(

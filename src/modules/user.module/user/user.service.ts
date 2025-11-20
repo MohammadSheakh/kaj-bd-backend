@@ -586,11 +586,15 @@ export class UserService extends GenericService<typeof User, IUser> {
     }
 
 
-    const [totalRevenueByMonth, currentAndLastMonthUserCount, currentAndLastMonthProviderCount]
+    const [
+      // totalRevenueByMonth,
+      // currentAndLastMonthUserCount, 
+      // currentAndLastMonthProviderCount
+    ]
      = await Promise.all([
-      await getTotalRevenueByMonths(filters?.year as string),  // TODO: eta test korte hobe thik result dicche kina
-      await calculateCurrentAndLastMonthsUserCountByRole("user"),
-      await calculateCurrentAndLastMonthsUserCountByRole("provider")
+      // await getTotalRevenueByMonths(filters?.year as string),  // TODO: eta test korte hobe thik result dicche kina
+      // await calculateCurrentAndLastMonthsUserCountByRole("user"),
+      // await calculateCurrentAndLastMonthsUserCountByRole("provider")
     ])
 
 
@@ -617,9 +621,9 @@ export class UserService extends GenericService<typeof User, IUser> {
 
     return {
       statistics,
-      totalRevenueByMonth,
-      currentAndLastMonthUserCount,
-      currentAndLastMonthProviderCount,
+      // totalRevenueByMonth,
+      // currentAndLastMonthUserCount,
+      // currentAndLastMonthProviderCount,
       ...res
     }
   }
@@ -822,6 +826,26 @@ export class UserService extends GenericService<typeof User, IUser> {
           }
         },
 
+        //---------------------------------
+
+        // Step 2: Lookup ServiceProviderDetails information
+        {
+          $lookup: {
+            from: 'serviceproviders', // Collection name (adjust if different)
+            localField: '_id',
+            foreignField: 'providerId',
+            as: 'serviceProviderDetails'
+          }
+        },
+        
+        // Step 3: Unwind profile array (convert array to object)
+        {
+          $unwind: {
+            path: '$serviceProviderDetails',
+            preserveNullAndEmptyArrays: true // Keep users without profiles
+          }
+        },
+
         //--------- look up user role data for providerApprovalStatus -----
         {
           $lookup: {
@@ -884,6 +908,10 @@ export class UserService extends GenericService<typeof User, IUser> {
                 role: 1,
                 profileId: 1,
                 createdAt: 1,
+
+
+                serviceName: '$serviceProviderDetails.serviceName',
+
                 // Add approval status from profile
                 dob: '$profileInfo.dob',
                 // Optionally include other profile fields

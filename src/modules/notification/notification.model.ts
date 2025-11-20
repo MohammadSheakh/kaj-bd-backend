@@ -34,9 +34,9 @@ const notificationModel = new Schema<INotification>(
 
     type: {
       type: String,
-      enum: [
-        TNotificationType      
-      ],
+      enum: 
+        Object.values(TNotificationType)      
+      ,
       required: true,
     },
 
