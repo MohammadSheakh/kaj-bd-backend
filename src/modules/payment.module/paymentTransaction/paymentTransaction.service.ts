@@ -102,7 +102,7 @@ export class PaymentTransactionService extends GenericService<
 
   }
 
-  // Get comprehensive earnings overview --- suplify -- kaz bd 
+   // Get comprehensive earnings overview
   async getEarningsOverview() {
     const now = new Date();
     const todayStart = startOfDay(now);
@@ -284,9 +284,23 @@ export class PaymentTransactionService extends GenericService<
         ? ((thisMonthTotal - lastMonthTotal) / lastMonthTotal) * 100
         : 0;
 
+    // Get month name
+    const monthNames = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    const currentMonth = monthNames[now.getMonth()];
+    const lastMonth = monthNames[lastMonthStart.getMonth()];    
+
+    // Format date range for last week
+    const formatDate = (date: Date) => {
+      return `${date.getDate()} ${monthNames[date.getMonth()].slice(0, 3)}`;
+    };
+
     return {
       totalEarnings: totalEarnings[0]?.total || 0,
       todayEarnings: {
+        label: 'Today earning',
         amount: todayEarnings[0]?.total || 0,
         count: todayEarnings[0]?.count || 0,
       },
@@ -294,36 +308,48 @@ export class PaymentTransactionService extends GenericService<
         amount: thisWeekTotal,
         count: thisWeekEarnings[0]?.count || 0,
         growth: weeklyGrowth.toFixed(2),
+        dateRange: `${formatDate(lastWeekStart)} - ${formatDate(lastWeekEnd)}`,
+        label: 'This week earning',
       },
       thisMonthEarnings: {
         amount: thisMonthTotal,
         count: thisMonthEarnings[0]?.count || 0,
         growth: monthlyGrowth.toFixed(2),
+        month: currentMonth,
+        label: 'This month earning',
       },
       lastWeekEarnings: {
         amount: lastWeekTotal,
         count: lastWeekEarnings[0]?.count || 0,
+        label: 'Last week earning',
+        dateRange: `${formatDate(lastWeekStart)} - ${formatDate(lastWeekEnd)}`,
       },
       lastMonthEarnings: {
         amount: lastMonthTotal,
         count: lastMonthEarnings[0]?.count || 0,
+        label: 'Previous month earning',
+        month: lastMonth,
       },
       thisQuarterEarnings: {
         amount: thisQuarterEarnings[0]?.total || 0,
         count: thisQuarterEarnings[0]?.count || 0,
+        label: 'This quarter earning',
       },
       thisYearEarnings: {
         amount: thisYearEarnings[0]?.total || 0,
         count: thisYearEarnings[0]?.count || 0,
+        label: 'This year earning',
       },
       totalTransactions,
       pendingPayments: {
         amount: pendingAmount[0]?.total || 0,
         count: pendingAmount[0]?.count || 0,
+        label: 'Pending payments',
       },
       processingPayments: {
         amount: processingAmount[0]?.total || 0,
         count: processingAmount[0]?.count || 0,
+        label: 'Processing payments',
       },
     };
   }

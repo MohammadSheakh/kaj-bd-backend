@@ -170,7 +170,10 @@ export class PaymentTransactionController extends GenericController<
     const options = pick(req.query, ['sortBy', 'limit', 'page', 'populate']);
 
     const populateOptions: (string | {path: string, select: string}[]) = [
-      
+      {
+        path: 'userId',
+        select: 'name profileImage role' 
+      },
     ];
 
     const select = '-isDeleted -createdAt -updatedAt -__v -gatewayResponse'; 

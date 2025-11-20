@@ -120,7 +120,7 @@ router.route('/change-approval-status').put(
 // User | Home Page | 03-01 | get category and popular providers also banners 
 //---------------------------------
 router.route('/home-page').get(
-  auth(TRole.user),
+  // auth(TRole.user),
   controller.getCategoriesAndPopularProvidersForUser
 )
 
