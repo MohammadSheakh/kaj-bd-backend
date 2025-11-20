@@ -190,7 +190,7 @@ export class WithdrawalRequstController extends GenericController<
       // Send Notification to Provider that a withdrawal request is rejected
       //------------------------------------
       await enqueueWebNotification(
-        `$${withdrawalRequst.requestedAmount} Withdrawal request is rejected by admin`,
+        `৳${withdrawalRequst.requestedAmount} Withdrawal request is rejected by admin`,
         (req?.user as IUser)?.userId as string, // senderId
         withdrawalRequst.userId, // receiverId
         null, // receiverRole
@@ -279,7 +279,7 @@ export class WithdrawalRequstController extends GenericController<
     // Send Notification to Doctor / Patient that a withdrawal request is approved
     //------------------------------------
     await enqueueWebNotification(
-      `$${withdrawalRequst.requestedAmount} Withdrawal request is approved by admin`,
+      `৳${withdrawalRequst.requestedAmount} Withdrawal request is approved by admin`,
       (req?.user as IUser)?.userId as string, // senderId
       withdrawalRequst.userId, // receiverId
       null, // receiverRole

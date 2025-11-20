@@ -51,6 +51,7 @@ import {
   subDays,
 } from 'date-fns';
 import { TAdminStatus } from '../userRoleData/userRoleData.constant';
+import { PaymentTransaction } from '../../payment.module/paymentTransaction/paymentTransaction.model';
 
 
 interface IAdminOrSuperAdminPayload {
@@ -440,7 +441,18 @@ export class UserService extends GenericService<typeof User, IUser> {
             }
         }
     ];
-    
+
+
+    // 📈⚙️ OPTIMIZATION: Get total service booking count
+    const serviceBookingStatPipeline = [
+      {
+        $group: {
+            _id: null,
+            count: { $sum: 1 }
+        }
+      }
+    ];
+
     // lets calculate total revenue for admin
 
     //------- calculate this months and last months providers count
@@ -458,9 +470,22 @@ export class UserService extends GenericService<typeof User, IUser> {
         const baseQuery = { isDeleted: false, role };
         
             const [
+              allCount,
               thisMonthEarnings,
               lastMonthEarnings,
             ] = await Promise.all([
+
+              // All Count
+              User.aggregate([
+                { $match: { ...baseQuery } },
+                {
+                  $group: {
+                    _id: null,
+                    // total: { $sum: '$amount' },
+                    count: { $sum: 1 },
+                  },
+                },
+              ]),
               
               // This month earnings
               User.aggregate([
@@ -503,6 +528,83 @@ export class UserService extends GenericService<typeof User, IUser> {
                 : 0;
 
         return {
+            allCount : allCount[0]?.count || 0,
+            thisMonthTotal,
+            lastMonthTotal,
+            monthlyGrowth
+        };
+    }
+
+
+    async function calculateCurrentAndLastMonthsServiceBookingCount() {
+        const now = new Date();
+        const monthStart = startOfMonth(now);
+
+        const lastMonthStart = startOfMonth(subMonths(now, 1));
+        const lastMonthEnd = endOfMonth(subMonths(now, 1));
+
+        const baseQuery = { isDeleted: false };
+        
+            const [
+              allBookingCount,
+              thisMonthBooking,
+              lastMonthBooking,
+            ] = await Promise.all([
+
+              // This month earnings
+              ServiceBooking.aggregate([
+                { $match: { ...baseQuery } },
+                {
+                  $group: {
+                    _id: null,
+                    // total: { $sum: '$amount' },
+                    count: { $sum: 1 },
+                  },
+                },
+              ]),
+              
+              // This month earnings
+              ServiceBooking.aggregate([
+                { $match: { ...baseQuery, createdAt: { $gte: monthStart } } },
+                {
+                  $group: {
+                    _id: null,
+                    // total: { $sum: '$amount' },
+                    count: { $sum: 1 },
+                  },
+                },
+              ]),
+        
+              // Last month earnings
+              ServiceBooking.aggregate([
+                {
+                  $match: {
+                    ...baseQuery,
+                    createdAt: { $gte: lastMonthStart, $lte: lastMonthEnd },
+                  },
+                },
+                {
+                  $group: {
+                    _id: null,
+                    // total: { $sum: '$amount' },
+                    count: { $sum: 1 },
+                  },
+                },
+              ]),
+            ]);
+        
+            // Calculate growth percentages
+            
+            
+            const thisMonthTotal = thisMonthBooking[0]?.count || 0;
+            const lastMonthTotal = lastMonthBooking[0]?.count || 0;
+            const monthlyGrowth =
+              lastMonthTotal > 0
+                ? ((thisMonthTotal - lastMonthTotal) / lastMonthTotal) * 100
+                : 0;
+
+        return {
+            allBookingCount : allBookingCount[0]?.count || 0,
             thisMonthTotal,
             lastMonthTotal,
             monthlyGrowth
@@ -553,6 +655,7 @@ export class UserService extends GenericService<typeof User, IUser> {
             },
             {
                 $group: {
+                    _id: null,
                     total: { $sum: '$amount' },
                 }
             }
@@ -581,20 +684,23 @@ export class UserService extends GenericService<typeof User, IUser> {
 
         return {
             monthlyData: result,
+            totalTransactionsAmountForAdmin : totalTransactionsAmountForAdmin[0]?.total || 0,
             // averageReportCount: parseFloat(averageReportCount.toFixed(2))
         };
     }
 
 
     const [
-      // totalRevenueByMonth,
-      // currentAndLastMonthUserCount, 
-      // currentAndLastMonthProviderCount
+      totalRevenueByMonth,
+      currentAndLastMonthUserCount, 
+      currentAndLastMonthProviderCount,
+      serviceBookingCount
     ]
      = await Promise.all([
-      // await getTotalRevenueByMonths(filters?.year as string),  // TODO: eta test korte hobe thik result dicche kina
-      // await calculateCurrentAndLastMonthsUserCountByRole("user"),
-      // await calculateCurrentAndLastMonthsUserCountByRole("provider")
+      await getTotalRevenueByMonths(filters?.year as string),  // TODO: eta test korte hobe thik result dicche kina
+      await calculateCurrentAndLastMonthsUserCountByRole("user"),
+      await calculateCurrentAndLastMonthsUserCountByRole("provider"),
+      await calculateCurrentAndLastMonthsServiceBookingCount(),
     ])
 
 
@@ -602,17 +708,37 @@ export class UserService extends GenericService<typeof User, IUser> {
     // Get statistics
     const roleStats = await User.aggregate(statisticsPipeline);
     
+    // get BookingCount 
+    const bookingCount = await ServiceBooking.aggregate(serviceBookingStatPipeline);
+
+
+    const paymentTransactionStatPipeline = [
+      {
+        $group: {
+            _id: null,
+            count: { $sum: 1 },
+            total: { $sum: '$amount' },
+        }
+      }
+    ];
+
+    // get total transaction amount for admin 
+    const totalTransactionAmountForAdmin = await PaymentTransaction
+    .aggregate(paymentTransactionStatPipeline);
+
     // Transform stats into the required format
     const statistics = {
-        // totalUser: roleStats.reduce((sum, stat) => sum + stat.count, 0),
-        totalUser: roleStats.find(stat => stat._id === 'user')?.count || 0,
-        totalProviders: roleStats.find(stat => stat._id === 'provider')?.count || 0,
-        totalSubAdmin: roleStats.find(stat => stat._id === 'subAdmin')?.count || 0,
-        totalAdmin: roleStats.find(stat => stat._id === 'admin')?.count || 0,
+      // totalUser: roleStats.reduce((sum, stat) => sum + stat.count, 0),
+      totalUser: roleStats.find(stat => stat._id === 'user')?.count || 0,
+      totalProviders: roleStats.find(stat => stat._id === 'provider')?.count || 0,
+      totalSubAdmin: roleStats.find(stat => stat._id === 'subAdmin')?.count || 0,
+      totalAdmin: roleStats.find(stat => stat._id === 'admin')?.count || 0,
+      totalServiceBooking: bookingCount[0]?.count || 0,
+      totalTransactionAmountForAdmin : totalTransactionAmountForAdmin[0]?.total || 0
     };
 
     // Use pagination service for aggregation
-     const res =
+    const res =
       await PaginationService.aggregationPaginate(
       User, 
       pipeline,
@@ -621,9 +747,10 @@ export class UserService extends GenericService<typeof User, IUser> {
 
     return {
       statistics,
-      // totalRevenueByMonth,
-      // currentAndLastMonthUserCount,
-      // currentAndLastMonthProviderCount,
+      totalRevenueByMonth,
+      currentAndLastMonthUserCount,
+      currentAndLastMonthProviderCount,
+      serviceBookingCount,
       ...res
     }
   }
