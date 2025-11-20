@@ -94,7 +94,8 @@ export class ServiceProviderController extends GenericController<
 
     const updatedServiceProvidersProfile : IUpdateProfileDTO= {
       backSideCertificateImage :  req.body.backSideCertificateImage,
-      frontSideCertificateImage : req.body.frontSideCertificateImage
+      frontSideCertificateImage : req.body.frontSideCertificateImage,
+      faceImageFromFrontCam : req.body.faceImageFromFrontCam
     }
 
     const [result, updatedProfile, updateServiceProviderRoleData] = await Promise.all([
@@ -109,7 +110,7 @@ export class ServiceProviderController extends GenericController<
       UserRoleData.findOneAndUpdate(
         { userId: (req.user as IUser).userId },
         {
-          providerApprovalStatus : TProviderApprovalStatus.pending
+          providerApprovalStatus : TProviderApprovalStatus.requested // CONFUSION : age pending chilo
         },
         { new: true }
       )

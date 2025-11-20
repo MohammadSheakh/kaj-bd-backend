@@ -16,6 +16,7 @@ export const imageUploadPipelineForCreateServiceProviderInformation = [
     upload.fields([
       { name: 'frontSideCertificateImage', maxCount: 1 }, // Allow up to 1 cover photo
       { name: 'backSideCertificateImage', maxCount: 1 }, // Allow up to 1 trailer video
+      { name: 'faceImageFromFrontCam', maxCount: 1 }, // Allow up to 1 trailer video      
     ]),
   ],
   processUploadedFilesForCreate([
@@ -27,6 +28,12 @@ export const imageUploadPipelineForCreateServiceProviderInformation = [
     },
     {
       name: 'backSideCertificateImage',
+      folder: TFolderName.trainingProgram,
+      required: true, // optional
+      allowedMimeTypes: ['image/jpeg', 'image/png'], // 'video/mp4', 'video/mov'
+    },
+    {
+      name: 'faceImageFromFrontCam',
       folder: TFolderName.trainingProgram,
       required: true, // optional
       allowedMimeTypes: ['image/jpeg', 'image/png'], // 'video/mp4', 'video/mov'

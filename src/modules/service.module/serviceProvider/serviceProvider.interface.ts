@@ -59,6 +59,7 @@ export interface ICreateServiceProviderDTO{
 export interface IUpdateProfileDTO{
   frontSideCertificateImage : string // from processUploadedFilesForCreate middleware
   backSideCertificateImage : string // from processUploadedFilesForCreate middleware
+  faceImageFromFrontCam : string // from processUploadedFilesForCreate middleware
 }
 
 export interface IUploadAttachmentsForGalleryDTO{
