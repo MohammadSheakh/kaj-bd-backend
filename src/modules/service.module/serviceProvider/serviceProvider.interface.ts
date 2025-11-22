@@ -38,7 +38,10 @@ export interface IServiceProvider {
 
 
 export interface ICreateServiceProvider{
-  serviceCategoryId:Types.ObjectId  
+  serviceCategoryId:Types.ObjectId;   
+
+  categoryCustomName : string;
+
   serviceName : string | IServiceProvider['serviceName']
   yearsOfExperience : number
   startPrice : number

@@ -49,6 +49,30 @@ export class ServiceCategoryController extends GenericController<
     });
   });
 
+  createByProvider = catchAsync(async (req: Request, res: Response) => {
+    const data:ICreateServiceCategory = req.body;
+    
+    // Translate multiple properties dynamically
+    const [nameObj] : [IServiceCategory['name']]  = await Promise.all([
+      buildTranslatedField(data.name as string)
+    ]);
+    
+    const serviceCategoryDTO:ICreateServiceCategory = {
+      attachments : data.attachments,
+      name: nameObj,
+      createdBy: (req.user as IUser).role
+    }
+
+    const result = await this.service.create(serviceCategoryDTO as Partial<IServiceCategory>);
+
+    sendResponse(res, {
+      code: StatusCodes.OK,
+      data: result,
+      message: `${this.modelName} created successfully`,
+      success: true,
+    });
+  });
+
   //----------------------------------
   // Admin | 05-03 | Update Service Category
   //----------------------------------

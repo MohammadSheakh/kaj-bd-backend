@@ -19,6 +19,9 @@ import ApiError from '../../../errors/ApiError';
 import { Review } from '../review/review.model';
 //@ts-ignore
 import mongoose from 'mongoose';
+import { ICreateServiceCategory, IServiceCategory } from '../serviceCategory/serviceCategory.interface';
+import { TRole } from '../../../middlewares/roles';
+import { ServiceCategoryService } from '../serviceCategory/serviceCategory.service';
 
 //-----------------------------
 // ServiceProvider means Service Provider Details
@@ -28,6 +31,7 @@ export class ServiceProviderController extends GenericController<
   IServiceProvider
 > {
   serviceProviderService = new ServiceProviderService();
+  serviceCategoryService = new ServiceCategoryService();
 
   constructor() {
     super(new ServiceProviderService(), 'ServiceProvider');
@@ -84,13 +88,43 @@ export class ServiceProviderController extends GenericController<
     await newReview.save();
     ---------------------------------*/
 
-    const createServiceProvider : ICreateServiceProviderDTO = {
-      serviceCategoryId : data.serviceCategoryId,
-      serviceName : nameObj,
-      yearsOfExperience : data.yearsOfExperience,
-      startPrice : data.startPrice,
-      providerId : (req.user as IUser).userId,
+    let createServiceProvider : ICreateServiceProviderDTO; 
+    if(data.serviceCategoryId){
+      createServiceProvider = {
+        serviceCategoryId : data.serviceCategoryId,
+        serviceName : nameObj,
+        yearsOfExperience : data.yearsOfExperience,
+        startPrice : data.startPrice,
+        providerId : (req.user as IUser).userId,
+      }
+    }else{
+      // first create category
+      
+      const [nameObj] : [IServiceCategory['name']]  = await Promise.all([
+        buildTranslatedField(data.categoryCustomName as string)
+      ]);
+      
+      const serviceCategoryDTO:ICreateServiceCategory = {
+        // attachment will be given by admin later
+        name: nameObj,
+        createdBy: TRole.provider, /// as provider create this .. 
+        createdByUserId : (req.user as IUser).userId // as provider create this .. admin can see .. who create this category
+      }
+  
+      const newServiceCategory:IServiceCategory = await this.serviceCategoryService.create(serviceCategoryDTO as Partial<IServiceCategory>);
+      
+      // then create service provider details
+
+      createServiceProvider  = {
+        serviceCategoryId : newServiceCategory._id,
+        serviceName : nameObj,
+        yearsOfExperience : data.yearsOfExperience,
+        startPrice : data.startPrice,
+        providerId : (req.user as IUser).userId,
+      }
     }
+
+    
 
     const updatedServiceProvidersProfile : IUpdateProfileDTO= {
       backSideCertificateImage :  req.body.backSideCertificateImage,

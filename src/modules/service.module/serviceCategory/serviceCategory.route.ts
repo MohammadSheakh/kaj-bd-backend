@@ -77,6 +77,12 @@ router.route('/').post(
   controller.create
 );
 
+//--------- when user create serviceProviderDetails .. we need to create this category automatically 
+// router.route('/by-provider').post(
+//   // validateRequest(validation.createHelpMessageValidationSchema), // TODO : must add validation
+//   controller.createByProvider
+// );
+
 router.route('/delete/:id').delete(
   //auth('common'),
   controller.deleteById
