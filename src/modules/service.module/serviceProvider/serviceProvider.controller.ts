@@ -90,6 +90,7 @@ export class ServiceProviderController extends GenericController<
 
     let createServiceProvider : ICreateServiceProviderDTO; 
     if(data.serviceCategoryId){
+      console.log("hit")
       createServiceProvider = {
         serviceCategoryId : data.serviceCategoryId,
         serviceName : nameObj,
@@ -98,6 +99,7 @@ export class ServiceProviderController extends GenericController<
         providerId : (req.user as IUser).userId,
       }
     }else{
+      console.log("miss : first create category")
       // first create category
       
       const [nameObj] : [IServiceCategory['name']]  = await Promise.all([
