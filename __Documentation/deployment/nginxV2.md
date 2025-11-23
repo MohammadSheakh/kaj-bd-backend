@@ -185,10 +185,11 @@ server {
 ```
 
 ##  📌 2. Config for BACKEND API
-File: /etc/nginx/sites-available/<_project_name_>-backend.conf
-# This server handles the backend API for <_project_name_>
+    File: /etc/nginx/sites-available/<_project_name_>-backend.conf
+    This server handles the backend API for <_project_name_>
 
 ```ts
+
 server {
     listen 443 ssl http2;
     server_name api.<_domain_>;
