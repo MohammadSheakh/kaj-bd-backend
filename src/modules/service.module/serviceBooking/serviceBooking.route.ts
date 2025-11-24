@@ -48,8 +48,8 @@ router.route('/paginate').get(
   getLoggedInUserAndSetReferenceToUser('userId'),
   setQueryOptions({
     populate: [
-      { path: 'providerDetailsId', select: 'serviceName' },
-      { path: 'providerId', select: 'name profileImage role' },
+      { path: 'providerDetailsId', select: 'serviceName'},
+      { path: 'providerId', select: 'name profileImage role'},
     ],
     select: `address bookingDateTime startPrice hasReview`// address bookingDateTime startPrice
     // ${defaultExcludes}

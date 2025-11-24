@@ -8,4 +8,7 @@ export enum TStatusType {
   inactive = 'inactive',
 }
 
-
+export enum TpreferredLanguage{
+  en = 'en',
+  bn = 'bn'
+}

@@ -5,7 +5,7 @@ import paginate from '../../../common/plugins/paginate';
 //@ts-ignore
 import bcryptjs from 'bcryptjs';
 import { config } from '../../../config';
-import { TStatusType } from './user.constant';
+import { TpreferredLanguage, TStatusType } from './user.constant';
 import { Roles } from '../../../middlewares/roles';
 import { TSubscription } from '../../../enums/subscription';
 
@@ -112,6 +112,15 @@ const userSchema = new Schema<IUser, UserModal>(
       ref: 'Wallet',
       required: false, // user and admin dont need any wallet .. only provider need wallet 
       default: null,
+    },
+
+    //---------------------------------
+    // Preferred Language
+    //---------------------------------
+    preferredLanguage: {
+      type: String,
+      enum: [TpreferredLanguage.en, TpreferredLanguage.bn],
+      required: [false, 'preferredLanguage is not required'],
     },
 
     isDeleted: {
