@@ -52,6 +52,9 @@ import {
 } from 'date-fns';
 import { TAdminStatus } from '../userRoleData/userRoleData.constant';
 import { PaymentTransaction } from '../../payment.module/paymentTransaction/paymentTransaction.model';
+import { TGender } from '../userProfile/userProfile.constant';
+import { Attachment } from '../../attachments/attachment.model';
+import { IAttachment } from '../../attachments/attachment.interface';
 
 
 interface IAdminOrSuperAdminPayload {
@@ -110,6 +113,35 @@ export class UserService extends GenericService<typeof User, IUser> {
     console.log("---- hit ----");
 
     return result;
+  };
+
+  removeSubAdmin = async (subAdminId: string): Promise<IUser> => {
+
+    const existingUser:IUser = await User.findByIdAndUpdate(
+      { _id: subAdminId },
+      {
+        isEmailVerified: false,
+        isDeleted: true,
+      },
+      {
+        new: true
+      }
+    );
+
+    if (!existingUser) {
+      throw new ApiError(StatusCodes.BAD_REQUEST, 'This User is not found');
+    }
+
+    await UserProfile.findOneAndUpdate(
+      { userId: existingUser._id },
+      {
+        adminStatus: TAdminStatus.inactive,
+      },
+      {
+        new: true
+      }
+    )
+    return existingUser;
   };
 
   //--------------------------------- kaj bd
@@ -333,7 +365,7 @@ export class UserService extends GenericService<typeof User, IUser> {
 
     const updateUser:IUser  = await User.findByIdAndUpdate(id, {
       name: data.name,
-      email: data.email,
+      // email: data.email, // email can not be updated
       phoneNumber: data.phoneNumber
     },{ new: true }).lean()
 
@@ -354,9 +386,13 @@ export class UserService extends GenericService<typeof User, IUser> {
       updateUserProfile.location = locationObj;
     }
 
-    updateUserProfile.dob = data.dob;
-    updateUserProfile.gender = data.gender;
-
+    if(data.dob){
+      updateUserProfile.dob = data.dob;
+    }
+    if(data.gender){
+      updateUserProfile.gender = data.gender as TGender;
+    }
+  
     const res =  await updateUserProfile.save();
 
     return {
@@ -364,6 +400,66 @@ export class UserService extends GenericService<typeof User, IUser> {
       ...res.toObject()
     };
   };
+
+  updateProfileInformationOfAdmin = async (id: string, data:IUpdateUserInfo) => {
+    //-- name, email, phoneNumber from User table ..
+
+    const user:IUser = await User.findById(id).select("name profileImage");
+
+    // if (!data?.profileImage[0]) {
+    //   throw new ApiError(StatusCodes.NOT_FOUND, 'You have to upload an image to update');
+    // }
+
+    const attachmentUrl:IAttachment = await Attachment.findById(data?.profileImage[0]);
+
+
+    const updateUser:IUser  = await User.findByIdAndUpdate(id, {
+      name: data.name,
+      profileImage : {
+        imageUrl: attachmentUrl?.attachment ? attachmentUrl?.attachment : user?.profileImage?.imageUrl,
+      },
+      phoneNumber: data.phoneNumber
+    },{ new: true }).lean()
+
+    
+    return {
+      ...updateUser
+    };
+  };
+
+
+  async updateProfileImageSeperately(userId: string, data: any): Promise<any> {
+    
+    const user:IUser = await User.findById(userId).select("name profileImage");
+
+    console.log("data service  data?.profileImage[0] -> ", data?.profileImage[0]);
+
+    if (!data?.profileImage[0]) {
+      throw new ApiError(StatusCodes.NOT_FOUND, 'You have to upload an image to update');
+    }
+
+    const attachmentUrl:IAttachment = await Attachment.findById(data?.profileImage[0]);
+    // console.log("user -> ", user);
+  
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        profileImage : {
+          imageUrl: attachmentUrl?.attachment ? attachmentUrl?.attachment : user?.profileImage?.imageUrl,
+        }
+      }, 
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      throw new ApiError(StatusCodes.NOT_FOUND, 'User not found while update');
+    }
+
+    return {
+      updatedUser
+    }
+
+  }
 
 
   async getAllWithPagination(
@@ -774,7 +870,7 @@ export class UserService extends GenericService<typeof User, IUser> {
       const value = filters[key];
       if (value === '' || value === null || value === undefined) continue;
       // --- Match for Users collection ---
-      if (['_id', 'from', 'to', 'role', 'name'].includes(key)) {
+      if (['_id', 'from', 'to', 'role', 'name', 'isDeleted'].includes(key)) {
         if (key == '_id') {
           userMatchStage[key] = new mongoose.Types.ObjectId(value);
         }else if (key.trim() === "from") {

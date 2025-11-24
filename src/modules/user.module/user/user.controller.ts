@@ -104,7 +104,7 @@ export class UserController extends GenericController<
      *
      */
 
-    if (user && user.isEmailVerified === true) {
+    if (user && user.isEmailVerified === false) { // previously isEmailVerified was true
       throw new ApiError(StatusCodes.BAD_REQUEST, 'Email already taken');
     } else if (user && user.isDeleted === true) {
       user.isDeleted = false;
@@ -135,6 +135,17 @@ export class UserController extends GenericController<
         });
       }
     }
+  });
+
+  removeSubAdmin = catchAsync(async (req:Request, res:Response) => {
+
+    const response = await this.userService.removeSubAdmin(req.params.id);
+
+    sendResponse(res, {
+      code: StatusCodes.OK,
+      data: response,
+      message: `Account removed successfully`,
+    });
   });
 
 //---------------------------------
@@ -388,6 +399,42 @@ export class UserController extends GenericController<
       success: true,
     });
   })
+
+  updateProfileInformationOfAdmin = catchAsync(async (req: Request, res: Response) => {
+    
+    req.body.profileImage = req.uploadedFiles.profileImage; // it actually returns array of string
+
+    const data = req.body;
+    
+    const result = await this.userService.updateProfileInformationOfAdmin((req.user as IUser).userId  as string, data);
+    sendResponse(res, {
+      code: StatusCodes.OK,
+      data: result,
+      message: 'Profile information fetched successfully',
+      success: true,
+    });
+  })
+
+  updateProfileImageSeparately = catchAsync(async (req: Request, res: Response) => {
+    const id = req.user.userId;
+    req.body.profileImage = req.uploadedFiles.profileImage; // it actually returns array of string
+
+    console.log("req.uploadedFiles.profileImage -> ", req.uploadedFiles.profileImage);
+    console.log("req.body from controller -> ", req.body);
+    console.log("req.body.profileImage from controller -> ", req.body.profileImage);
+
+    const data = req.body;
+
+    const result = await this.userService.updateProfileImageSeperately(id, data);
+    
+    sendResponse(res, {
+      code: StatusCodes.OK,
+      data: result,
+      message: `${this.modelName} updated successfully`,
+      success: true,
+    });
+    
+  });
   
 }
 

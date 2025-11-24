@@ -11,7 +11,8 @@ import validateRequest from '../../../shared/validateRequest';
 const UPLOADS_FOLDER = 'uploads/users';
 const upload = fileUploadHandler(UPLOADS_FOLDER);
 import * as validation from './user.validation';
-import { setRequstFilterAndValue } from '../../../middlewares/setRequstFilterAndValue';
+import { setRequestFiltersV2, setRequstFilterAndValue } from '../../../middlewares/setRequstFilterAndValue';
+import { imageUploadPipelineForUpdateUserProfile } from './user.middleware';
 
 export const optionValidationChecking = <T extends keyof IUser | 'sortBy' | 'page' | 'limit' | 'populate'>(
   filters: T[]
@@ -57,7 +58,15 @@ router.route('/paginate/for-user').get(
 router.route('/paginate/for-sub-admin').get(
   auth(TRole.admin),
   validateFiltersForQuery(optionValidationChecking(['_id', 'name', 'createdAt', 'from', 'to', ...paginationOptions])),
+  
   setRequstFilterAndValue('role', 'subAdmin'),
+  
+  // setRequestFiltersV2(
+  //   { 
+  //     isDeleted: false,
+  //     role: 'subAdmin'
+  //   }
+  // ),
   controller.getAllWithPaginationV2
 );
 
@@ -70,6 +79,17 @@ router.post(
   validateRequest(validation.sendInvitationToBeAdminValidationSchema),
   controller.sendInvitationLinkToAdminEmail
 );
+
+//---------------------------------  kaj-bd
+// Admin | 00-02 | Remove Sub Admin
+// :id -> here id is subAdminId 
+//---------------------------------
+router.put(
+  "/remove-sub-admin/:id",
+  auth(TRole.admin),
+  controller.removeSubAdmin
+);
+
 
 
 // TODO : MUST : Get all providers who are not approved .. 
@@ -150,18 +170,36 @@ router.route('/profile-info').get(
  * @desc Update profile information of a user
  *----------------------------------------------*/
 router.route('/profile-info').put(
-  auth(TRole.user, TRole.provider),
+  auth(TRole.user, TRole.provider, TRole.commonAdmin),
   // validateRequest(validation.updateProfileInfoValidationSchema), // TODO : MUST : add validation
   controller.updateProfileInformationOfAUser
 )
 
+/** ----------------------------------------------
+ * @role Admin
+ * @Section Profile
+ * @module User|UserProfile
+ * @figmaIndex 06-02
+ * @desc Update Profile Info with profile Image of a admin
+ *----------------------------------------------*/
+router.route('/profile-info/for-admin').put(
+  auth(TRole.commonAdmin),
+  ...imageUploadPipelineForUpdateUserProfile,
+  controller.updateProfileInformationOfAdmin
+)
 
+/** ----------------------------------------------
+ * @role User
+ * @Section Profile
+ * @module User|UserProfile
+ * @figmaIndex 06-02
+ * @desc Update profile Image of a user
+ *----------------------------------------------*/
 router.route('/profile-picture').put(
-  auth(TRole.user),
-  // validateRequest(validation.updateProfileInfoValidationSchema), // TODO : MUST : add validation
-  controller.updateProfileInformationOfAUser
+  auth(TRole.common),
+  ...imageUploadPipelineForUpdateUserProfile,
+  controller.updateProfileImageSeparately
 )
-
 
 router.route('/update/:id').put(
   //auth('common'),
