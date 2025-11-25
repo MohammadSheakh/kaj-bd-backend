@@ -1,9 +1,11 @@
+//@ts-ignore
 import mongoose from 'mongoose';
+//@ts-ignore
 import { z } from 'zod';
 
 export const createHelpMessageValidationSchema = z.object({
   body: z.object({
-    SupportMessage: z  
+    SupportMessage: z
     .string({
         required_error: 'message is required, message must be a string.',
         invalid_type_error: 'dateOfBirth must be a string.',

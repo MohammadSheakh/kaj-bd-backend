@@ -63,8 +63,14 @@ router.route('/:id').put(
 
 //[🚧][🧑‍💻✅][🧪] // 🆗
 router.route('/').get(
-  auth('commonAdmin'),
-  controller.getAll
+  auth(TRole.common),
+  setQueryOptions({
+    populate: [
+      { path: 'attachments', select: 'attachment' },
+    ],
+    select: 'name' // -isDeleted -createdAt -updatedAt
+  }),
+  controller.getAllV2
 );
 
 //---------------------------------

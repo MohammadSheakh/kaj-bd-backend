@@ -11,7 +11,7 @@ const SupportMessageSchema = new Schema<ISupportMessage>(
     },
     supportMessage: {
       type: String,
-      required: [true, 'dateOfBirth is required'],
+      required: [true, 'supportMessage is required'],
     },
     attachments: [
       {
@@ -20,6 +20,11 @@ const SupportMessageSchema = new Schema<ISupportMessage>(
         required: [false, 'attachments is not required'],
       }
     ],
+    isResolved: {
+      type: Boolean,
+      required: [false, 'isResolved is not required'],
+      default : false,
+    },
     isDeleted: {
       type: Boolean,
       required: [false, 'isDeleted is not required'],

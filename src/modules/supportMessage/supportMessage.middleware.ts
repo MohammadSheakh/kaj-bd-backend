@@ -11,7 +11,7 @@ const upload = multer({ storage: storage });
 export const imageUploadPipelineForCreateSupportMessage = [
   [
     upload.fields([
-      { name: 'attachments', maxCount: 1 }, // Allow up to 1 cover photo
+      { name: 'attachments', maxCount: 5 }, // Allow up to 1 cover photo
     ]),
   ],
   processUploadedFilesForCreate([

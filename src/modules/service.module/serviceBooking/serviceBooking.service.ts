@@ -63,7 +63,6 @@ export class ServiceBookingService extends GenericService<
 
 
   async getWithAdditionalCosts(bookingId, loggedInUserId){
-    
 
     return {
       serviceBooking,

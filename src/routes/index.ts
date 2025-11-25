@@ -20,6 +20,8 @@ import { SettingsRoutes } from '../modules/settings.module/settings/settings.rou
 import { AdditionalCostRoute } from '../modules/service.module/additionalCost/additionalCost.route';
 import { BannerRoute } from '../modules/banner/banner.route';
 import { AdminPercentageRoute } from '../modules/adminPercentage/adminPercentage.route';
+import { SupportMessage } from '../modules/supportMessage/SupportMessage.model';
+import { SupportMessageRoute } from '../modules/supportMessage/supportMessage.route';
 
 // import { ChatRoutes } from '../modules/chat/chat.routes';
 // import { MessageRoutes } from '../modules/message/message.routes';
@@ -41,8 +43,13 @@ const apiRoutes = [
 
   ////////////////////// Created By Mohammad Sheakh
 
+  ///////////////////////////////////////// Support Message
+  { // 🟢
+    path: '/support-messages',
+    route: SupportMessageRoute,
+  },
 
-  ///////////////////////////////////////// Payment Transaction
+  ///////////////////////////////////////// 
   { // 🟢
     path: '/banners',
     route: BannerRoute,

@@ -1,13 +1,16 @@
 //@ts-ignore
 import express from 'express';
-import * as validation from './SupportMessage.validation';
-import { SupportMessageController} from './SupportMessage.controller';
-import { ISupportMessage } from './SupportMessage.interface';
+import * as validation from './supportMessage.validation';
+import { SupportMessageController} from './supportMessage.controller';
+import { ISupportMessage } from './supportMessage.interface';
 import { validateFiltersForQuery } from '../../middlewares/queryValidation/paginationQueryValidationMiddleware';
 import validateRequest from '../../shared/validateRequest';
 import auth from '../../middlewares/auth';
 //@ts-ignore
 import multer from "multer";
+import { TRole } from '../../middlewares/roles';
+import { imageUploadPipelineForCreateSupportMessage } from './supportMessage.middleware';
+import { setQueryOptions } from '../../middlewares/setQueryOptions';
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
@@ -29,11 +32,17 @@ const paginationOptions: Array<'sortBy' | 'page' | 'limit' | 'populate'> = [
 // const taskService = new TaskService();
 const controller = new SupportMessageController();
 
-//
 router.route('/paginate').get(
-  //auth('common'),
+  auth(TRole.commonAdmin),
   validateFiltersForQuery(optionValidationChecking(['_id', ...paginationOptions])),
-  controller.getAllWithPagination
+  setQueryOptions({
+    populate: [
+      { path: 'attachments', select: 'attachment' },
+      { path: 'creatorId', select: 'name profileImage email phoneNumber role' },
+    ],
+    select: '-isDeleted -createdAt -updatedAt'
+  }),
+  controller.getAllWithPaginationV2
 );
 
 router.route('/:id').get(
@@ -53,15 +62,18 @@ router.route('/').get(
   controller.getAll
 );
 
-//[🚧][🧑‍💻✅][🧪] // 🆗
-router.route('/create').post(
-  // [
-  //   upload.fields([
-  //     { name: 'attachments', maxCount: 15 }, // Allow up to 5 cover photos
-  //   ]),
-  // ],
-  auth('common'),
-  validateRequest(validation.createHelpMessageValidationSchema),
+/** ----------------------------------------------
+   * @role User
+   * @Section Support Message
+   * @module SupportMessage |
+   * @figmaIndex 0-0
+   * @desc as per clients need 
+   * 
+   *----------------------------------------------*/
+router.route('/').post(
+  auth(TRole.commonUser),
+  // validateRequest(validation.createHelpMessageValidationSchema),
+  ...imageUploadPipelineForCreateSupportMessage,
   controller.create
 );
 
