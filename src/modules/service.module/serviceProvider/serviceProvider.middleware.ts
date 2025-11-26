@@ -22,19 +22,19 @@ export const imageUploadPipelineForCreateServiceProviderInformation = [
   processUploadedFilesForCreate([
     {
       name: 'frontSideCertificateImage',
-      folder: TFolderName.trainingProgram,
+      folder: TFolderName.serviceProviderDetails,
       required: true, // optional
       allowedMimeTypes: ['image/jpeg', 'image/png'], // , 'application/pdf'
     },
     {
       name: 'backSideCertificateImage',
-      folder: TFolderName.trainingProgram,
+      folder: TFolderName.serviceProviderDetails,
       required: true, // optional
       allowedMimeTypes: ['image/jpeg', 'image/png'], // 'video/mp4', 'video/mov'
     },
     {
       name: 'faceImageFromFrontCam',
-      folder: TFolderName.trainingProgram,
+      folder: TFolderName.serviceProviderDetails,
       required: true, // optional
       allowedMimeTypes: ['image/jpeg', 'image/png'], // 'video/mp4', 'video/mov'
     },

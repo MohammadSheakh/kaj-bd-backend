@@ -17,7 +17,7 @@ export const imageUploadPipelineForCreateBanner = [
   processUploadedFilesForCreate([
     {
       name: 'attachments',
-      folder: TFolderName.trainingProgram,
+      folder: TFolderName.banner,
       required: true, // optional
       allowedMimeTypes: ['image/jpeg', 'image/png'], // , 'application/pdf'
     },
@@ -34,7 +34,7 @@ export const imageUploadPipelineForUpdateBanner = [
   processUploadedFilesForUpdate([
     {
       name: 'attachments',
-      folder: TFolderName.trainingProgram,
+      folder: TFolderName.banner,
       required: true, // optional
       allowedMimeTypes: ['image/jpeg', 'image/png'], // , 'application/pdf'
     },

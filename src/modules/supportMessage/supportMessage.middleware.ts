@@ -17,7 +17,7 @@ export const imageUploadPipelineForCreateSupportMessage = [
   processUploadedFilesForCreate([
     {
       name: 'attachments',
-      folder: TFolderName.trainingProgram,
+      folder: TFolderName.supportMessage,
       required: true, // optional
       allowedMimeTypes: ['image/jpeg', 'image/png'], // , 'application/pdf'
     },
@@ -34,7 +34,7 @@ export const imageUploadPipelineForUpdateSupportMessage = [
   processUploadedFilesForUpdate([
     {
       name: 'attachments',
-      folder: TFolderName.trainingProgram,
+      folder: TFolderName.supportMessage,
       required: true, // optional
       allowedMimeTypes: ['image/jpeg', 'image/png'], // , 'application/pdf'
     },

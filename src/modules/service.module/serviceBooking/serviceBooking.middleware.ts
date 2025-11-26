@@ -200,7 +200,7 @@ export const imageUploadPipelineForUpdateServiceBooking = [
   processUploadedFilesForUpdate([
     {
       name: 'attachments',
-      folder: TFolderName.trainingProgram,
+      folder: TFolderName.serviceBooking,
       required: true, // optional
       allowedMimeTypes: ['image/jpeg', 'image/png'], // , 'application/pdf'
     },

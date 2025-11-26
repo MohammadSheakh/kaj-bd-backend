@@ -40,7 +40,7 @@ router.route('/paginate').get(
       { path: 'attachments', select: 'attachment' },
       { path: 'creatorId', select: 'name profileImage email phoneNumber role' },
     ],
-    select: '-isDeleted -createdAt -updatedAt'
+    select: '-isDeleted -updatedAt'
   }),
   controller.getAllWithPaginationV2
 );

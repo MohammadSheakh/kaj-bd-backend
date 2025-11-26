@@ -17,7 +17,7 @@ export const imageUploadPipelineForCreateServiceCategory = [
   processUploadedFilesForCreate([
     {
       name: 'attachments',
-      folder: TFolderName.trainingProgram,
+      folder: TFolderName.serviceCategory,
       required: true, // optional
       allowedMimeTypes: ['image/jpeg', 'image/png'], // , 'application/pdf'
     },
@@ -34,7 +34,7 @@ export const imageUploadPipelineForUpdateServiceCategory = [
   processUploadedFilesForUpdate([
     {
       name: 'attachments',
-      folder: TFolderName.trainingProgram,
+      folder: TFolderName.serviceCategory,
       required: false, // optional
       allowedMimeTypes: ['image/jpeg', 'image/png'], // , 'application/pdf'
     },
