@@ -16,7 +16,7 @@ import { startNotificationWorker, startScheduleWorker } from './helpers/bullmq/b
 import connectToDb from './config/mongoDbConfig';
 import { initializeRedis, redisClient, redisPubClient, redisSubClient } from './helpers/redis/redis';
 import { socketHelperForKafka } from './helpers/socket/socketForChatV1WithKafka';
-import { socketService } from './helpers/socket/socketForChatV3';
+import { socketService } from './helpers/socket/socketForChatV3WithFirebase';
 
 // in production, use all cores, but in development, limit to 2-4 cores
 const numCPUs = config.environment === 'production' ? os.cpus().length : Math.max(0, Math.min(1, os.cpus().length));

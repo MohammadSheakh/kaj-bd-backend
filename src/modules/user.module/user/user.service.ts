@@ -1219,7 +1219,7 @@ export class UserService extends GenericService<typeof User, IUser> {
   async getCategoriesAndPopularProvidersForUser() {
     const [categories, providers, banners] = await Promise.all([
       ServiceCategory.find({ isDeleted: false, isVisible: true })
-        .limit(9)
+        .limit(6)
         .select('name attachments').populate({
           path: 'attachments',
           select: 'attachment attachmentType',

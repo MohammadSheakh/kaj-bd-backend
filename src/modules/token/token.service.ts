@@ -47,12 +47,22 @@ const verifyToken = async (
   secret: Secret,
   tokenType: TokenType
 ) => {
+
+  console.log("token : ", token);
+  console.log("secret : ", secret);
+  console.log("tokenType : ", tokenType);
+
   const decoded = jwt.verify(token, secret) as JwtPayload;
+
+  console.log("decoded : ", decoded);
+
   const storedToken = await Token.findOne({
     token,
     user: decoded.userId,
     type: tokenType
   });
+
+  console.log("storedToken -> ", storedToken);
 
   // ------------------------ as per toky vai  TODO : MUST : NEED_TO_TEST
   // if (!storedToken) {

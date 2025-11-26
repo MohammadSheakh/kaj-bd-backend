@@ -34,7 +34,7 @@ const controller = new SupportMessageController();
 
 router.route('/paginate').get(
   auth(TRole.commonAdmin),
-  validateFiltersForQuery(optionValidationChecking(['_id', ...paginationOptions])),
+  validateFiltersForQuery(optionValidationChecking(['_id', 'isResolved', ...paginationOptions])),
   setQueryOptions({
     populate: [
       { path: 'attachments', select: 'attachment' },
@@ -50,10 +50,17 @@ router.route('/:id').get(
   controller.getById
 );
 
-router.route('/update/:id').put(
-  //auth('common'),
-  // validateRequest(validation.createHelpMessageValidationSchema),
-  controller.updateById
+/** ----------------------------------------------
+   * @role Admin
+   * @Section Support Message
+   * @module SupportMessage |
+   * @figmaIndex 0-0
+   * @desc as per clients need .. change status of support message
+   * 
+   *----------------------------------------------*/
+router.route('/change-satus/:id').put(
+  auth(TRole.commonAdmin),
+  controller.changeResolveSatus
 );
 
 //[🚧][🧑‍💻✅][🧪] // 🆗

@@ -34,13 +34,12 @@ export class SupportMessageController extends GenericController<
   changeResolveSatus = catchAsync(async (req: Request, res: Response) => {
     
     let supportMessageId = req.params.id;
-
     const result = await this.supportMessageService.changeResolveSatus(supportMessageId);
 
     sendResponse(res, {
       code: StatusCodes.OK,
       data: result,
-      message: `${this.modelName} created successfully`,
+      message: `${this.modelName} status updated successfully`,
       success: true,
     });
   });

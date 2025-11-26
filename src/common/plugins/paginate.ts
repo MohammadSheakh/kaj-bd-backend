@@ -23,15 +23,15 @@ const paginate = <T>(schema: Schema<T>) => {
         
         // Check if it's the old format (array of strings)
         if (typeof populateOptions[0] === 'string') {
-            // Old format: ['attachments', 'siteId']
-            populateOptions.forEach(field => {
-                query = query.populate(field as string);
-            });
+          // Old format: ['attachments', 'siteId']
+          populateOptions.forEach(field => {
+              query = query.populate(field as string);
+          });
         } else {
-            // New format: [{path: 'attachments', select: 'filename'}, ...]
-            populateOptions.forEach(option => {
-                query = query.populate(option);
-            });
+          // New format: [{path: 'attachments', select: 'filename'}, ...]
+          populateOptions.forEach(option => {
+              query = query.populate(option);
+          });
         }
     }
 

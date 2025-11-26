@@ -53,6 +53,15 @@
 (Module) feat : Commit Message
 (Module) :wrench:  Commit Message  <chore>
 (Module) :hammer:   or :recycle: Commit Message <refactor>
+-------------------------
+(Module) fix : resolve ** issue 
+(Module) feat : added **  
+
+---------------
+branch creation
+git checkout -b hotfix/
+git checkoub -b feat/
+git checkout -b bugfix/
 
 :zap: ⚡ -> performance improvement with refactoring  <perf>
 :broom: -> clean up

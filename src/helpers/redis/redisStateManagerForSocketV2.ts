@@ -208,6 +208,13 @@ export class RedisStateManager {
     return await this.redis.sMembers(`${this.KEYS.ROOM_USERS}${roomId}`);
   }
 
+  // this method add for handle push notification
+  // here roomId means conversationId
+  async isUserInRoom(userId: string, roomId: string): Promise<boolean> {
+    return await this.redis.sIsMember(`${this.KEYS.ROOM_USERS}${roomId}`, userId);
+  }
+
+
   async getUserRooms(userId: string): Promise<string[]> {
     return await this.redis.sMembers(`${this.KEYS.USER_ROOMS}${userId}`);
   }

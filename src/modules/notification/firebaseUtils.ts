@@ -4,29 +4,6 @@ import * as admin from 'firebase-admin';
 import { Schema } from 'mongoose';
 import { Notification } from './notification.model';
 // Initialize Firebase Admin SDK (ensure it's only done once)
-let firebaseInitialized = false;
-
-export const initializeFirebase = () => {
-  if (firebaseInitialized) return;
-
-  if (
-    !process.env.FIREBASE_PROJECT_ID ||
-    !process.env.FIREBASE_PRIVATE_KEY ||
-    !process.env.FIREBASE_CLIENT_EMAIL
-  ) {
-    throw new Error('Missing Firebase environment variables');
-  }
-
-  admin.initializeApp({
-    credential: admin.credential.cert({
-      projectId: process.env.FIREBASE_PROJECT_ID,
-      privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
-      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-    }),
-  });
-
-  firebaseInitialized = true;
-};
 
 
 /*************
@@ -44,15 +21,14 @@ export const initializeFirebase = () => {
  * ********* */
 
 // This function can now be reused in your services or utils as needed
-export const sendPushNotification = async (
+export const sendPushNotificationDepricated = async (
   fcmToken: string,
   notificationText: string,
   receiverId: Schema.Types.ObjectId | string // INFO : naki  userId hobe eita
 ): Promise<void> => {
   try {
     // Initialize Firebase Admin SDK only once
-    initializeFirebase();
-
+    
     const message : admin.messaging.Message = {
       notification: {
         notificationText,

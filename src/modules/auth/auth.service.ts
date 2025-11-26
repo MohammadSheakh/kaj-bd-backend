@@ -336,7 +336,7 @@ const verifyEmail = async (email: string, token: string, otp: string) => {
 };
 
 const forgotPassword = async (email: string) => {
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email: email.trim().toLowerCase() });
   if (!user) {
     throw new ApiError(StatusCodes.NOT_FOUND, 'User not found');
   }
