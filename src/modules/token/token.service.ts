@@ -65,12 +65,12 @@ const verifyToken = async (
   console.log("storedToken -> ", storedToken);
 
   // ------------------------ as per toky vai  TODO : MUST : NEED_TO_TEST
-  // if (!storedToken) {
-  //   throw new ApiError(
-  //     StatusCodes.BAD_REQUEST,
-  //     'Token is invalid or already used'
-  //   );
-  // }
+  if (!storedToken) {
+    throw new ApiError(
+      StatusCodes.BAD_REQUEST,
+      'Token is invalid or already used'
+    );
+  }
   if (storedToken.expiresAt < new Date()) {
     throw new ApiError(StatusCodes.BAD_REQUEST, 'Token has expired');
   }
