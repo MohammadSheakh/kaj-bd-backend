@@ -156,7 +156,7 @@ export class UserService extends GenericService<typeof User, IUser> {
 
     const id = loggedInUser.userId
 
-    const user = await User.findById(id).select('name email phoneNumber').lean();
+    const user = await User.findById(id).select('name email phoneNumber profileImage').lean();
     const userProfile =  await UserProfile.findOne({
       userId: id
     }).select('location dob gender').lean();

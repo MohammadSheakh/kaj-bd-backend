@@ -15,11 +15,6 @@ const ServiceProviderSchema = new Schema<IServiceProvider>(
       ref: 'User',
       required: [true, 'Provider ID is required'],
     },
-    // serviceName: {
-    //   type: String,
-    //   required: [true, 'Service name is required'],
-    //   trim: true,
-    // },
     serviceName: {
       en: { 
         type: String, 

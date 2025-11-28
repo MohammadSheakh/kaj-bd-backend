@@ -22,6 +22,8 @@ import mongoose from 'mongoose';
 import { ICreateServiceCategory, IServiceCategory } from '../serviceCategory/serviceCategory.interface';
 import { TRole } from '../../../middlewares/roles';
 import { ServiceCategoryService } from '../serviceCategory/serviceCategory.service';
+import omit from '../../../shared/omit';
+import pick from '../../../shared/pick';
 
 //-----------------------------
 // ServiceProvider means Service Provider Details
@@ -307,6 +309,65 @@ export class ServiceProviderController extends GenericController<
       message: `${this.modelName} retrieved successfully`,
     });
   })
+
+
+  getAllWithPaginationV2 = catchAsync(async (req: Request, res: Response) => {
+    //const filters = pick(req.query, ['_id', 'title']); // now this comes from middleware in router
+    const filters =  omit(req.query, ['sortBy', 'limit', 'page', 'populate']);
+    const options = pick(req.query, ['sortBy', 'limit', 'page', 'populate']);
+
+    // ✅ Default values
+    let populateOptions: (string | { path: string; select: string }[]) = [];
+    let select = '-isDeleted -createdAt -updatedAt -__v';
+
+    // ✅ If middleware provided overrides → use them
+    if (req.queryOptions) {
+      if (req.queryOptions.populate) {
+        populateOptions = req.queryOptions.populate;
+      }
+      if (req.queryOptions.select) {
+        select = req.queryOptions.select;
+      }
+    }
+
+    const query = {};
+
+    // Create a copy of filter without isPreview to handle separately
+    const mainFilter = { ...filters };
+
+    // Loop through each filter field and add conditions if they exist
+    for (const key of Object.keys(mainFilter)) {
+      if (key === 'serviceName' && mainFilter[key] !== '') {
+        // query[key] = { $regex: mainFilter[key], $options: 'i' }; // Case-insensitive regex search for name
+        
+        // 🔍 Search in both English and Bangla fields
+        // Only set $or if it doesn't exist yet, or merge conditions
+        if (!query['$or']) {
+          query['$or'] = [
+            { 'serviceName.en': { $regex: mainFilter[key], $options: 'i' } },
+            { 'serviceName.bn': { $regex: mainFilter[key], $options: 'i' } }
+          ];
+        }
+      
+        // } else {
+      } else if (mainFilter[key] !== '' && mainFilter[key] !== null && mainFilter[key] !== undefined){
+        
+        //---------------------------------
+        // In pagination in filters when we pass empty string  it retuns all data
+        //---------------------------------
+        query[key] = mainFilter[key];
+      }
+    }
+
+    const result = await this.service.getAllWithPagination(query, options, populateOptions , select );
+
+    sendResponse(res, {
+      code: StatusCodes.OK,
+      data: result,
+      message: `All ${this.modelName} with pagination`,
+      success: true,
+    });
+  });
 
   // add more methods here if needed or override the existing ones 
 }

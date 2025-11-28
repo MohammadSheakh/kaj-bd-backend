@@ -41,7 +41,7 @@ const controller = new ServiceProviderController();
 //---------------------------------
 router.route('/paginate').get(
   //auth('common'),
-  validateFiltersForQuery(optionValidationChecking(['_id', 'serviceCategoryId', ...paginationOptions])),
+  validateFiltersForQuery(optionValidationChecking(['_id', 'serviceCategoryId', 'serviceName', ...paginationOptions])),
   setRequestFiltersV2({
     isDeleted: false,
     providerApprovalStatus: TProviderApprovalStatus.accept,
@@ -49,6 +49,7 @@ router.route('/paginate').get(
   setQueryOptions({
     populate: [
       { path: 'attachmentsForGallery', select: 'attachment' },
+      { path: 'providerId', select: 'name profileImage' },
     ],
     select: '-isDeleted -createdAt -updatedAt'
   }),
