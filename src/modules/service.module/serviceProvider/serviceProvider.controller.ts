@@ -242,14 +242,21 @@ export class ServiceProviderController extends GenericController<
       {
         path: 'providerId',
         select: 'name profileImage',
-      }
+      },
+      { 
+        path: 'attachmentsForGallery',
+        select: 'attachment'
+      },
     ];
     
     const select =  defaultExcludes;
 
     const result = await this.service.getById(id, populateOptions, select);
 
-    const reviews = await Review.find({ serviceProviderDetailsId: id }); // TODO : MUST : 
+    const reviews = await Review.find({ serviceProviderDetailsId: id }).populate({
+      path:"userId",
+      select:"name profileImage"
+    }); // TODO : MUST : 
 
     const reviewCountPerRating = await Review.aggregate([
       {

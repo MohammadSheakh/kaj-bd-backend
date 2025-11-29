@@ -72,7 +72,7 @@ export class ReviewService extends GenericService<
       }
     ]);
 
-    console.log("result : ", result);
+    // console.log("result : ", result);
 
     // if (result.length === 0) {
     //   return {
@@ -84,7 +84,7 @@ export class ReviewService extends GenericService<
     if(result.length !== 0){
       const { totalRating, ratingCount } = result[0];
 
-      console.log('totalRating', totalRating, ' ⚡⚡ ratingCount', ratingCount);
+      // console.log('totalRating', totalRating, ' ⚡⚡ ratingCount', ratingCount);
       
       const averageRating = ratingCount > 0 
         ? parseFloat((totalRating / ratingCount).toFixed(2)) 
