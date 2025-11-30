@@ -144,6 +144,15 @@ router.route('/home-page').get(
   controller.getCategoriesAndPopularProvidersForUser
 )
 
+//--------------------------------- kaj bd
+// User | Home Page |   get only popular providers  
+//---------------------------------
+// TODO : MUST : Need to implement pagination .. 
+router.route('/home-page/popular').get(
+  // auth(TRole.user),
+  controller.getPopularProvidersForUser
+)
+
 
 //--------------------------------- kaj bd
 // Provider | Home Page | 03-01 | get earning by category, categorically booking count, all recent job request  

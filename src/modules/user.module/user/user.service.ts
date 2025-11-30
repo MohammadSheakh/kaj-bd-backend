@@ -1252,6 +1252,26 @@ export class UserService extends GenericService<typeof User, IUser> {
 
     return { categories, providers, banners };
   }
+
+  async getPopularProvidersForUser() {
+    const [ providers] = await Promise.all([
+
+      ServiceProvider.find({
+        providerApprovalStatus: 'accept',
+        rating: { $lt: 3.5 },
+        isDeleted: false,
+      })
+        .select('-__v -updatedAt -createdAt -isDeleted -attachmentsForCoverPhoto')
+        .populate({
+          path: 'attachmentsForGallery attachmentsForCoverPhoto',
+          select: 'attachment attachmentType',
+        }),
+
+    ]);
+
+
+    return { providers };
+  }
 }
 
 /*********

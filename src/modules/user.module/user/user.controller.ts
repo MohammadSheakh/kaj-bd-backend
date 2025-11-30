@@ -362,6 +362,16 @@ export class UserController extends GenericController<
     });
   })
 
+  getPopularProvidersForUser = catchAsync(async (req: Request, res: Response) => {
+    const result = await this.userService.getPopularProvidersForUser();
+    sendResponse(res, {
+      code: StatusCodes.OK,
+      data: result,
+      message: 'Categories and popular providers fetched successfully',
+      success: true,
+    });
+  })
+
   //--------------------------------- kaj bd
   // User | Home Page | 03-01 | get category and popular providers also banners 
   //---------------------------------
