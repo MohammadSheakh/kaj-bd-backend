@@ -57,6 +57,24 @@ router.route('/paginate').get(
   controller.getAllWithPaginationV2
 );
 
+// for user ... as per toky vai's requirement
+router.route('/paginate/tokiVai').get(
+  auth(TRole.user),
+  validateFiltersForQuery(optionValidationChecking(['_id','status', ...paginationOptions])),
+  getLoggedInUserAndSetReferenceToUser('userId'),
+  setQueryOptions({
+    populate: [
+      { path: 'providerDetailsId', select: 'serviceName'},
+      { path: 'providerId', select: 'name profileImage role'},
+      { path: 'attachments', select: 'attachment'},
+    ],
+    select: `address bookingDateTime startPrice hasReview paymentTransactionId paymentMethod paymentStatus`// address bookingDateTime startPrice
+    // ${defaultExcludes}
+  }),
+  controller.getAllWithPaginationV2
+);
+
+
 //-------------------------------------------
 // Admin | 06-01 | Get all service booking for work tracker
 //-------------------------------------------

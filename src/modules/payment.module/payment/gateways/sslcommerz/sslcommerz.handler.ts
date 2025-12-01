@@ -20,6 +20,7 @@ import { TCurrency } from "../../../../../enums/payment";
 import { TTransactionFor } from "../../../../../constants/TTransactionFor";
 import { User } from "../../../../user.module/user/user.model";
 import { IUser } from "../../../../user.module/user/user.interface";
+import sendResponse from "../../../../../shared/sendResponse";
 
 // ===================================
 // SSL COMMERZ SUCCESS HANDLER 
@@ -201,17 +202,23 @@ export const validateAfterSuccessfulTransaction = async (req: Request, res: Resp
         const isIOS = userAgent.includes('iphone') || userAgent.includes('ipad') || userAgent.includes('ios');
 
 
-        if (isAndroid || isIOS) {
-            return res.status(StatusCodes.OK).json({
-                message: 'Payment successful',
-                data: {
-                transactionId: tran_id,
-                amount: data.amount,
-                status: data.status,
-                currency: data.currency,
-                },
-            });
-        }
+        // if (isAndroid || isIOS) {
+        //     return sendResponse(res, {
+        //     code: StatusCodes.OK,
+        //     data: {
+        //         message: 'Payment successful',
+        //         data: {
+        //         transactionId: tran_id,
+        //         // amount: data.amount,
+        //         // status: data.status,
+        //         // currency: data.currency,
+        //         },
+        //     },
+        //     message: `Payment successful`,
+        // });
+        // }
+
+        
 
         // Redirect to success page
         // res.redirect(`${config.frontend.url}/payment/success?booking_id=${referenceId}`);
@@ -219,7 +226,7 @@ export const validateAfterSuccessfulTransaction = async (req: Request, res: Resp
         //------------ This is for SSL Commerze success page
         // res.redirect(`http://localhost:6737/`); -- as we are in ubuntu
 
-        res.redirect(config.backend.baseUrl);
+        res.redirect(config.backend.shobhoyUrl);
         
         
     } catch (error) {

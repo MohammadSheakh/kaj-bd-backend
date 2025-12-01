@@ -31,9 +31,9 @@ export class ServiceProviderService extends GenericService<
 
     const userProfile = await UserProfile.findOne({
       userId : userProfileId
-    }).select('frontSideCertificateImage backSideCertificateImage').populate(
+    }).select('frontSideCertificateImage backSideCertificateImage faceImageFromFrontCam').populate(
       {
-        path: 'frontSideCertificateImage backSideCertificateImage',
+        path: 'frontSideCertificateImage backSideCertificateImage faceImageFromFrontCam',
         select: 'attachment',
       }
     ).lean();

@@ -48,13 +48,13 @@ const verifyToken = async (
   tokenType: TokenType
 ) => {
 
-  console.log("token : ", token);
-  console.log("secret : ", secret);
-  console.log("tokenType : ", tokenType);
+  // console.log("token : ", token);
+  // console.log("secret : ", secret);
+  // console.log("tokenType : ", tokenType);
 
   const decoded = jwt.verify(token, secret) as JwtPayload;
 
-  console.log("decoded : ", decoded);
+  // console.log("decoded : ", decoded);
 
   const storedToken = await Token.findOne({
     token,
@@ -62,7 +62,7 @@ const verifyToken = async (
     type: tokenType
   });
 
-  console.log("storedToken -> ", storedToken);
+  
 
   // ------------------------ as per toky vai  TODO : MUST : NEED_TO_TEST
   if (!storedToken) {
@@ -166,23 +166,27 @@ const accessAndRefreshToken = async (user: IUserMain) => {
     stripe_customer_id: user.stripe_customer_id ? user.stripe_customer_id : null
   };
 
-  await Token.deleteMany({ user: user._id });
+  // await Token.deleteMany({ user: user._id });  // ---------------------
+
   const accessToken = createToken(
     payload,
     config.jwt.accessSecret,
     config.jwt.accessExpiration
   );
+
   const refreshToken = createToken(
     payload,
     config.jwt.refreshSecret,
     config.jwt.refreshExpiration
   );
+
   await Token.create({
     token: accessToken,
     user: user._id,
     type: TokenType.ACCESS,
     expiresAt: getExpirationTime(config.jwt.accessExpiration),
   });
+
   await Token.create({
     token: refreshToken,
     user: user._id,
