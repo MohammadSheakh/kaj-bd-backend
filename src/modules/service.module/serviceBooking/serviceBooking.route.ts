@@ -293,6 +293,14 @@ router.route('/').post(
 );
 
 //---------------------------------------
+// User | Before Create A Service Booking we need to check with in half hour time range if provider is free or not   
+//---------------------------------------
+router.route('/schedule-check').post(
+  auth(TRole.user),
+  controller.checkForOverlapScheduleBeforeCreate
+);
+
+//---------------------------------------
 // User | 04-(10/11) Make Payment For Service Booking To Admin 
 // from req.body .. we get bookingId
 // we have loggedIn User Id who pay

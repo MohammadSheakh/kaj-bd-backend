@@ -52,6 +52,20 @@ export class ServiceBookingController extends GenericController<
     });
   });
 
+  checkForOverlapScheduleBeforeCreate = catchAsync(async (req: Request, res: Response) => {
+    const userTimeZone = req.header('X-Time-Zone') || 'Asia/Dhaka'; //TODO: Timezone must from env file
+    const data = req.body as ICreateServiceBooking; // we only receive bookingDateTime and providerId here
+
+    const result = await this.serviceBookingService.checkForOverlapScheduleBeforeCreate(data, req.user as IUser, userTimeZone);
+
+    sendResponse(res, {
+    code: StatusCodes.OK,
+    data: result,
+    message: `Schedule checked successfully`,
+    success: true,
+    });
+  });
+
   
   getAllBookingsWhichStatusIsDone = catchAsync(async (req: Request, res: Response) => {
     const filters =  omit(req.query, ['sortBy', 'limit', 'page', 'populate']); ;

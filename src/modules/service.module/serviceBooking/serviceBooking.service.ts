@@ -101,21 +101,6 @@ export class ServiceBookingService extends GenericService<
         if(isNaN(scheduleDate.getTime())) {
             throw new Error('Invalid date or time format');
         }
-
-        const now = new Date();
-        if(data.bookingDateTime < now) {
-            throw new Error('Booking Date Time must be in the future');
-        }
-
-        // Check for overlapping schedules for the same providers schedule
-        const overlappingSchedule = await ServiceBooking.findOne({
-            providerId: data.providerId,
-            bookingDateTime: scheduleDate,
-        });
-
-        if(overlappingSchedule) {
-            throw new Error('Overlapping schedule exists for the provider. ');
-        }
     }
 
     // Translate multiple properties dynamically
@@ -185,6 +170,49 @@ export class ServiceBookingService extends GenericService<
 
 
     return createdServiceBooking;
+  }
+
+
+  async checkForOverlapScheduleBeforeCreate(data:ICreateServiceBooking , user: IUser, userTimeZone:string) : Promise<any> {
+    
+    const provider = await ServiceProvider.findOne({ providerId: data.providerId });
+    if (!provider) throw new ApiError(400, "Provider details not found");
+
+    if (data.bookingDateTime) {
+
+        // Convert to Date
+        const userDate = new Date(data.bookingDateTime);
+        if (isNaN(userDate.getTime())) {
+            throw new Error("Invalid date format");
+        }
+
+        // Convert to UTC for DB
+        const bookingUTC = toUTCTime(data.bookingDateTime, userTimeZone);
+        data.bookingDateTime = bookingUTC;
+
+        // Must be future
+        if (bookingUTC < new Date()) {
+            throw new Error("Booking time must be in future");
+        }
+
+        // 30-min overlap range
+        const startRange = new Date(bookingUTC.getTime() - 30 * 60000);
+        const endRange = new Date(bookingUTC.getTime() + 30 * 60000);
+
+        const overlapping = await ServiceBooking.findOne({
+            providerId: data.providerId,
+            bookingDateTime: { $gte: startRange, $lte: endRange }
+        });
+
+        if (overlapping) {
+            throw new Error("Provider is booked within 30 minutes of this time");
+        }
+    }
+
+    return {
+        bookingDateTime: data.bookingDateTime,
+        providerId: data.providerId
+    };
   }
 
   //----------------------------------------
