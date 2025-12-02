@@ -108,7 +108,7 @@ router.route('/').post(
 );
 
 
-/** ----------------------------------------------
+/** ---------------------------------------------- V2 Found
    * @role Provider
    * @Section Profile -> Documents
    * @module UserProfile |
@@ -120,6 +120,20 @@ router.route('/upload-attachments').put(
   auth(TRole.provider),
   ...imageUploadPipelineForUpdateAttachmentsOfServiceProvider, //🥇
   controller.uploadAttachments
+);
+
+/** ----------------------------------------------
+   * @role Provider
+   * @Section Profile -> Documents
+   * @module UserProfile |
+   * @figmaIndex 06-03
+   * @desc to upload images for service providers gallery with other information .. 
+   * 
+   *----------------------------------------------*/
+router.route('/upload-attachments-v2').put(
+  auth(TRole.provider),
+  ...imageUploadPipelineForUpdateAttachmentsOfServiceProvider, //🥇
+  controller.uploadAttachmentsV2
 );
 
 router.route('/delete/:id').delete(

@@ -99,7 +99,8 @@ export class ServiceBookingService extends GenericService<
         data.bookingDateTime = toUTCTime(data.bookingDateTime, userTimeZone);
 
         if(isNaN(scheduleDate.getTime())) {
-            throw new Error('Invalid date or time format');
+            // throw new Error('Invalid date or time format');
+            throw new ApiError(StatusCodes.BAD_REQUEST, 'Invalid date or time format');
         }
     }
 
@@ -168,7 +169,6 @@ export class ServiceBookingService extends GenericService<
       null, // linkId // queryParamValue
     );
 
-
     return createdServiceBooking;
   }
 
@@ -183,7 +183,8 @@ export class ServiceBookingService extends GenericService<
         // Convert to Date
         const userDate = new Date(data.bookingDateTime);
         if (isNaN(userDate.getTime())) {
-            throw new Error("Invalid date format");
+            // throw new Error("Invalid date format");
+            throw new ApiError(StatusCodes.BAD_REQUEST, 'Invalid date format');
         }
 
         // Convert to UTC for DB
@@ -192,7 +193,8 @@ export class ServiceBookingService extends GenericService<
 
         // Must be future
         if (bookingUTC < new Date()) {
-            throw new Error("Booking time must be in future");
+            // throw new Error("Booking time must be in future");
+            throw new ApiError(StatusCodes.BAD_REQUEST, 'Booking time must be in future');
         }
 
         // 30-min overlap range
@@ -205,7 +207,8 @@ export class ServiceBookingService extends GenericService<
         });
 
         if (overlapping) {
-            throw new Error("Provider is booked within 30 minutes of this time");
+            // throw new Error("Provider is booked within 30 minutes of this time");
+            throw new ApiError(StatusCodes.BAD_REQUEST, 'Provider is booked within 30 minutes of this time');
         }
     }
 

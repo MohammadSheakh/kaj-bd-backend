@@ -4,7 +4,7 @@ import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { GenericController } from '../../_generic-module/generic.controller';
 import { ServiceProvider } from './serviceProvider.model';
-import { ICreateServiceProvider, ICreateServiceProviderDTO, IServiceProvider, IUpdateProfileDTO, IUploadAttachmentsForGalleryDTO } from './serviceProvider.interface';
+import { ICreateServiceProvider, ICreateServiceProviderDTO, IServiceProvider, IUpdateProfileDTO, IUploadAttachmentsForGalleryDTO, IUploadAttachmentsForGalleryDTOV2 } from './serviceProvider.interface';
 import { ServiceProviderService } from './serviceProvider.service';
 import catchAsync from '../../../shared/catchAsync';
 import sendResponse from '../../../shared/sendResponse';
@@ -197,6 +197,58 @@ export class ServiceProviderController extends GenericController<
       code: StatusCodes.OK,
       data: updatedServiceProviderDetails,
       message: `Images uploaded successfully for service providers attachments section`,
+      success: true,
+    });
+
+  })
+
+  // this function allow upload attachments with other service provider details
+  uploadAttachmentsV2 = catchAsync(async (req: Request, res: Response) => {
+    
+    const data:ICreateServiceProvider = req.body;
+
+    // 🥇
+    // Translate multiple properties dynamically
+    const [nameObj] : [IServiceProvider['serviceName']]  = await Promise.all([
+      buildTranslatedField(data.serviceName as string)
+    ]);
+
+    const [descriptionObj] : [IServiceProvider['serviceName']]  = await Promise.all([
+      buildTranslatedField(data.description as string)
+    ]);
+
+    // first we have to get serviceProviderDetails
+    const serviceProviderDetailsId = req.query.serviceProviderDetailsId;
+
+    const serviceProviderDetails : IServiceProvider | null = await ServiceProvider.findOne({
+      _id: serviceProviderDetailsId
+    });
+
+    console.log("ServiceProviderDetails :⚡⚡: ", serviceProviderDetails);
+    
+    const updatedServiceProvidersProfile : IUploadAttachmentsForGalleryDTOV2 = {
+      attachmentsForGallery :  [ ...req.uploadedFiles.attachmentsForGallery, ...serviceProviderDetails?.attachmentsForGallery],
+      serviceName : nameObj,
+      yearsOfExperience : data.yearsOfExperience,
+      startPrice : data.startPrice,
+      providerId : (req.user as IUser).userId,
+      description : descriptionObj
+    }
+
+   
+    const [updatedServiceProviderDetails] = await Promise.all([
+       
+       ServiceProvider.findOneAndUpdate(
+        { _id: serviceProviderDetailsId },
+          updatedServiceProvidersProfile,
+        { new: true }
+      )
+    ]);
+
+    sendResponse(res, {
+      code: StatusCodes.OK,
+      data: updatedServiceProviderDetails,
+      message: `Service Providers Details Updated`,
       success: true,
     });
 

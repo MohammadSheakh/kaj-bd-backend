@@ -69,6 +69,15 @@ export interface IUploadAttachmentsForGalleryDTO{
   attachmentsForGallery : string // from imageUploadPipelineForUpdateAttachmentsOfServiceProvider middleware
 }
 
+export interface IUploadAttachmentsForGalleryDTOV2{
+  attachmentsForGallery : string[] // from imageUploadPipelineForUpdateAttachmentsOfServiceProvider middleware
+  serviceName : string | IServiceProvider['serviceName']
+  yearsOfExperience : number
+  startPrice : number
+  providerId : Types.ObjectId // logged in userId
+  description : string | IServiceProvider['description']
+}
+
 export interface IServiceProviderModel extends Model<IServiceProvider> {
   paginate: (
     query: Record<string, any>,
