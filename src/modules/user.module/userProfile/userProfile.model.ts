@@ -60,11 +60,28 @@ const userProfileSchema = new Schema<IUserProfile>({
         type: Number,
         required: false,
     },
+
+    // as per client requirement we add this .. also keep the previous lat lng structure so that
+    // Flutter devs UI does not break .. 
+    locationV2: {
+        type: {
+            type: String,
+            enum: ["Point"],
+            default: "Point",
+        },
+        coordinates: {
+            type: [Number], // [longitude, latitude]
+            required: true
+        }
+    },
+
     userId: { //🔗 for back reference .. 
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: false,
     },
 });
+
+userProfileSchema.index({ locationV2: "2dsphere" });
 
 export const UserProfile = model<IUserProfile, IUserProfileModel>('UserProfile', userProfileSchema);

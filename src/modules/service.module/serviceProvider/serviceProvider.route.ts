@@ -39,6 +39,7 @@ const controller = new ServiceProviderController();
 //---------------------------------
 // User | 03-05 Get all service provider for a serviceCategoryId
 //---------------------------------
+
 router.route('/paginate').get(
   //auth('common'),
   validateFiltersForQuery(optionValidationChecking(['_id', 'serviceCategoryId', 'serviceName', ...paginationOptions])),

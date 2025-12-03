@@ -72,6 +72,10 @@ const register = catchAsync(async (req :Request, res:Response) => {
     }, // make sure we store both bn and en version
     lat: data.lat,
     lng : data.lng,
+    locationV2: {
+      type: "Point",
+      coordinates: [ data.lng, data.lat ] // must be [longitude, latitude]
+    },
     dob : data.dob 
   });
 

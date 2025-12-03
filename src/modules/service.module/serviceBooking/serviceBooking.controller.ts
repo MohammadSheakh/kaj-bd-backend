@@ -299,7 +299,7 @@ export class ServiceBookingController extends GenericController<
       },
       {
       path: 'attachments',
-      select: 'attachment'
+      select: 'attachment attachmentType'
       },]
     ); // its booking id
     const additionalCosts = await AdditionalCost.find({
