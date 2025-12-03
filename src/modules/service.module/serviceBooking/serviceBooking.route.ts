@@ -66,7 +66,7 @@ router.route('/paginate/tokiVai').get(
     populate: [
       { path: 'providerDetailsId', select: 'serviceName'},
       { path: 'providerId', select: 'name profileImage role'},
-      { path: 'attachments', select: 'attachment'},
+      { path: 'attachments', select: 'attachment attachmentType'}, 
     ],
     select: `address bookingDateTime startPrice hasReview paymentTransactionId paymentMethod paymentStatus`// address bookingDateTime startPrice
     // ${defaultExcludes}

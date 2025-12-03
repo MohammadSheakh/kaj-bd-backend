@@ -53,7 +53,7 @@ router.route('/paginate-with-wallet').get(
   getLoggedInUserAndSetReferenceToUser('userId'),
   setQueryOptions({ // this will work on transaction history
     populate: [],
-    select: '-isDeleted -createdAt -updatedAt'
+    select: '-isDeleted -updatedAt'
   }),
   controller.getAllWithWallet
 );

@@ -20,14 +20,20 @@ export class ServiceProviderService extends GenericService<
     const serviceProvider = await ServiceProvider.findOne({
       providerId: userProfileId,
     })
-    .select('serviceName yearsOfExperience startPrice introOrBio description')
-    .populate({
-      path: "serviceCategoryId",
-      select: "name"
-    })
+    .select('serviceName attachmentsForGallery yearsOfExperience startPrice introOrBio description')
+    .populate([
+      {
+        path: "serviceCategoryId",
+        select: "name"
+      },
+      { 
+        path: 'attachmentsForGallery', 
+        select: 'attachment attachmentType'
+      },]
+    )
     .lean();
 
-    console.log('serviceProvider: ', serviceProvider);
+    // console.log('serviceProvider: ', serviceProvider);
 
     const userProfile = await UserProfile.findOne({
       userId : userProfileId
