@@ -73,6 +73,13 @@ router.route('/:id').get(
   controller.getByIdWithReviews
 );
 
+// pass providers userId
+router.route('/limited-info/:id').get(
+  auth(TRole.user),
+  controller.getOnlyAttachmentServiceNameAndInitCost
+);
+
+
 
 //---------------------------------  
 // User | 03-08 get a service provider's profile details 

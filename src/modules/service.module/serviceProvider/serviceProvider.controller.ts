@@ -217,6 +217,12 @@ export class ServiceProviderController extends GenericController<
       buildTranslatedField(data.description as string)
     ]);
 
+    const [introOrBioObj] : [IServiceProvider['serviceName']]  = await Promise.all([
+      buildTranslatedField(data.introOrBio as string)
+    ]);
+
+    
+
     // first we have to get serviceProviderDetails
     const serviceProviderDetailsId = req.query.serviceProviderDetailsId;
 
@@ -232,7 +238,8 @@ export class ServiceProviderController extends GenericController<
       yearsOfExperience : data.yearsOfExperience,
       startPrice : data.startPrice,
       providerId : (req.user as IUser).userId,
-      description : descriptionObj
+      description : descriptionObj,
+      introOrBio: introOrBioObj,
     }
 
    
@@ -354,6 +361,39 @@ export class ServiceProviderController extends GenericController<
         result,
         reviews,
         fullResult
+      },
+      message: `${this.modelName} retrieved successfully`,
+    });
+  });
+
+  getOnlyAttachmentServiceNameAndInitCost = catchAsync(async (req: Request, res: Response) => {
+    const id = req.params.id; // this is providers userId
+
+    // INFO: is it possible to optimize this more ?
+    const populateOptions = [
+      { 
+        path: 'attachmentsForGallery',
+        select: 'attachment'
+      },
+    ];
+    const select = 'serviceName startPrice attachmentsForGallery';
+    const result = await ServiceProvider.find({providerId : id})
+    .select('serviceName startPrice attachmentsForGallery').populate({ 
+      path: 'attachmentsForGallery',
+      select: 'attachment'
+    });
+
+    if (!result) {
+      throw new ApiError(
+        StatusCodes.NOT_FOUND,
+        `Object with ID ${id} not found`
+      );
+    }
+
+    sendResponse(res, {
+      code: StatusCodes.OK,
+      data: {
+        result,
       },
       message: `${this.modelName} retrieved successfully`,
     });
