@@ -20,7 +20,6 @@ import { SettingsRoutes } from '../modules/settings.module/settings/settings.rou
 import { AdditionalCostRoute } from '../modules/service.module/additionalCost/additionalCost.route';
 import { BannerRoute } from '../modules/banner/banner.route';
 import { AdminPercentageRoute } from '../modules/adminPercentage/adminPercentage.route';
-import { SupportMessage } from '../modules/supportMessage/SupportMessage.model';
 import { SupportMessageRoute } from '../modules/supportMessage/supportMessage.route';
 
 // import { ChatRoutes } from '../modules/chat/chat.routes';

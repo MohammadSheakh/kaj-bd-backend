@@ -28,11 +28,6 @@ router.route('/update/:attachmentId').put(
   AttachmentController.updateById
 );
 
-router.route('/addOrRemoveReact/:attachmentId').put(
-  auth('common'),
-  // validateRequest(validation.createHelpMessageValidationSchema),
-  AttachmentController.addOrRemoveReact
-);
 
 router.route('/').get(
   auth('common'),
@@ -46,7 +41,7 @@ router.route('/').get(
 // );
 
 //[🚧][🧑‍💻✅][🧪🆗] 
-router.route('/delete/:attachmentId').delete(
+router.route('/:attachmentId').delete(
   auth('common'),
   AttachmentController.deleteById
 );

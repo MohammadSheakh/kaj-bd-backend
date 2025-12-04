@@ -122,43 +122,29 @@ const updateById = catchAsync(async (req, res) => {
 
 //[🚧][🧑‍💻✅][🧪🆗]
 
-const deleteById = catchAsync(async (req, res) => {
-  const attachment = await attachmentService.getById(req.params.attachmentId);
-  if (!attachment) {
-    throw new ApiError(StatusCodes.NOT_FOUND, 'Attachment not found');
-  }
-  let results;
-
-  if (req.user.role == attachment.uploaderRole) {
-    if (attachment.attachedToType == 'project') {
-      // taile amra just attachment  delete korbo
-      results = await attachmentService.deleteById(req.params.attachmentId);
-    } else if (attachment.attachedToType == 'note') {
-      const note = await noteService.getById(attachment.attachedToId);
-      note.attachments = note.attachments.filter(
-        attachmentId => attachmentId._id.toString() !== req.params.attachmentId
+const deleteById = catchAsync(async (req: Request, res: Response) => {
+    if (!req.params.attachmentId) {
+      throw new ApiError(
+        StatusCodes.BAD_REQUEST,
+        `id is required for delete Attachment`
       );
-      const result = await noteService.updateById(note._id, note);
-      if (result) {
-        results = await attachmentService.deleteById(req.params.attachmentId);
-      }
     }
-    // TODO :  task er jonno kaj korte hobe ...
-  } else {
-    throw new ApiError(
-      StatusCodes.UNAUTHORIZED,
-      'You are not authorized to delete this attachment'
-    );
-  }
+    const id = req.params.attachmentId;
 
-  // await attachmentService.deleteById(req.params.attachmentId);
-  sendResponse(res, {
-    code: StatusCodes.OK,
-    message: 'Project deleted successfully',
-    data: results,
-    success: true,
+    const deletedObject = await Attachment.findByIdAndDelete(id).select('-__v');;
+    if (!deletedObject) {
+      throw new ApiError(
+        StatusCodes.NOT_FOUND,
+        `Object with ID ${id} not found`
+      );
+    }
+    //   return res.status(StatusCodes.NO_CONTENT).json({});
+    sendResponse(res, {
+      code: StatusCodes.OK,
+      data: deletedObject,
+      message: `Attachment deleted successfully`,
+    });
   });
-});
 
 const addOrRemoveReact = catchAsync(async (req, res) => {
   const { attachmentId } = req.params;

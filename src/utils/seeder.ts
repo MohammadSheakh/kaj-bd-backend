@@ -96,7 +96,7 @@ const connectToDatabase = async () => {
 const seedDatabase = async () => {
   try {
     await connectToDatabase();
-    // await dropDatabase();
+    await dropDatabase();
     await seedUsers();
     console.log('--------------> Database seeding completed <--------------');
   } catch (err) {

@@ -85,6 +85,10 @@ export class ServiceBookingService extends GenericService<
       isDeleted: false,
     });
 
+    if(!adminPercentage){
+      throw new ApiError(StatusCodes.BAD_REQUEST, 'No Admin Percentage Found');
+    }
+
     if (!serviceProviderData) {
       throw new ApiError(StatusCodes.BAD_REQUEST, 'No service provider details found for selected service');
     }

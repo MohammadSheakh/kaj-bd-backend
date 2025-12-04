@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import auth from '../../middlewares/auth';
 import { NotificationController } from './notification.controllers';
+import { TRole } from '../../middlewares/roles';
 
 const router = Router();
 
@@ -9,10 +10,10 @@ router
   .delete(auth('common'), NotificationController.clearAllNotification);
 router
   .route('/admin-notifications')
-  .get(auth('admin'), NotificationController.getAdminNotifications);
+  .get(auth(TRole.commonAdmin), NotificationController.getAdminNotifications);
 router
   .route('/')
-  .get(auth('common'), NotificationController.getALLNotification);
+  .get(auth(TRole.common), NotificationController.getALLNotification);
 
 router
   .route('/:id')

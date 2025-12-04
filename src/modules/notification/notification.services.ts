@@ -34,7 +34,10 @@ const getAdminNotifications = async (
   filters: Partial<INotification>,
   options: PaginateOptions
 ): Promise<PaginateResult<INotification>> => {
-  filters.role = 'admin'; // Important SQL
+  
+  filters.receiverRole = 'admin'; // Important SQL
+  options.sortBy='-createdAt'
+
   return Notification.paginate(filters, options);
 };
 
