@@ -262,7 +262,7 @@ export class UserService extends GenericService<typeof User, IUser> {
       providerId,
       status: TBookingStatus.pending,
     })
-      .populate('userId', 'name avatar')
+      .populate('userId', 'name profileImage')
       .sort({ createdAt: -1 })
       .limit(5)
       .lean();
