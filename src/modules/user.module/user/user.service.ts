@@ -386,6 +386,7 @@ export class UserService extends GenericService<typeof User, IUser> {
       updateUserProfile.location = locationObj;
     }
 
+
     if(data.dob){
       updateUserProfile.dob = data.dob;
     }

@@ -13,12 +13,14 @@ interface TranslatedField {
 export const buildTranslatedField = async (
   text: string,
 ): Promise<TranslatedField> => {
+  
+  /*---------------------------------
   const cleanText = text?.trim();
   if (cleanText.length < 3) {
     throw new Error('Text too short to translate');
   }
 
-  /*---------------------------------
+  
 
   // 1️⃣ Detect the language
   let detectedLang = await detectLanguage(cleanText);

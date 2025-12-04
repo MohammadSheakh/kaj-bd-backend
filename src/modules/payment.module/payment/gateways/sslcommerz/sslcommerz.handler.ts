@@ -159,6 +159,7 @@ export const validateAfterSuccessfulTransaction = async (req: Request, res: Resp
         // also create wallet transaction history for provider
         await WalletTransactionHistory.create(
             { 
+                userId:updatedBooking.providerId,
                 walletId:updatedWallet._id,
                 paymentTransactionId: newPayment._id,
                 type : TWalletTransactionHistory.credit,

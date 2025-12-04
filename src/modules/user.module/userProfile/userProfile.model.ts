@@ -63,17 +63,24 @@ const userProfileSchema = new Schema<IUserProfile>({
 
     // as per client requirement we add this .. also keep the previous lat lng structure so that
     // Flutter devs UI does not break .. 
-    locationV2: {
-        type: {
-            type: String,
-            enum: ["Point"],
-            default: "Point",
-        },
-        coordinates: {
-            type: [Number], // [longitude, latitude]
-            required: true
-        }
-    },
+    // locationV2: {
+    //     type: {
+    //         type: String,
+    //         enum: ["Point"],
+    //         default: "Point"
+    //     },
+    //     coordinates: {
+    //         type: [Number],
+    //         validate: {
+    //         validator: function (v) {
+    //             // allow null but if present must be exactly 2 numbers
+    //             return v == null || v.length === 2;
+    //         },
+    //         message: "Coordinates must be an array of two numbers [lng, lat]"
+    //         },
+    //         default: undefined
+    //     }
+    // },
 
     userId: { //🔗 for back reference .. 
         type: Schema.Types.ObjectId,
@@ -82,6 +89,6 @@ const userProfileSchema = new Schema<IUserProfile>({
     },
 });
 
-userProfileSchema.index({ locationV2: "2dsphere" });
+// userProfileSchema.index({ locationV2: "2dsphere" });
 
 export const UserProfile = model<IUserProfile, IUserProfileModel>('UserProfile', userProfileSchema);

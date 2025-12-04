@@ -184,6 +184,10 @@ router.route('/profile-info').put(
   controller.updateProfileInformationOfAUser
 )
 
+router.route('/update-location-test').put(
+  controller.updateLocationTest
+)
+
 /** ----------------------------------------------
  * @role Admin
  * @Section Profile

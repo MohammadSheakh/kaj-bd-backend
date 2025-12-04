@@ -401,11 +401,39 @@ export class UserController extends GenericController<
   
 
   updateProfileInformationOfAUser = catchAsync(async (req: Request, res: Response) => {
+    
+    // await UserProfile.updateMany(
+    //   { "locationV2.coordinates": { $size: 0 } },
+    //   { $set: { locationV2: { type: "Point", coordinates: [0, 0] } } }
+    // );
+
     const result = await this.userService.updateProfileInformationOfAUser((req.user as IUser).userId  as string, req.body);
+    
     sendResponse(res, {
       code: StatusCodes.OK,
       data: result,
       message: 'Profile information fetched successfully',
+      success: true,
+    });
+  })
+
+  updateLocationTest  = catchAsync(async (req: Request, res: Response) => {
+    
+    // await UserProfile.updateMany(
+    //   { "locationV2.coordinates": { $size: 0 } },
+    //   { $set: { locationV2: { type: "Point", coordinates: [0, 0] } } }
+    // );
+
+    await UserProfile.updateMany(
+      { "locationV2.coordinates": { $size: 0 } },
+      { $unset: { locationV2: "" } }
+    )
+
+    
+    sendResponse(res, {
+      code: StatusCodes.OK,
+      data: null,
+      message: 'done',
       success: true,
     });
   })

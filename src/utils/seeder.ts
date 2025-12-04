@@ -11,6 +11,8 @@ dotenv.config();
 
 // Sample data for default users
 const usersData = [
+
+  // this admin needs a wallet .. 
   {
     name: 'Admin',
     email: 'a@gmail.com',
