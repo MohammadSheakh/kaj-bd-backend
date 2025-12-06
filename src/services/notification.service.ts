@@ -32,7 +32,7 @@ export async function enqueueWebNotification(
 ) {
 
   const notifAdded = await notificationQueue.add(
-    'send-notification',
+    'send-notification-kajbd',
     {
       title,
       senderId,

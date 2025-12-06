@@ -123,7 +123,7 @@ export const startScheduleWorker = () => {
  * *********************************************************** */
 
 // Notification Queue
-export const notificationQueue = new Queue("notificationQueue", {
+export const notificationQueue = new Queue("notificationQueue-kajbd", {
   connection: redisPubClient.options,
 });
 // new QueueScheduler("notificationQueue", { connection: redisPubClient.options });
@@ -142,7 +142,7 @@ interface IScheduleJobForNotification {
 
 export const startNotificationWorker = () => {
   const worker = new Worker(
-    "notificationQueue",
+    "notificationQueue-kajbd",
     async (
       job: IScheduleJobForNotification
       // job : Job<INotification, any, NotificationJobName>
