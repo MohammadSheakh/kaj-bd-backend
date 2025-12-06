@@ -485,7 +485,8 @@ export class SocketService {
       //  conversation er lastMessage update korte hobe ..
       //---------------------------------
         const updatedConversation = await Conversation.findByIdAndUpdate(messageData.conversationId, {
-          lastMessage: newMessage._id,
+          lastMessageId: newMessage._id,
+          lastMessage : messageData.text, 
         }); // .populate('lastMessage').exec()
 
         // Prepare message data for emission

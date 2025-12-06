@@ -7,7 +7,10 @@
 // }
 
 import translate from '@google-cloud/translate';
-const client = new translate.v2.Translate();
+import { config } from '../config';
+const client = new translate.v2.Translate({
+  keyFilename: config.firebase.translation
+});
 
 export async function detectLanguage(text: string): Promise<'en' | 'bn'> {
   // const franc = await getFranc();

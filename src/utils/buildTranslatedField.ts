@@ -14,29 +14,31 @@ export const buildTranslatedField = async (
   text: string,
 ): Promise<TranslatedField> => {
   
-  /*---------------------------------
+  
   const cleanText = text?.trim();
   if (cleanText.length < 3) {
     throw new Error('Text too short to translate');
   }
 
-  
-
   // 1️⃣ Detect the language
   let detectedLang = await detectLanguage(cleanText);
+
   const originalLang = detectedLang || 'en';
 
   // 3️⃣ Build the translation object
-  const result: TranslatedField = { en: '', bn: '' };
+  let result: TranslatedField = { en: '', bn: '' };
 
   result[originalLang] = cleanText;
 
   const otherLang = originalLang === "en" ? 'bn' : 'en';
   result[otherLang] = await translateTextToTargetLang(cleanText, otherLang);
 
+
+  /*---------------------------------
   ---------------------------------*/
 
-  const result: TranslatedField = {  en: 'TEST_EN', bn: 'TEST_BN' }; // 🧪 FOR_TESTING 
+  // const result: TranslatedField
+  // result = {  en: 'TEST_EN', bn: 'TEST_BN' }; // 🧪 FOR_TESTING 
 
   return result;
 };
