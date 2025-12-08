@@ -39,7 +39,6 @@ const controller = new ServiceProviderController();
 //---------------------------------
 // User | 03-05 Get all service provider for a serviceCategoryId
 //---------------------------------
-
 router.route('/paginate').get(
   //auth('common'),
   validateFiltersForQuery(optionValidationChecking(['_id', 'serviceCategoryId', 'serviceName', ...paginationOptions])),
@@ -55,6 +54,30 @@ router.route('/paginate').get(
     select: '-isDeleted -createdAt -updatedAt'
   }),
   controller.getAllWithPaginationV2
+);
+
+  // userLatitude, 
+  // userLongitude, 
+  // maxDistance = 10000, // in meters (default 10km)
+
+router.route('/paginate/by-location').get(
+  //auth('common'),
+  validateFiltersForQuery(optionValidationChecking(['_id', 'serviceCategoryId', 'serviceName', 'userLatitude', 'userLongitude', 'maxDistance', ...paginationOptions])),
+  
+  //----------------------------- THis is so important .. we need to get those providers who are approved by admin
+  // setRequestFiltersV2({
+  //   isDeleted: false,
+  //   providerApprovalStatus: TProviderApprovalStatus.accept,
+  // }),
+
+  // setQueryOptions({
+  //   populate: [
+  //     { path: 'attachmentsForGallery', select: 'attachment' },
+  //     { path: 'providerId', select: 'name profileImage' },
+  //   ],
+  //   select: '-isDeleted -createdAt -updatedAt'
+  // }),
+  controller.getAllWithPaginationV2WithLocationFiltering
 );
 
 //---------------------------------  

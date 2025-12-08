@@ -15,6 +15,11 @@ const ServiceProviderSchema = new Schema<IServiceProvider>(
       ref: 'User',
       required: [true, 'Provider ID is required'],
     },
+    locationId: { //🔗 who provide this service
+      type: Schema.Types.ObjectId,
+      ref: 'Location',
+      required: [false, 'Provider ID is required'],
+    },
     serviceName: {
       en: { 
         type: String, 
@@ -108,6 +113,7 @@ const ServiceProviderSchema = new Schema<IServiceProvider>(
       default: TProviderApprovalStatus.pending,
     },
 
+  
     isDeleted: {
       type: Boolean,
       required: [false, 'isDeleted is not required'],

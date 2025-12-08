@@ -52,6 +52,17 @@ const userProfileSchema = new Schema<IUserProfile>({
             required: false,
         }
     },
+    /*----------------------------------
+     * 
+     * this lat lng .. is not enough because client want to search based on providers location ..
+     * so we need to have a geojson structure to perform geospatial queries ..
+     * however to avoid breaking changes for flutter devs UI .. we are keeping this lat lng structure ..
+     * 
+     * 
+     * for geospatial queries we will create another collection in database .. which contains
+     * only location related information of provider and user .. 
+     * 
+     ------------------------------------*/
     lat: {
         type: Number,
         required: false,

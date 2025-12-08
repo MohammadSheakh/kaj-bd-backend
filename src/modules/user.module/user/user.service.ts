@@ -1016,7 +1016,6 @@ export class UserService extends GenericService<typeof User, IUser> {
           roleDataMatchStage['userRoleDataInfo.providerApprovalStatus'] = value;
         }
       }
-      
     }
 
     if (Object.keys(userMatchStage.createdAt).length === 0) {
