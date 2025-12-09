@@ -127,7 +127,7 @@ router.route('/').get(
   controller.getAll
 );
 
-//----------------------------------------
+//---------------------------------------- 💎✨🔍 -> V2 Found
 // Service Provider | After Registration 
 // This Information must need for provider to be visible to users 
 //----------------------------------------
@@ -138,6 +138,17 @@ router.route('/').post(
   controller.create
 );
 
+//----------------------------------------
+// Service Provider | After Registration 
+// client want to search provider with in a location .. for that we need to store
+// providers location into location collection and link it with service provider 
+//----------------------------------------
+router.route('/with-locationInfo').post(
+  auth(TRole.provider),
+  ...imageUploadPipelineForCreateServiceProviderInformation, 
+  // validateRequest(validation.createHelpMessageValidationSchema), // TODO add validation
+  controller.createV2
+);
 
 /** ---------------------------------------------- V2 Found
    * @role Provider

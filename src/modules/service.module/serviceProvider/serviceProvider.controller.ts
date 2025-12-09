@@ -24,6 +24,8 @@ import { TRole } from '../../../middlewares/roles';
 import { ServiceCategoryService } from '../serviceCategory/serviceCategory.service';
 import omit from '../../../shared/omit';
 import pick from '../../../shared/pick';
+import { ProvidersLocation } from '../location/location.model';
+import { ILocation } from '../location/location.interface';
 
 //-----------------------------
 // ServiceProvider means Service Provider Details
@@ -39,6 +41,7 @@ export class ServiceProviderController extends GenericController<
     super(new ServiceProviderService(), 'ServiceProvider');
   }
 
+  // 💎✨🔍 -> V2 Found
   create = catchAsync(async (req: Request, res: Response) => {
     const data:ICreateServiceProvider = req.body;
 
@@ -161,6 +164,204 @@ export class ServiceProviderController extends GenericController<
       success: true,
     });
   });
+
+  
+  // this V2
+  createV2 = catchAsync(async (req: Request, res: Response) => {
+    const data:ICreateServiceProvider = req.body;
+
+    // TODO : MUST : 
+    // already ekbar serviceProviderDetails create korle .. ar create kora jabe na .. 
+
+    // V2 Found
+    function createLocation(lat : string, lng : string){
+      try {
+        const { address, latitude, longitude } = req.body;
+
+        // Validate required fields
+        if (!latitude || !longitude) {
+          return res.status(400).json({
+            success: false,
+            message: 'Latitude and longitude are required'
+          });
+        }
+
+        // Validate coordinate ranges
+        if (latitude < -90 || latitude > 90) {
+          return res.status(400).json({
+            success: false,
+            message: 'Latitude must be between -90 and 90'
+          });
+        }
+
+        if (longitude < -180 || longitude > 180) {
+          return res.status(400).json({
+            success: false,
+            message: 'Longitude must be between -180 and 180'
+          });
+        }
+
+        // Create location object
+        const locationData = {
+          address: address || { bn: '', en: '' },
+          location: {
+            type: 'Point',
+            coordinates: [longitude, latitude] // [longitude, latitude] - GeoJSON format
+          },
+          isDeleted: false
+        };
+
+        // Save to database
+        // const newLocation = await Location.create(locationData);
+
+        return res.status(201).json({
+          success: true,
+          message: 'Location created successfully',
+          data: {
+            // _id: newLocation._id,
+            // address: newLocation.address,
+            // coordinates: {
+            //   latitude: newLocation.location.coordinates[1],
+            //   longitude: newLocation.location.coordinates[0]
+            // },
+            // createdAt: newLocation.createdAt
+          }
+        });
+
+      } catch (error: any) {
+        console.error('Error creating location:', error);
+        return res.status(500).json({
+          success: false,
+          message: 'Failed to create location',
+          error: error.message
+        });
+      }
+    }
+
+    async function createLocationV2(lat: string, lng: string) : Promise<ILocation> {
+      const latitude = parseFloat(lat);
+      const longitude = parseFloat(lng);
+      const { address } = req.body;
+
+      if (!address) {
+        throw new Error('Latitude must be between -90 and 90');
+      }
+
+      // Translate multiple properties dynamically
+      const [addressObj] : [any]  = await Promise.all([
+        buildTranslatedField(address as string)
+      ]);
+
+
+      if (isNaN(latitude) || isNaN(longitude)) {
+        throw new Error('Latitude and longitude must be valid numbers');
+      }
+
+      if (latitude < -90 || latitude > 90) {
+        throw new Error('Latitude must be between -90 and 90');
+      }
+
+      if (longitude < -180 || longitude > 180) {
+        throw new Error('Longitude must be between -180 and 180');
+      }
+
+      // Save to database
+      const newLocation : ILocation = await ProvidersLocation.create({
+        address: addressObj,
+        location :{
+          type: 'Point',
+          coordinates: [longitude, latitude] // [longitude, latitude] - GeoJSON format
+        },
+      });
+
+      return newLocation;
+    }
+
+    // lets create location .. and provider must turn on his devices location .. 
+    const createdLocation = await createLocationV2(req.body.lat, req.body.lng);
+    // request er body te address pass korte hobe .. 
+
+
+    // 🥇
+    // Translate multiple properties dynamically
+    const [nameObj] : [IServiceProvider['serviceName']]  = await Promise.all([
+      buildTranslatedField(data.serviceName as string)
+    ]);
+
+    let createServiceProvider : ICreateServiceProviderDTO; 
+    if(data.serviceCategoryId){
+      console.log("hit")
+      createServiceProvider = {
+        serviceCategoryId : data.serviceCategoryId,
+        serviceName : nameObj,
+        yearsOfExperience : data.yearsOfExperience,
+        startPrice : data.startPrice,
+        providerId : (req.user as IUser).userId,
+        locationId : createdLocation._id
+      }
+    }else{
+      console.log("miss : first create category")
+      // first create category
+      
+      const [nameObj] : [IServiceCategory['name']]  = await Promise.all([
+        buildTranslatedField(data.categoryCustomName as string)
+      ]);
+      
+      const serviceCategoryDTO:ICreateServiceCategory = {
+        // attachment will be given by admin later
+        name: nameObj,
+        createdBy: TRole.provider, /// as provider create this .. 
+        createdByUserId : (req.user as IUser).userId // as provider create this .. admin can see .. who create this category
+      }
+  
+      const newServiceCategory:IServiceCategory = await this.serviceCategoryService.create(serviceCategoryDTO as Partial<IServiceCategory>);
+      
+      // then create service provider details
+
+      createServiceProvider  = {
+        serviceCategoryId : newServiceCategory._id,
+        serviceName : nameObj,
+        yearsOfExperience : data.yearsOfExperience,
+        startPrice : data.startPrice,
+        providerId : (req.user as IUser).userId,
+        locationId : createdLocation._id
+      }
+    }
+
+    
+
+    const updatedServiceProvidersProfile : IUpdateProfileDTO= {
+      backSideCertificateImage :  req.body.backSideCertificateImage,
+      frontSideCertificateImage : req.body.frontSideCertificateImage,
+      faceImageFromFrontCam : req.body.faceImageFromFrontCam
+    }
+
+    const [result, updatedProfile, updateServiceProviderRoleData] = await Promise.all([
+       this.service.create(createServiceProvider as Partial<IServiceProvider>),
+       
+       UserProfile.findOneAndUpdate(
+        { userId: (req.user as IUser).userId },
+        updatedServiceProvidersProfile,
+        { new: true }
+      ),
+      
+      UserRoleData.findOneAndUpdate(
+        { userId: (req.user as IUser).userId },
+        {
+          providerApprovalStatus : TProviderApprovalStatus.requested // CONFUSION : age pending chilo
+        },
+        { new: true }
+      )
+    ])
+
+    sendResponse(res, {
+      code: StatusCodes.OK,
+      data: result,
+      message: `${this.modelName} created successfully`,
+      success: true,
+    });
+  });
+  
 
   uploadAttachments = catchAsync(async (req: Request, res: Response) => {
     

@@ -7,6 +7,7 @@ import { UserProfile } from '../../user.module/userProfile/userProfile.model';
 import PaginationService from '../../../common/service/paginationService';
 import mongoose from 'mongoose';
 import { PaginateOptions } from '../../../types/paginate';
+import { ILocation } from '../location/location.interface';
 
 //-----------------------------
 // ServiceProvider means Service Provider Details
@@ -265,12 +266,15 @@ export class ServiceProviderService extends GenericService<
         }
       ];
 
-      const nearbyLocations = await mongoose.model('Location').aggregate(nearbyLocationsPipeline);
+      const nearbyLocations:ILocation = await mongoose.model('Location').aggregate(nearbyLocationsPipeline);
       
-      console.log(`Found ${nearbyLocations.length} nearby locations`);
+      console.log("nearbyLocations :: ", nearbyLocations);
+      // console.log(`Found ${nearbyLocations.length} nearby locations`);
 
       if (nearbyLocations.length === 0) {
         // No locations found within radius
+        // No users found within radius
+
         return {
           docs: [],
           totalDocs: 0,
@@ -282,6 +286,7 @@ export class ServiceProviderService extends GenericService<
         };
       }
 
+      /*------------
       // Create map for distance lookup
       const distanceMap = new Map(
         nearbyLocations.map(loc => [loc.locationId.toString(), {
@@ -290,17 +295,22 @@ export class ServiceProviderService extends GenericService<
           address: loc.address
         }])
       );
+      ------------*/
 
-      const nearbyLocationIds = nearbyLocations.map(loc => loc.locationId);
+      // const nearbyLocationIds = nearbyLocations.map((loc : ILocation) => loc._id);
+      const nearbyLocationIds = nearbyLocations.map((loc : ILocation) => new mongoose.Types.ObjectId(loc._id));
 
       // Add locationId filter to match stage
       userMatchStage.locationId = { $in: nearbyLocationIds };
+
+      console.log("Updated userMatchStage with location filter: ", userMatchStage);
 
       // Build main pipeline
       pipeline = [
         // Step 1: Match service providers
         { $match: userMatchStage },
 
+        /*---------------------------------------------
         // Step 2: Lookup provider user
         {
           $lookup: {
@@ -343,6 +353,8 @@ export class ServiceProviderService extends GenericService<
           }
         },
 
+        -------------------------------------------*/
+
         // Step 5: Project fields
         {
           $project: {
@@ -359,6 +371,8 @@ export class ServiceProviderService extends GenericService<
             providerApprovalStatus: 1,
             createdAt: 1,
             locationId: 1,
+
+            /*---------------------------------
             
             // Provider info
             providerName: '$provider.name',
@@ -376,6 +390,10 @@ export class ServiceProviderService extends GenericService<
                 in: '$$att.attachment' 
               }
             }
+
+            ---------------------------------*/
+
+
           }
         }
       ];
@@ -383,6 +401,9 @@ export class ServiceProviderService extends GenericService<
       // Execute pipeline
       let results = await ServiceProvider.aggregate(pipeline);
 
+      console.log("results ::: ", results);
+
+      /*---------------------
       // Add distances from our pre-calculated map
       results = results.map(doc => {
         const locationData = distanceMap.get(doc.locationId?.toString());
@@ -396,6 +417,9 @@ export class ServiceProviderService extends GenericService<
 
       // Sort by distance (closest first)
       results.sort((a, b) => a.distance - b.distance);
+      -----------------------*/
+
+      
 
       // Manual pagination
       const page = options.page || 1;

@@ -36,6 +36,8 @@ const LocationSchema = new Schema<ILocation>(
   { timestamps: true }
 );
 
+LocationSchema.index({ location: '2dsphere' });
+
 LocationSchema.plugin(paginate);
 
 LocationSchema.pre('save', function (next) {
@@ -56,7 +58,7 @@ LocationSchema.set('toJSON', {
   },
 });
 
-export const Location = model<
+export const ProvidersLocation = model<
   ILocation,
   ILocationModel
 >('Location', LocationSchema);
