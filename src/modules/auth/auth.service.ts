@@ -192,14 +192,21 @@ const login = async (email: string,
   //   );
   // }
 
-  if (user.lockUntil && user.lockUntil > new Date()) {
-    throw new ApiError(
-      StatusCodes.TOO_MANY_REQUESTS,
-      `Account is locked. Try again after ${config.auth.lockTime} minutes`,
-    );
-  }
+  // if (user.lockUntil && user.lockUntil > new Date()) {
+  //   throw new ApiError(
+  //     StatusCodes.TOO_MANY_REQUESTS,
+  //     `Account is locked. Try again after ${config.auth.lockTime} minutes`,
+  //   );
+  // }
 
   const isPasswordValid = await bcryptjs.compare(reqpassword, user.password);
+
+
+  if (!isPasswordValid) {
+    throw new ApiError(StatusCodes.UNAUTHORIZED, 'Invalid credentials');
+  }
+
+  /*---------------------------------------
   if (!isPasswordValid) {
     user.failedLoginAttempts = (user.failedLoginAttempts || 0) + 1;
     if (user.failedLoginAttempts >= config.auth.maxLoginAttempts) {
@@ -220,6 +227,8 @@ const login = async (email: string,
     user.lockUntil = undefined;
     await user.save();
   }
+
+  -------------------------------------------*/
 
   const tokens = await TokenService.accessAndRefreshToken(user);
 

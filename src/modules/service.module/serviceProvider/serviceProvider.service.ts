@@ -179,7 +179,7 @@ export class ServiceProviderService extends GenericService<
     // Extract location parameters
     let userLatitude: number | null = null;
     let userLongitude: number | null = null;
-    let maxDistance: number = 10000; // Default 10km in meters
+    let maxDistance: number = 1000; // Default 1000 meter = 1 Km
 
     // Dynamically apply filters
     for (const key in filters) {
@@ -201,6 +201,9 @@ export class ServiceProviderService extends GenericService<
           userMatchStage[key] = { $in: value };
         }
         else if (key === '_id') {
+          userMatchStage[key] = new mongoose.Types.ObjectId(value);
+        }
+        else if (key === 'serviceCategoryId'){
           userMatchStage[key] = new mongoose.Types.ObjectId(value);
         }
         else {
@@ -276,13 +279,13 @@ export class ServiceProviderService extends GenericService<
         // No users found within radius
 
         return {
-          docs: [],
-          totalDocs: 0,
+          results: [],
+          totalResults: 0,
           limit: options.limit || 10,
           page: options.page || 1,
-          totalPages: 0,
-          hasNextPage: false,
-          hasPrevPage: false
+          // totalPages: 0,
+          // hasNextPage: false,
+          // hasPrevPage: false
         };
       }
 
@@ -430,16 +433,16 @@ export class ServiceProviderService extends GenericService<
       const paginatedResults = results.slice(startIndex, endIndex);
 
       return {
-        docs: paginatedResults,
-        totalDocs: results.length,
+        results: paginatedResults,
+        totalResults: results.length,
         limit: limit,
         page: page,
         totalPages: Math.ceil(results.length / limit),
-        hasNextPage: endIndex < results.length,
-        hasPrevPage: page > 1,
-        pagingCounter: startIndex + 1,
-        prevPage: page > 1 ? page - 1 : null,
-        nextPage: endIndex < results.length ? page + 1 : null
+        // hasNextPage: endIndex < results.length,
+        // hasPrevPage: page > 1,
+        // pagingCounter: startIndex + 1,
+        // prevPage: page > 1 ? page - 1 : null,
+        // nextPage: endIndex < results.length ? page + 1 : null
       };
 
     } else {
