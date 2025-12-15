@@ -38,6 +38,37 @@ export class ServiceBookingController extends GenericController<
     super(new ServiceBookingService(), 'ServiceBooking');
   }
 
+  getAllWithPaginationV2 = catchAsync(async (req: Request, res: Response) => {
+    //const filters = pick(req.query, ['_id', 'title']); // now this comes from middleware in router
+    const filters =  omit(req.query, ['sortBy', 'limit', 'page', 'populate']);
+    const options = pick(req.query, ['sortBy', 'limit', 'page', 'populate']);
+
+    // ✅ Default values
+    let populateOptions: (string | { path: string; select: string }[]) = [];
+    let select = '-isDeleted -createdAt -updatedAt -__v';
+
+    options.limit = 3000;
+
+    // ✅ If middleware provided overrides → use them
+    if (req.queryOptions) {
+      if (req.queryOptions.populate) {
+        populateOptions = req.queryOptions.populate;
+      }
+      if (req.queryOptions.select) {
+        select = req.queryOptions.select;
+      }
+    }
+
+    const result = await this.service.getAllWithPagination(filters, options, populateOptions , select );
+
+    sendResponse(res, {
+      code: StatusCodes.OK,
+      data: result,
+      message: `All ${this.modelName} with pagination`,
+      success: true,
+    });
+  });
+
   create = catchAsync(async (req: Request, res: Response) => {
     const userTimeZone = req.header('X-Time-Zone') || 'Asia/Dhaka'; //TODO: Timezone must from env file
     const data = req.body as ICreateServiceBooking;
