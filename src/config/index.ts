@@ -21,6 +21,14 @@ export const config = {
     translation : process.env.Firebase_Service_Account_Path_For_Translation,
   },
 
+  agora: {
+    appId: process.env.AGORA_APP_ID,
+    appCertificationPrimary: process.env.AGORA_APP_CERTIFICATE_PRIMARY,
+    appKey: process.env.AGORA_APP_KEY,
+    appOrgName: process.env.AGORA_APP_ORG_NAME,
+    appName: process.env.AGORA_APP_NAME,
+  },
+
   database: {
     mongoUrl:
       process.env.MONGODB_URL || 'mongodb://localhost:27017/mentor-service',

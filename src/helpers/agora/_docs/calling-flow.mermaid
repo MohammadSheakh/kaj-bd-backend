@@ -1,0 +1,23 @@
+sequenceDiagram
+    participant Frontend
+    participant Backend
+    participant Agora
+
+    Frontend->>Backend: POST /api/call/token { userId, channelName, role }
+    Backend->>Backend: Validate user, generate Agora token
+    Backend->>Frontend: Return { token, appId, channelName }
+    Frontend->>Agora: Initialize client with appId
+    Frontend->>Agora: Join channel with token & userId
+    Agora->>Frontend: Notify about other users joining
+    Frontend->>Agora: Publish local stream
+    Frontend->>Agora: Subscribe to remote streams
+    Frontend->>Frontend: Render video/audio
+    Frontend->>Agora: User leaves call
+    Agora->>Frontend: Clean up
+    Frontend->>Backend: (Optional) DELETE /api/call/session/{channelName} to end session
+
+
+
+
+
+    
