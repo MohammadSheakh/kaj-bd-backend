@@ -30,42 +30,19 @@ const paginationOptions: Array<'sortBy' | 'page' | 'limit' | 'populate'> = [
 // const taskService = new TaskService();
 const controller = new AgoraCallingController();
 
-//
-router.route('/paginate').get(
-  //auth('common'),
-  validateFiltersForQuery(optionValidationChecking(['_id', ...paginationOptions])),
-  controller.getAllWithPagination
-);
 
-router.post('/token', async (req, res) => {
-  try {
-    
-
-    
-    res.json(tokenData);
-  } catch (error) {
-    console.error('Token generation failed:', error);
-    res.status(500).json({ error: 'Failed to generate call token' });
-  }
-});
-
+/** ----------------------------------------------
+   * @role All
+   * @Section Calling With Agora
+   * @module |
+   * @figmaIndex 0-0
+   * @desc app user will call this api to get token 
+   * 
+   *----------------------------------------------*/
 router.route('/token').post(
   auth(TRole.common),
   controller.generateToken
-); // FIXME : change to admin
-
-
-router.route('/delete/:id').delete(
-  //auth('common'),
-  controller.deleteById
-); // FIXME : change to admin
-
-router.route('/softDelete/:id').put(
-  //auth('common'),
-  controller.softDeleteById
-);
-
-
+); 
 
 
 export const AgoraCallingRoute = router;

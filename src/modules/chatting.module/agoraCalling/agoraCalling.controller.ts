@@ -29,16 +29,16 @@ export class AgoraCallingController extends GenericController<
 
     const tokenData = await socketService.getCallToken(userId, channelName, role);
 
-
     sendResponse(res, {
       code: StatusCodes.OK,
-      data: result,
+      data: tokenData,
       message: `${this.modelName} created successfully`,
       success: true,
     });
   });
 
 
+  
 
   // add more methods here if needed or override the existing ones 
 }
