@@ -41,16 +41,7 @@ export class MessageControllerV2 extends GenericController<typeof Message, IMess
 
         // Get chat details
         const {conversationData, conversationParticipants} = await getConversationById(req.body.conversationId);
-          
-
-        if(conversationData.canConversate === false){
-            return sendResponse(res, {
-                code: StatusCodes.BAD_REQUEST,
-                message: `You cannot send message in this conversation`,
-                success: false,
-            });
-        }
-        
+         
         let attachments = [];
     
         if (req.files && req.files.attachments) {

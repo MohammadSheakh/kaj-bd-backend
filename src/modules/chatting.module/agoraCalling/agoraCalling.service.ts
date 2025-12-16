@@ -5,6 +5,16 @@ import { GenericService } from '../../_generic-module/generic.services';
 // import { RtcRole } from 'agora-token';
 import { RtcTokenBuilder, RtcRole } from 'agora-access-token'
 import { config } from '../../../config';
+import { IMessageToEmmit, socketService } from '../../../helpers/socket/socketForChatV3WithFirebase';
+import { Conversation } from '../conversation/conversation.model';
+import { ConversationParticipents } from '../conversationParticipents/conversationParticipents.model';
+import { IMessage } from '../message/message.interface';
+import { Message } from '../message/message.model';
+import { UserDevices } from '../../user.module/userDevices/userDevices.model';
+import { IUserDevices } from '../../user.module/userDevices/userDevices.interface';
+import { sendPushNotificationV2 } from '../../../utils/firebaseUtils';
+import { User } from '../../user.module/user/user.model';
+import { IUser } from '../../user.module/user/user.interface';
 
 export class AgoraCallingService extends GenericService<
   typeof AgoraCalling,
@@ -22,13 +32,115 @@ export class AgoraCallingService extends GenericService<
 
   public async getCallToken(
     userId: string,
-    channelName: string,
+    channelName: string, // channelName is conversationId
     role: 'publisher' | 'subscriber' = 'publisher'
   ): Promise<{ token: string; appId: string; channelName: string }> {
     
     try {
       const agoraRole = role === 'publisher' ? RtcRole.PUBLISHER : RtcRole.SUBSCRIBER;
       const token = this.generateToken(channelName, userId, agoraRole);
+
+      // lets emit and event to UserB that userA calls him
+
+      const userProfile : IUser | null = await User.findById(userId);
+
+      if(!userProfile){
+        throw new Error(`User with ID ${userId} not found`);
+      }
+
+      // Get chat details
+      const {conversationData, conversationParticipants} = await getConversationById(channelName);
+    
+      /*-------------------------------
+    
+      ----------------------------------*/
+
+      //---------------------------------
+      // As per sayed vais suggestion, we will emit the event to the specific conversation room
+      // as when a user send attachments via chat, we need to notify all the participants of that conversation
+      //---------------------------------
+
+      const eventName = `incoming-call`;
+    
+      
+
+      // ============================================
+      // 3️⃣ HANDLE EACH PARTICIPANT
+      // ============================================
+      for (const participant of conversationParticipants) {
+        const participantId = participant.userId?.toString();
+        
+        // Skip the sender
+        if (participantId === userId.toString()) {
+          continue;
+        }
+
+        // Prepare message data for emission
+        const messageToEmit:IMessageToEmmit = {
+          senderId: userId, // senderId should be the userId
+          name: userProfile?.name,
+          image: userProfile?.profileImage
+        };
+
+        const isOnline = await socketService.isUserOnline(participantId.toString()); // current way need to test
+
+        /*----------------------  ************** for calling usecase.. room is not matter ..  we just need to send push notification
+
+        ---------------------------------------*/
+
+        if (isOnline) { // && !isInConversationRoom
+          // ⚠️ User is online but NOT in this conversation room
+          // Send both socket notification AND conversation list update
+          console.log(`⚠️ User ${participantId} is online but not in room, sending notification 3️⃣`);
+          
+          // Send message notification to personal room
+          socketService.emitToUser(
+            participantId,
+            eventName,
+            {
+              message : `${userProfile?.name} is calling you`,
+              image: userProfile?.profileImage,
+            }
+          )
+
+          /*----------------------------------------
+          
+          ----------------------------------------*/
+
+        } else {
+          // 🔴 User is OFFLINE - send push notification
+          console.log(`🔴 User ${participantId} is offline, sending push notification 4️⃣`);
+          
+          try {
+            // Fetch user's FCM token
+            //const user = await User.findById(participantId).select('fcmToken');
+            // --- previous line logic was for one device .. now we design a system where user can have multiple device
+
+            const userDevices:IUserDevices[] = await UserDevices.find({
+              userId: participantId, 
+            });
+            if(!userDevices){
+              console.log(`⚠️ No FCM token found for user ${participantId}`);
+              // TODO : MUST : need to think how to handle this case
+            }
+
+            // fcmToken,deviceType,deviceName,lastActive,
+            for(const userDevice of userDevices){
+              await sendPushNotificationV2(
+                userDevice.fcmToken,
+                {
+                  message : `${userProfile?.name} is calling you`,
+                  image: userProfile?.profileImage,
+                },
+                participantId
+              );
+            }
+
+          } catch (error) {
+            console.error(`❌ Failed to send push notification to ${participantId}: 7️⃣`, error);
+          }
+        }
+      }
 
       return {
         token,
@@ -42,6 +154,7 @@ export class AgoraCallingService extends GenericService<
     }
   }
 
+  
 
   /**
    * Generate an RTC token for a user to join a specific channel.
@@ -81,5 +194,28 @@ export class AgoraCallingService extends GenericService<
    */
   generateAudienceToken(channelName: string, userId: string | number): string {
     return this.generateToken(channelName, userId, RtcRole.SUBSCRIBER, 3600);
+  }
+}
+
+// Need to move to message or conversations service file .. 
+async function getConversationById(conversationId: string) {
+  try {
+    const conversationData = await Conversation.findById(conversationId)//.populate('users').exec();  // FIXME: user populate korar bishoy ta 
+    // FIXME : check korte hobe  
+    
+    const conversationParticipants = await ConversationParticipents.find({
+      conversationId: conversationId
+    });
+
+    if (!conversationData) {
+      throw new Error(`Conversation with ID ${conversationId} not found`);
+    }
+    return { 
+      conversationData: conversationData,
+      conversationParticipants: conversationParticipants
+    };
+  } catch (error) {
+    console.error('Error fetching chat:', error);
+    throw error;
   }
 }
