@@ -21,6 +21,7 @@ import { AdditionalCostRoute } from '../modules/service.module/additionalCost/ad
 import { BannerRoute } from '../modules/banner/banner.route';
 import { AdminPercentageRoute } from '../modules/adminPercentage/adminPercentage.route';
 import { SupportMessageRoute } from '../modules/supportMessage/supportMessage.route';
+import { AgoraCallingRoute } from '../modules/chatting.module/agoraCalling/agoraCalling.route';
 
 // import { ChatRoutes } from '../modules/chat/chat.routes';
 // import { MessageRoutes } from '../modules/message/message.routes';
@@ -128,6 +129,11 @@ const apiRoutes = [
     path: '/messages',
     route: MessageRoute,
   },
+  {
+    path: '/call',
+    route: AgoraCallingRoute,
+  },
+
   // {
   //   path: '/payments',
   //   route: PaymentTransactionRoute,

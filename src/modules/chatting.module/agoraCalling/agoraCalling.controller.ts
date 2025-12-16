@@ -15,19 +15,19 @@ export class AgoraCallingController extends GenericController<
 > {
   AgoraCallingService = new AgoraCallingService();
   
-
   constructor() {
     super(new AgoraCallingService(), 'AgoraCalling');
   }
 
-  generateToken = catchAsync(async (req: Request, res: Response) => {
+  generateToken = catchAsync(async (req: Request, res: Response) :Promise<any> => {
     const { userId, channelName, role = 'publisher' } = req.body;
 
-    if (!userId || !channelName) {
-      return res.status(400).json({ error: 'userId and channelName are required' });
+    if (!channelName) {
+      return res.status(400).json({ error: 'channelName is required' });
     }
 
-    const tokenData = await socketService.getCallToken(userId, channelName, role);
+    // const tokenData = await socketService.getCallToken(userId, channelName, role);
+    const tokenData = await this.AgoraCallingService.getCallToken(req.user.userId, channelName, role);
 
     sendResponse(res, {
       code: StatusCodes.OK,
