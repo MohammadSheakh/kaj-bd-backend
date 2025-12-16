@@ -1,0 +1,102 @@
+sequenceDiagram
+    title End-to-End Voice/Video Call Flow with Redis State Management
+
+    participant FrontendCaller as Caller (Frontend)
+    participant BackendAPI as Backend (HTTP)
+    participant SocketIOCaller as Caller (Socket.IO)
+    participant Redis as RedisStateManager
+    participant Agora as Agora RTC
+    participant SocketIOCallee as Callee (Socket.IO)
+    participant FrontendCallee as Callee (Frontend)
+    participant Push as FCM Push
+
+    Note over FrontendCaller,FrontendCallee: User A (caller) starts call in conversation "conv_123"
+
+    FrontendCaller->>BackendAPI: POST /api/call/token { userId: "A", channelName: "conv_123" }
+    activate BackendAPI
+    BackendAPI->>BackendAPI: Validate: Is "A" in conversation "conv_123"?
+    BackendAPI->>BackendAPI: Generate Agora token (string UID)
+    BackendAPI-->>FrontendCaller: { token, appId, channelName }
+    deactivate BackendAPI
+
+    FrontendCaller->>Agora: client.join(appId, "conv_123", token, "A")
+    activate Agora
+    Agora-->>FrontendCaller: Joined successfully
+    deactivate Agora
+
+    FrontendCaller->>SocketIOCaller: emit 'call-started', { conversationId: "conv_123" }
+    activate SocketIOCaller
+
+    SocketIOCaller->>Redis: startPendingCall("conv_123", "A")
+    activate Redis
+    Redis-->>SocketIOCaller: Pending call stored (60s TTL)
+
+    SocketIOCaller->>SocketIOCaller: Get conversation participants (A, B, C)
+
+    loop For each participant ≠ A
+        SocketIOCaller->>Redis: isUserOnline(participantId)
+        alt Participant is ONLINE
+            SocketIOCaller->>SocketIOCallee: emit 'incoming-call' to personal room
+        else Participant is OFFLINE
+            SocketIOCaller->>Push: sendPushNotification(participantId, "A is calling you")
+        end
+    end
+
+    deactivate SocketIOCaller
+
+    Note over FrontendCallee: Callee B sees notification → accepts call
+
+    FrontendCallee->>BackendAPI: POST /api/call/token { userId: "B", channelName: "conv_123" }
+    activate BackendAPI
+    BackendAPI->>BackendAPI: Validate + generate token
+    BackendAPI-->>FrontendCallee: { token, appId, channelName }
+    deactivate BackendAPI
+
+    FrontendCallee->>Agora: client.join(appId, "conv_123", token, "B")
+    Agora-->>FrontendCallee: Joined successfully
+
+    FrontendCallee->>SocketIOCallee: emit 'call-accepted', { conversationId: "conv_123" }
+    activate SocketIOCallee
+
+    SocketIOCallee->>Redis: isCallPending("conv_123")?
+    Redis-->>SocketIOCallee: Yes → proceed
+
+    SocketIOCallee->>Redis: acceptCall("conv_123", ["A","B","C"])
+    
+    Redis->>SocketIOCallee: Active call stored ******* all users marked as in-call
+
+
+    SocketIOCallee->>SocketIOCaller: emit 'call-connected' to all participants
+    SocketIOCallee->>SocketIOCallee: emit 'call-connected'
+
+    deactivate SocketIOCallee
+
+    Note over FrontendCaller,FrontendCallee: Media flows directly via Agora (P2P/SFU)
+
+    alt During call: User hangs up
+        FrontendCaller->>SocketIOCaller: emit 'call-ended', { conversationId: "conv_123" }
+        SocketIOCaller->>Redis: endCall("conv_123")
+        Redis-->>SocketIOCaller: Call state cleaned up
+        SocketIOCaller->>SocketIOCallee: emit 'call-ended'
+    end
+
+    alt Call not answered (60s timeout)
+        Redis->>Redis: Auto-delete pending call (TTL expired)
+        Note right of Redis: No action needed — silent cleanup
+    end
+
+    alt Callee rejects
+        FrontendCallee->>SocketIOCallee: emit 'call-rejected'
+        SocketIOCallee->>Redis: cancelPendingCall("conv_123")
+        SocketIOCallee->>SocketIOCaller: emit 'call-rejected'
+    end
+
+    Note over Redis: Redis ensures: <br/>- No double calls <br/>- No ghost notifications <br/>- Atomic state
+
+
+
+
+
+
+
+
