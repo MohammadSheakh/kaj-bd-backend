@@ -4,7 +4,7 @@ import { Server as SocketIOServer, Socket } from 'socket.io';
 import { createAdapter } from '@socket.io/redis-adapter';
 //@ts-ignore
 import { Server } from 'http';
-import { RedisStateManager } from '../redis/redisStateManagerForSocketV2';
+import { RedisStateManager } from '../redis/redisStateManagerForSocketV2WithCalling'; // previously it was V2
 import { logger } from '../../shared/logger';
 //@ts-ignore
 import colors from 'colors';
@@ -230,7 +230,7 @@ export class SocketService {
         // Get user profile
         const userProfile = await this.getUserProfile(userId) as IUserProfile;
 
-        console.log("userProfile in connection 🔌🔌", userProfile)
+        console.log("userProfile in connection 🔌🔌", userProfile._id, userProfile.name)
         socket.data.userProfile = userProfile;
 
         // Handle connection in Redis
@@ -322,8 +322,14 @@ export class SocketService {
       // Optional: double-check user is in conversation
       // ...
 
+      console.log("Hit 1 ✅")
+
       // ✅ Start pending call in Redis
       await this.redisStateManager.startPendingCall(conversationId, userId);
+
+
+      console.log("Hit 2 ✅")
+
 
       // ✅ Notify other participants (your existing loop)
       // const { conversationParticipants } = await getConversationById(conversationId);
@@ -338,7 +344,8 @@ export class SocketService {
       const {conversationData, conversationParticipants} = await getConversationById(channelName);
     
       const eventName = `incoming-call`;
-    
+      
+      console.log("conversationParticipants : ", conversationParticipants);
       // ============================================
       // 3️⃣ HANDLE EACH PARTICIPANT
       // ============================================
@@ -358,6 +365,8 @@ export class SocketService {
         };
 
         const isOnline = await socketService.isUserOnline(participantId.toString()); // current way need to test
+
+        console.log("isOnline ?", isOnline, " -- ", participantId.toString())
 
         if (isOnline) { // && !isInConversationRoom
           // ⚠️ User is online but NOT in this conversation room
