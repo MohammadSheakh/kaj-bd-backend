@@ -322,14 +322,8 @@ export class SocketService {
       // Optional: double-check user is in conversation
       // ...
 
-      console.log("Hit 1 ✅")
-
       // ✅ Start pending call in Redis
       await this.redisStateManager.startPendingCall(conversationId, userId);
-
-
-      console.log("Hit 2 ✅")
-
 
       // ✅ Notify other participants (your existing loop)
       // const { conversationParticipants } = await getConversationById(conversationId);
@@ -341,7 +335,7 @@ export class SocketService {
 
 
       // Get chat details
-      const {conversationData, conversationParticipants} = await getConversationById(channelName);
+      const {conversationData, conversationParticipants} = await getConversationById(conversationId);
     
       const eventName = `incoming-call`;
       
@@ -361,7 +355,8 @@ export class SocketService {
         const messageToEmit:IMessageToEmmit = {
           senderId: userId, // senderId should be the userId
           name: userProfile?.name,
-          image: userProfile?.profileImage
+          image: userProfile?.profileImage,
+          conversationId: conversationId,
         };
 
         const isOnline = await socketService.isUserOnline(participantId.toString()); // current way need to test
@@ -380,6 +375,7 @@ export class SocketService {
             {
               message : `${userProfile?.name} is calling you`,
               image: userProfile?.profileImage,
+              conversationId: conversationId,
             }
           )
 
@@ -405,6 +401,7 @@ export class SocketService {
                 {
                   message : `${userProfile?.name} is calling you`,
                   image: userProfile?.profileImage,
+                  conversationId: conversationId,
                 },
                 participantId
               );
@@ -418,6 +415,120 @@ export class SocketService {
 
     });
 
+
+    socket.on('call-startedV2', async (data) => {
+      const { conversationId } = data;
+      const userId = socket.data.user._id;
+
+      // Optional: double-check user is in conversation
+      // ...
+
+      
+
+      // ✅ Start pending call in Redis
+      await this.redisStateManager.startPendingCall(conversationId, userId);
+
+      // ✅ Notify other participants (your existing loop)
+      // const { conversationParticipants } = await getConversationById(conversationId);
+      // for (const p of conversationParticipants) {
+      //   if (p.userId.toString() !== userId) {
+      //     // Emit 'incoming-call' via socket or push
+      //   }
+      // }
+
+
+      // Get chat details
+      const {conversationData, conversationParticipants} = await getConversationById(conversationId);
+    
+      const eventName = `incoming-call`;
+      
+      console.log("conversationParticipants : ", conversationParticipants);
+      // ============================================
+      // 3️⃣ HANDLE EACH PARTICIPANT
+      // ============================================
+      for (const participant of conversationParticipants) {
+        const participantId = participant.userId?.toString();
+        
+        // Skip the sender
+        if (participantId === userId.toString()) {
+          continue;
+        }
+
+        const convIdFound = await this.redisStateManager.isUserInCall(participantId)
+
+        console.log("convIdFound ... ", convIdFound);
+
+        if(convIdFound !== null){
+          // means User is in a call .. so .. can not connect with him
+          // lets cancel that pending call
+          await this.redisStateManager.cancelPendingCall(conversationId);
+        }
+
+        // Prepare message data for emission
+        const messageToEmit:IMessageToEmmit = {
+          senderId: userId, // senderId should be the userId
+          name: userProfile?.name,
+          image: userProfile?.profileImage,
+          conversationId: conversationId,
+        };
+
+        const isOnline = await socketService.isUserOnline(participantId.toString()); // current way need to test
+
+        console.log("isOnline ?", isOnline, " -- ", participantId.toString())
+
+        if (isOnline) { // && !isInConversationRoom
+          // ⚠️ User is online but NOT in this conversation room
+          // Send both socket notification AND conversation list update
+          console.log(`⚠️ User ${participantId} is online but not in room, sending notification 3️⃣`);
+          
+          // Send message notification to personal room
+          socketService.emitToUser(
+            participantId,
+            eventName,
+            {
+              message : `${userProfile?.name} is calling you`,
+              image: userProfile?.profileImage,
+              conversationId: conversationId,
+            }
+          )
+
+        } else {
+          // 🔴 User is OFFLINE - send push notification
+          console.log(`🔴 User ${participantId} is offline, sending push notification 4️⃣`);
+          
+          try {
+            // --- previous line logic was for one device .. now we design a system where user can have multiple device
+
+            const userDevices:IUserDevices[] = await UserDevices.find({
+              userId: participantId, 
+            });
+            if(!userDevices){
+              console.log(`⚠️ No FCM token found for user ${participantId}`);
+              // TODO : MUST : need to think how to handle this case
+            }
+
+            // fcmToken,deviceType,deviceName,lastActive,
+            for(const userDevice of userDevices){
+              await sendPushNotificationV2(
+                userDevice.fcmToken,
+                {
+                  message : `${userProfile?.name} is calling you`,
+                  image: userProfile?.profileImage,
+                  conversationId: conversationId,
+                },
+                participantId
+              );
+            }
+
+          } catch (error) {
+            console.error(`❌ Failed to send push notification to ${participantId}: 7️⃣`, error);
+          }
+        }
+      }
+
+    });
+
+
     // Frontend: user clicks "Accept"
     // → GET /api/call/token (same channel)
     // → Join Agora
@@ -429,22 +540,273 @@ export class SocketService {
       const userId = socket.data.user._id;
 
       // Get all participants (from DB or Redis)
-      const { conversationParticipants } = await getConversationById(conversationId);
+      // Get chat details
+      const {conversationData, conversationParticipants} = await getConversationById(conversationId);
+
       const participantIds = conversationParticipants.map(p => p.userId.toString());
 
       // ✅ Promote to active call
       await this.redisStateManager.acceptCall(conversationId, participantIds);
 
+      /*------------------
       // ✅ Notify all participants: call is now active
       for (const pid of participantIds) {
         socketService.emitToUser(pid, 'call-connected', { conversationId });
       }
+
+      -----------------*/
+
+      const eventName = `call-connected`;
+      
+      console.log("conversationParticipants : ", conversationParticipants);
+      // ============================================
+      // 3️⃣ HANDLE EACH PARTICIPANT
+      // ============================================
+      for (const participant of conversationParticipants) {
+        const participantId = participant.userId?.toString();
+        
+        // Skip the sender
+        if (participantId === userId.toString()) {
+          continue;
+        }
+
+        // Prepare message data for emission
+        const messageToEmit:IMessageToEmmit = {
+          senderId: userId, // senderId should be the userId
+          name: userProfile?.name,
+          image: userProfile?.profileImage,
+          conversationId: conversationId,
+        };
+
+        const isOnline = await socketService.isUserOnline(participantId.toString()); // current way need to test
+
+        console.log("isOnline ?", isOnline, " -- ", participantId.toString())
+
+        if (isOnline) { // && !isInConversationRoom
+          // ⚠️ User is online but NOT in this conversation room
+          // Send both socket notification AND conversation list update
+          console.log(`⚠️ User ${participantId} is online but not in room, sending notification 3️⃣`);
+          
+          // Send message notification to personal room
+          socketService.emitToUser(
+            participantId,
+            eventName,
+            {
+              message : `${userProfile?.name} has received your call`,
+              image: userProfile?.profileImage,
+              conversationId: conversationId,
+            }
+          )
+
+        } else {
+          // 🔴 User is OFFLINE - send push notification
+          console.log(`🔴 User ${participantId} is offline, sending push notification 4️⃣`);
+          
+          try {
+            // --- previous line logic was for one device .. now we design a system where user can have multiple device
+
+            const userDevices:IUserDevices[] = await UserDevices.find({
+              userId: participantId, 
+            });
+            if(!userDevices){
+              console.log(`⚠️ No FCM token found for user ${participantId}`);
+              // TODO : MUST : need to think how to handle this case
+            }
+
+            // fcmToken,deviceType,deviceName,lastActive,
+            for(const userDevice of userDevices){
+              await sendPushNotificationV2(
+                userDevice.fcmToken,
+                {
+                  message : `${userProfile?.name} has received your call`,
+                  image: userProfile?.profileImage,
+                  conversationId: conversationId,
+                },
+                participantId
+              );
+            }
+
+          } catch (error) {
+            console.error(`❌ Failed to send push notification to ${participantId}: 7️⃣`, error);
+          }
+        }
+      }
     });
+
 
     socket.on('call-rejected', async (data) => {
       const { conversationId } = data;
+
+
+      // Get chat details
+      const {conversationData, conversationParticipants} = await getConversationById(conversationId);
+
+
       await this.redisStateManager.cancelPendingCall(conversationId);
       // Notify caller: 'call-rejected'
+
+      const eventName = `call-rejected`;
+      
+      console.log("conversationParticipants : ", conversationParticipants);
+      // ============================================
+      // 3️⃣ HANDLE EACH PARTICIPANT
+      // ============================================
+      for (const participant of conversationParticipants) {
+        const participantId = participant.userId?.toString();
+        
+        // Skip the sender
+        if (participantId === userId.toString()) {
+          continue;
+        }
+
+        // Prepare message data for emission
+        const messageToEmit:IMessageToEmmit = {
+          senderId: userId, // senderId should be the userId
+          name: userProfile?.name,
+          image: userProfile?.profileImage,
+          conversationId: conversationId,
+        };
+
+        const isOnline = await socketService.isUserOnline(participantId.toString()); // current way need to test
+
+        console.log("isOnline ?", isOnline, " -- ", participantId.toString())
+
+        if (isOnline) { // && !isInConversationRoom
+          // ⚠️ User is online but NOT in this conversation room
+          // Send both socket notification AND conversation list update
+          console.log(`⚠️ User ${participantId} is online but not in room, sending notification 3️⃣`);
+          
+          // Send message notification to personal room
+          socketService.emitToUser(
+            participantId,
+            eventName,
+            {
+              message : `${userProfile?.name} is reject your call`,
+              image: userProfile?.profileImage,
+            }
+          )
+
+        } else {
+          // 🔴 User is OFFLINE - send push notification
+          console.log(`🔴 User ${participantId} is offline, sending push notification 4️⃣`);
+          
+          try {
+            // --- previous line logic was for one device .. now we design a system where user can have multiple device
+
+            const userDevices:IUserDevices[] = await UserDevices.find({
+              userId: participantId, 
+            });
+            if(!userDevices){
+              console.log(`⚠️ No FCM token found for user ${participantId}`);
+              // TODO : MUST : need to think how to handle this case
+            }
+
+            // fcmToken,deviceType,deviceName,lastActive,
+            for(const userDevice of userDevices){
+              await sendPushNotificationV2(
+                userDevice.fcmToken,
+                {
+                  message : `${userProfile?.name} is reject your call`,
+                  image: userProfile?.profileImage,
+                  conversationId: conversationId,
+                },
+                participantId
+              );
+            }
+
+          } catch (error) {
+            console.error(`❌ Failed to send push notification to ${participantId}: 7️⃣`, error);
+          }
+        }
+      }
+    });
+
+    socket.on('call-end', async (data) => {
+      const { conversationId } = data;
+
+
+      // Get chat details
+      const {conversationData, conversationParticipants} = await getConversationById(conversationId);
+
+
+      await this.redisStateManager.endCall(conversationId);
+      // Notify caller: 'call-rejected'
+
+      const eventName = `call-end`;
+      
+      console.log("conversationParticipants : ", conversationParticipants);
+      // ============================================
+      // 3️⃣ HANDLE EACH PARTICIPANT
+      // ============================================
+      for (const participant of conversationParticipants) {
+        const participantId = participant.userId?.toString();
+        
+        // Skip the sender
+        if (participantId === userId.toString()) {
+          continue;
+        }
+
+        // Prepare message data for emission
+        const messageToEmit:IMessageToEmmit = {
+          senderId: userId, // senderId should be the userId
+          name: userProfile?.name,
+          image: userProfile?.profileImage,
+          conversationId: conversationId,
+        };
+
+        const isOnline = await socketService.isUserOnline(participantId.toString()); // current way need to test
+
+        console.log("isOnline ?", isOnline, " -- ", participantId.toString())
+
+        if (isOnline) { // && !isInConversationRoom
+          // ⚠️ User is online but NOT in this conversation room
+          // Send both socket notification AND conversation list update
+          console.log(`⚠️ User ${participantId} is online but not in room, sending notification 3️⃣`);
+          
+          // Send message notification to personal room
+          socketService.emitToUser(
+            participantId,
+            eventName,
+            {
+              message : `The call is ended by ${userProfile?.name}`,
+              image: userProfile?.profileImage,
+              conversationId: conversationId,
+            }
+          )
+
+        } else {
+          // 🔴 User is OFFLINE - send push notification
+          console.log(`🔴 User ${participantId} is offline, sending push notification 4️⃣`);
+          
+          try {
+            // --- previous line logic was for one device .. now we design a system where user can have multiple device
+
+            const userDevices:IUserDevices[] = await UserDevices.find({
+              userId: participantId, 
+            });
+            if(!userDevices){
+              console.log(`⚠️ No FCM token found for user ${participantId}`);
+              // TODO : MUST : need to think how to handle this case
+            }
+
+            // fcmToken,deviceType,deviceName,lastActive,
+            for(const userDevice of userDevices){
+              await sendPushNotificationV2(
+                userDevice.fcmToken,
+                {
+                  message : `The call is ended by ${userProfile?.name}`,
+                  image: userProfile?.profileImage,
+                  conversationId: conversationId,
+                },
+                participantId
+              );
+            }
+
+          } catch (error) {
+            console.error(`❌ Failed to send push notification to ${participantId}: 7️⃣`, error);
+          }
+        }
+      }
     });
 
     /*--------------------

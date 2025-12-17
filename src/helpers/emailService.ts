@@ -49,7 +49,7 @@ const sendVerificationEmail = async (to: string, otp: string) => {
   const html = `
     <div style="width: 45% ; margin: 0 auto ;font-family: Arial, sans-serif; padding: 20px; color: #333; border: 1px solid #ccc; border-radius: 20px;">
       <div style="text-align: center; margin-bottom: 20px;">
-        <img src="https://raw.githubusercontent.com/rakibislam2233/Image-Server/refs/heads/main/mentor-services.png" alt="Logo" style="width: 200px; margin-bottom: 20px;" />
+        <img src="${config.backend.shobhoyUrl}uploads/logoForEmail/kajbdlogo.png" alt="Logo" style="width: 200px; margin-bottom: 20px;" />
         <h1 style="color: #1B9AAA;">Email Verification</h1>
         <p style="font-size: 16px;">Thank you for signing up! Please verify your email address to complete the registration process. If you did not create an account with us, please disregard this email.</p>
       </div>
@@ -68,7 +68,7 @@ const sendResetPasswordEmail = async (to: string, otp: string) => {
   const html = `
    <div style="width: 45% ; margin: 0 auto ;font-family: Arial, sans-serif; padding: 20px; color: #333; border: 1px solid #ccc; border-radius: 20px;">
       <div style="text-align: center; margin-bottom: 20px;">
-        <img src="https://raw.githubusercontent.com/rakibislam2233/Image-Server/refs/heads/main/mentor-services.png" alt="Logo" style="width: 200px; margin-bottom: 20px;" />
+        <img src="${config.backend.shobhoyUrl}uploads/logoForEmail/kajbdlogo.png" alt="Logo" style="width: 200px; margin-bottom: 20px;" />
         <h1 style="color: #1B9AAA;">Password Reset Request</h1>
         <p style="font-size: 16px;">We received a request to reset your password. Use the code below to proceed with resetting your password:</p>
       </div>
@@ -98,7 +98,7 @@ const sendAdminOrSuperAdminCreationEmail = async (
   const html = `
     <div style="width: 45%; margin: 0 auto; font-family: Arial, sans-serif; padding: 20px; color: #333; border: 1px solid #ccc; border-radius: 20px;">
       <div style="text-align: center; margin-bottom: 20px;">
-        <img src="${config.backend.shobhoyUrl}uploads/logoForEmail/logo.png" alt="Logo" style="width: 200px; margin-bottom: 20px;" />
+        <img src="${config.backend.shobhoyUrl}uploads/logoForEmail/kajbdlogo.png" alt="Logo" style="width: 200px; margin-bottom: 20px;" />
         <h1 style="color: #1B9AAA;">Congratulations! You are now an ${role}</h1>
         <p style="font-size: 16px;">You have been granted ${role} access to the system. Use the credentials below to log in:</p>
       </div>
@@ -127,7 +127,7 @@ const sendWelcomeEmail = async (to: string, password: string) => {
   const html = `
     <div style="width: 45%; margin: 0 auto; font-family: Arial, sans-serif; padding: 20px; color: #333; border: 1px solid #ccc; border-radius: 20px;">
       <div style="text-align: center; margin-bottom: 20px;">
-        <img src="https://raw.githubusercontent.com/rakibislam2233/Image-Server/refs/heads/main/mentor-services.png" alt="Logo" style="width: 200px; margin-bottom: 20px;" />
+        <img src="${config.backend.shobhoyUrl}uploads/logoForEmail/kajbdlogo.png" alt="Logo" style="width: 200px; margin-bottom: 20px;" />
         <h1 style="color: #1B9AAA;">Welcome to the Platform!</h1>
         <p style="font-size: 16px;">We are excited to have you join us. Your account has been created successfully. Use the following credentials to log in:</p>
       </div>
@@ -150,7 +150,7 @@ const sendSupportMessageEmail = async (
   const html = `
     <div style="width: 45%; margin: 0 auto; font-family: Arial, sans-serif; padding: 20px; color: #333; border: 1px solid #ccc; border-radius: 20px;">
       <div style="text-align: center; margin-bottom: 20px;">
-        <img src="https://raw.githubusercontent.com/rakibislam2233/Image-Server/refs/heads/main/mentor-services.png" alt="Logo" style="width: 200px; margin-bottom: 20px;" />
+        <img src="${config.backend.shobhoyUrl}uploads/logoForEmail/kajbdlogo.png" alt="Logo" style="width: 200px; margin-bottom: 20px;" />
         <h1 style="color: #1B9AAA;">New Support Message</h1>
         <p style="font-size: 16px;"><strong>From:</strong> ${userName} (${userEmail})</p>
         <p style="font-size: 16px;"><strong>Subject:</strong> ${subject}</p>

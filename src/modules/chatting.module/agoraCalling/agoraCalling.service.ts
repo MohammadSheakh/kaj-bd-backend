@@ -187,6 +187,7 @@ export class AgoraCallingService extends GenericService<
         throw new Error(`You are not a participants of this conversation`);
       }
 
+    
       /*--------------------
       for (const participant of conversationParticipants) {
          const participantId = participant.userId?.toString();
@@ -196,7 +197,7 @@ export class AgoraCallingService extends GenericService<
          }
       }
       --------------------*/
-
+    
       return {
         token,
         appId: this.appId,
