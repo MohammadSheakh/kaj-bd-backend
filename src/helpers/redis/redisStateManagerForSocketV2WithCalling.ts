@@ -356,6 +356,14 @@ export class RedisStateManager {
     logger.info(`❌ Pending call canceled for conversation ${conversationId}`);
   }
 
+  /*----------------------------- // 🎨   -> GUIDE FOR FRONTEND 
+  //--------- After this call related methods .. go to .. socket and add a  'call-started' listener ..
+  //--------- Front end will fire 'call-started' event to backend when user start a call .. 
+  // Frontend:
+  // 1. GET /api/call/token → get token
+  // 2. Join Agora channel
+  // 3. IF SUCCESS → emit Socket.IO: socket.emit('call-started', { conversationId })
+  ------------------------------*/
 
   // =============================================
   // Related Users

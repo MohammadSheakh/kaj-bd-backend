@@ -181,8 +181,6 @@ export class SocketService {
         const token = socket.handshake.auth.token || 
                      socket.handshake.headers.token as string;
 
-                     
-
         if (!token) {
           return next(new Error('Authentication token required'));
         }
@@ -306,9 +304,152 @@ export class SocketService {
 
   // 🔗➡️ setupEventHandlers
   private setupUserEventHandlers(socket: Socket, userId: string, userProfile: IUserProfile) {
+    
+    //---------------------------------------------------------------------
+    //  Handle AGORA calling related events .. 
+    //---------------------------------------------------------------------
+
+    // Frontend:
+    // 1. GET /api/call/token → get token
+    // 2. Join Agora channel
+    // 3. IF SUCCESS → emit Socket.IO: socket.emit('call-started', { conversationId })
+
+    // Backend (Socket.IO handler):
+    socket.on('call-started', async (data) => {
+      const { conversationId } = data;
+      const userId = socket.data.user._id;
+
+      // Optional: double-check user is in conversation
+      // ...
+
+      // ✅ Start pending call in Redis
+      await this.redisStateManager.startPendingCall(conversationId, userId);
+
+      // ✅ Notify other participants (your existing loop)
+      // const { conversationParticipants } = await getConversationById(conversationId);
+      // for (const p of conversationParticipants) {
+      //   if (p.userId.toString() !== userId) {
+      //     // Emit 'incoming-call' via socket or push
+      //   }
+      // }
+
+
+      // Get chat details
+      const {conversationData, conversationParticipants} = await getConversationById(channelName);
+    
+      const eventName = `incoming-call`;
+    
+      // ============================================
+      // 3️⃣ HANDLE EACH PARTICIPANT
+      // ============================================
+      for (const participant of conversationParticipants) {
+        const participantId = participant.userId?.toString();
+        
+        // Skip the sender
+        if (participantId === userId.toString()) {
+          continue;
+        }
+
+        // Prepare message data for emission
+        const messageToEmit:IMessageToEmmit = {
+          senderId: userId, // senderId should be the userId
+          name: userProfile?.name,
+          image: userProfile?.profileImage
+        };
+
+        const isOnline = await socketService.isUserOnline(participantId.toString()); // current way need to test
+
+        if (isOnline) { // && !isInConversationRoom
+          // ⚠️ User is online but NOT in this conversation room
+          // Send both socket notification AND conversation list update
+          console.log(`⚠️ User ${participantId} is online but not in room, sending notification 3️⃣`);
+          
+          // Send message notification to personal room
+          socketService.emitToUser(
+            participantId,
+            eventName,
+            {
+              message : `${userProfile?.name} is calling you`,
+              image: userProfile?.profileImage,
+            }
+          )
+
+        } else {
+          // 🔴 User is OFFLINE - send push notification
+          console.log(`🔴 User ${participantId} is offline, sending push notification 4️⃣`);
+          
+          try {
+            // --- previous line logic was for one device .. now we design a system where user can have multiple device
+
+            const userDevices:IUserDevices[] = await UserDevices.find({
+              userId: participantId, 
+            });
+            if(!userDevices){
+              console.log(`⚠️ No FCM token found for user ${participantId}`);
+              // TODO : MUST : need to think how to handle this case
+            }
+
+            // fcmToken,deviceType,deviceName,lastActive,
+            for(const userDevice of userDevices){
+              await sendPushNotificationV2(
+                userDevice.fcmToken,
+                {
+                  message : `${userProfile?.name} is calling you`,
+                  image: userProfile?.profileImage,
+                },
+                participantId
+              );
+            }
+
+          } catch (error) {
+            console.error(`❌ Failed to send push notification to ${participantId}: 7️⃣`, error);
+          }
+        }
+      }
+
+    });
+
+    // Frontend: user clicks "Accept"
+    // → GET /api/call/token (same channel)
+    // → Join Agora
+    // → Emit: socket.emit('call-accepted', { conversationId })
+
+    // Backend:
+    socket.on('call-accepted', async (data) => {
+      const { conversationId } = data;
+      const userId = socket.data.user._id;
+
+      // Get all participants (from DB or Redis)
+      const { conversationParticipants } = await getConversationById(conversationId);
+      const participantIds = conversationParticipants.map(p => p.userId.toString());
+
+      // ✅ Promote to active call
+      await this.redisStateManager.acceptCall(conversationId, participantIds);
+
+      // ✅ Notify all participants: call is now active
+      for (const pid of participantIds) {
+        socketService.emitToUser(pid, 'call-connected', { conversationId });
+      }
+    });
+
+    socket.on('call-rejected', async (data) => {
+      const { conversationId } = data;
+      await this.redisStateManager.cancelPendingCall(conversationId);
+      // Notify caller: 'call-rejected'
+    });
+
+    /*--------------------
+      4. Caller Hangs Up Before Accept
+      If caller leaves before accept, the pending call auto-expires in 60s (thanks to EXPIRE).
+      Or, caller can emit call-canceled → trigger cancelPendingCall.
+    ---------------------*/
+
+    //------------------------------------------  CHATTING RELATED EVENTS ---------------------------------
+
     //---------------------------------
     //   Handle Returning all related online users not all online users ..   🟢working perfectly
     //--------------------------------- 
+
     // Get related online users
     socket.on('only-related-online-users', async (data: {userId: string}, callback) => {
       try {
@@ -338,7 +479,7 @@ export class SocketService {
       // Join socket.io room
       socket.join(conversationId);
       
-      // Update Redis state
+      // Update Redis state 
       await this.redisStateManager.joinRoom(userId, conversationId);
       
       // Get room users from Redis

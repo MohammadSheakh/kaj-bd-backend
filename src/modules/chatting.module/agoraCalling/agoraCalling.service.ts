@@ -15,6 +15,7 @@ import { IUserDevices } from '../../user.module/userDevices/userDevices.interfac
 import { sendPushNotificationV2 } from '../../../utils/firebaseUtils';
 import { User } from '../../user.module/user/user.model';
 import { IUser } from '../../user.module/user/user.interface';
+import { IConversationParticipents } from '../conversationParticipents/conversationParticipents.interface';
 
 export class AgoraCallingService extends GenericService<
   typeof AgoraCalling,
@@ -30,6 +31,7 @@ export class AgoraCallingService extends GenericService<
     this.appCertificate = config.agora.appCertificationPrimary!;
   }
 
+  //--------------------------------  💎✨🔍 -> V2 Found
   public async getCallToken(
     userId: string,
     channelName: string, // channelName is conversationId
@@ -140,6 +142,60 @@ export class AgoraCallingService extends GenericService<
           }
         }
       }
+
+      return {
+        token,
+        appId: this.appId,
+        channelName,
+      };
+    } catch (error) {
+      // logger.error();
+      // throw new Error('Failed to generate call token');
+      throw new Error(`Failed to generate Agora token for user ${userId} in channel ${channelName}: ${error}`);
+    }
+  }
+
+  public async getCallTokenV2(
+    userId: string,
+    channelName: string, // channelName is conversationId
+    role: 'publisher' | 'subscriber' = 'publisher'
+  ): Promise<{ token: string; appId: string; channelName: string }> {
+    
+    try {
+      const agoraRole = role === 'publisher' ? RtcRole.PUBLISHER : RtcRole.SUBSCRIBER;
+      const token = this.generateToken(channelName, userId, agoraRole);
+
+      // lets emit and event to UserB that userA calls him
+
+      const userProfile : IUser | null = await User.findById(userId);
+
+      if(!userProfile){
+        throw new Error(`User with ID ${userId} not found`);
+      }
+
+      // Get chat details
+      const {conversationData, conversationParticipants} = await getConversationById(channelName);
+    
+      // ============================================
+      // 3️⃣ Check this user in conversation participants or not
+      // ============================================
+      const isUserInConversation = conversationParticipants.some(
+        participant => participant.id === userId
+      );
+
+      if(!isUserInConversation){
+        throw new Error(`You are not a participants of this conversation`);
+      }
+
+      /*--------------------
+      for (const participant of conversationParticipants) {
+         const participantId = participant.userId?.toString();
+        // Skip the sender
+         if (participantId === userId.toString()) {
+          continue;
+         }
+      }
+      --------------------*/
 
       return {
         token,
