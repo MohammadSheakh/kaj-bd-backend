@@ -27,7 +27,7 @@ export class AgoraCallingController extends GenericController<
     }
 
     // const tokenData = await socketService.getCallToken(userId, channelName, role);
-    const tokenData = await this.AgoraCallingService.getCallToken(req.user.userId, channelName, role);
+    const tokenData = await this.AgoraCallingService.getCallTokenV2(req.user.userId, channelName, role);
 
     sendResponse(res, {
       code: StatusCodes.OK,

@@ -16,6 +16,7 @@ import { sendPushNotificationV2 } from '../../../utils/firebaseUtils';
 import { User } from '../../user.module/user/user.model';
 import { IUser } from '../../user.module/user/user.interface';
 import { IConversationParticipents } from '../conversationParticipents/conversationParticipents.interface';
+import ApiError from '../../../errors/ApiError';
 
 export class AgoraCallingService extends GenericService<
   typeof AgoraCalling,
@@ -169,8 +170,11 @@ export class AgoraCallingService extends GenericService<
 
       const userProfile : IUser | null = await User.findById(userId);
 
+      console.log("userProfile: ", userProfile);
+
       if(!userProfile){
-        throw new Error(`User with ID ${userId} not found`);
+        // throw new Error(`User with ID ${userId} not found`);
+        throw new ApiError(StatusCodes.BAD_REQUEST, 'User with ID ${userId} not found');
       }
 
       // Get chat details
@@ -179,15 +183,15 @@ export class AgoraCallingService extends GenericService<
       // ============================================
       // 3️⃣ Check this user in conversation participants or not
       // ============================================
+
       const isUserInConversation = conversationParticipants.some(
-        participant => participant.id === userId
+        participant => participant.userId.toString() === userId.toString()
       );
 
-      if(!isUserInConversation){
-        throw new Error(`You are not a participants of this conversation`);
+      if(isUserInConversation == false){
+        throw new ApiError(StatusCodes.BAD_REQUEST, 'You are not a participants of this conversation');
       }
 
-    
       /*--------------------
       for (const participant of conversationParticipants) {
          const participantId = participant.userId?.toString();
@@ -206,7 +210,8 @@ export class AgoraCallingService extends GenericService<
     } catch (error) {
       // logger.error();
       // throw new Error('Failed to generate call token');
-      throw new Error(`Failed to generate Agora token for user ${userId} in channel ${channelName}: ${error}`);
+      // throw new Error(`Failed to generate Agora token for user ${userId} in channel ${channelName}: ${error}`);
+      throw new ApiError(StatusCodes.BAD_REQUEST, `Failed to generate Agora token for user ${userId} in channel ${channelName}: ${error}`);
     }
   }
 
@@ -233,6 +238,8 @@ export class AgoraCallingService extends GenericService<
 
     const currentTime = Math.floor(Date.now() / 1000);
     const privilegeExpiredTs = currentTime + expireTimeInSeconds;
+
+    console.log("primary token :: ", this.appCertificate);
 
     return RtcTokenBuilder.buildTokenWithUid(
       this.appId,

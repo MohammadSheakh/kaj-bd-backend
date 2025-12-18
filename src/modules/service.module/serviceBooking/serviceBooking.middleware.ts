@@ -203,7 +203,14 @@ export const imageUploadPipelineForUpdateServiceBooking = [
       name: 'attachments',
       folder: TFolderName.serviceBooking,
       required: true, // optional
-      allowedMimeTypes: ['image/jpeg', 'image/png'], // , 'application/pdf'
+      allowedMimeTypes: ['image/jpeg', 'image/png',
+        // Videos
+        'video/mp4',
+        'video/webm',
+        'video/quicktime', // .mov
+        'video/x-msvideo', // .avi
+        'video/x-matroska', // .mkv 
+    ], // , 'application/pdf'
     },
   ]),
 ];
