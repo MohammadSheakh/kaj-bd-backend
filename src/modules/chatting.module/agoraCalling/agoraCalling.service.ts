@@ -255,8 +255,8 @@ export class AgoraCallingService extends GenericService<
       this.appCertificate,
       channelName,
       // uid,
-      userId.toString(),
-      //0,
+      // userId.toString(),
+      0,
       role,
       privilegeExpiredTs
     );
