@@ -91,7 +91,7 @@ router.route('/paginate/for-admin').get(
     select: `address bookingDateTime completionDate startPrice hasReview status`
   }),
   // service provider er rating show kora lagbe 
-  controller.getAllWithPaginationV2
+  controller.getAllWithPaginationV2ForAdmin
 );
 
 //-------------------------------------------

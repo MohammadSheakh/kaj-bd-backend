@@ -36,7 +36,7 @@ const controller = new UserController();
 // Admin | 02-01 | Get All Users from Users Table With Statistics
 //---------------------------------
 router.route('/paginate').get(
-  auth(TRole.admin),
+  auth(TRole.admin, TRole.subAdmin),
   validateFiltersForQuery(optionValidationChecking(['_id', 'name', 'createdAt', ...paginationOptions])),
   setRequstFilterAndValue('role', 'user'),
   controller.getAllWithPaginationV2WithStatistics
@@ -46,7 +46,7 @@ router.route('/paginate').get(
 // Admin | 03-01 | Get All Users from Users Table
 //---------------------------------
 router.route('/paginate/for-user').get(
-  auth(TRole.admin),
+  auth(TRole.admin, TRole.subAdmin),
   validateFiltersForQuery(optionValidationChecking(['_id', 'name', 'createdAt', 'from', 'to', ...paginationOptions])),
   setRequstFilterAndValue('role', 'user'),
   controller.getAllWithPaginationV2
@@ -98,7 +98,7 @@ router.put(
 // Admin | 04-01 | Get All Providers from Users Table 
 //---------------------------------
 router.route('/paginate/for-provider').get(
-  auth(TRole.admin),
+  auth(TRole.admin, TRole.subAdmin),
   // providerApprovalStatus must pass kora lagbe .. 
   // from and to is for date range filter
   validateFiltersForQuery(optionValidationChecking(['_id', 'name', 'email', 'phoneNumber','role', 'providerApprovalStatus', 'from', 'to', ...paginationOptions])),

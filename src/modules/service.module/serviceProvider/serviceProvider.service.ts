@@ -179,7 +179,7 @@ export class ServiceProviderService extends GenericService<
     // Extract location parameters
     let userLatitude: number | null = null;
     let userLongitude: number | null = null;
-    let maxDistance: number = 1000; // Default 1000 meter = 1 Km
+    let maxDistance: number = 50000; // Default 1000 meter = 1 Km
 
     // Dynamically apply filters
     for (const key in filters) {
