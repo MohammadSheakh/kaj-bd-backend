@@ -156,6 +156,25 @@ export class AgoraCallingService extends GenericService<
     }
   }
 
+  // ============================================
+  // UID CONVERSION HELPER
+  // ============================================
+  /**
+   * Converts MongoDB ObjectId to Agora UID (32-bit unsigned integer)
+   * Agora UIDs must be: 1 to (2^32 - 1)
+   */
+  private convertToAgoraUid(mongoId: string): number {
+    // Method 1: Hash the last 8 characters and convert to number
+    const last8Chars = mongoId.slice(-8);
+    const uid = parseInt(last8Chars, 16) % 0xFFFFFFFF;
+    
+    // Ensure UID is never 0
+    return uid === 0 ? 1 : uid;
+    
+    // Alternative Method 2: Use a hash function for better distribution
+    // You could also use a library like 'object-hash' or store a mapping in DB
+  }
+
   public async getCallTokenV2(
     userId: string,
     channelName: string, // channelName is conversationId
@@ -164,16 +183,16 @@ export class AgoraCallingService extends GenericService<
     
     try {
       const agoraRole = role === 'publisher' ? RtcRole.PUBLISHER : RtcRole.SUBSCRIBER;
-      const token = this.generateToken(channelName, userId, agoraRole);
 
-      // lets emit and event to UserB that userA calls him
+      // 4️⃣ Generate Agora UID from MongoDB ObjectId
+      // const agoraUid = this.convertToAgoraUid(userId);
+
+      const token = this.generateToken(channelName, userId, agoraRole);
+      //const token = this.generateToken(channelName, agoraUid, agoraRole);
 
       const userProfile : IUser | null = await User.findById(userId);
 
-      console.log("userProfile: ", userProfile);
-
       if(!userProfile){
-        // throw new Error(`User with ID ${userId} not found`);
         throw new ApiError(StatusCodes.BAD_REQUEST, 'User with ID ${userId} not found');
       }
 
@@ -192,25 +211,14 @@ export class AgoraCallingService extends GenericService<
         throw new ApiError(StatusCodes.BAD_REQUEST, 'You are not a participants of this conversation');
       }
 
-      /*--------------------
-      for (const participant of conversationParticipants) {
-         const participantId = participant.userId?.toString();
-        // Skip the sender
-         if (participantId === userId.toString()) {
-          continue;
-         }
-      }
-      --------------------*/
-    
+  
       return {
         token,
         appId: this.appId,
         channelName,
       };
     } catch (error) {
-      // logger.error();
-      // throw new Error('Failed to generate call token');
-      // throw new Error(`Failed to generate Agora token for user ${userId} in channel ${channelName}: ${error}`);
+      
       throw new ApiError(StatusCodes.BAD_REQUEST, `Failed to generate Agora token for user ${userId} in channel ${channelName}: ${error}`);
     }
   }
@@ -231,7 +239,8 @@ export class AgoraCallingService extends GenericService<
     role: RtcRole = RtcRole.PUBLISHER, // Default to publisher (can send/receive audio/video)
     expireTimeInSeconds: number = 3600
   ): string {
-    const uid = typeof userId === 'string' ? parseInt(userId, 10) : userId;
+    
+    const uid = typeof userId === 'string' ? parseInt(userId, 10) : userId; // ISSUE : Multiple users may end up with the same UID
     if (isNaN(uid)) {
       throw new Error(`Invalid userId for Agora token: ${userId}`);
     }
@@ -239,13 +248,15 @@ export class AgoraCallingService extends GenericService<
     const currentTime = Math.floor(Date.now() / 1000);
     const privilegeExpiredTs = currentTime + expireTimeInSeconds;
 
-    console.log("primary token :: ", this.appCertificate);
+    // console.log("primary token :: ", this.appCertificate);
 
     return RtcTokenBuilder.buildTokenWithUid(
       this.appId,
       this.appCertificate,
       channelName,
-      uid,
+      // uid,
+      userId.toString(),
+      //0,
       role,
       privilegeExpiredTs
     );
