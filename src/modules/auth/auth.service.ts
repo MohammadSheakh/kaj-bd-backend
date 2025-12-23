@@ -179,6 +179,10 @@ const login = async (email: string,
     throw new ApiError(StatusCodes.UNAUTHORIZED, 'Invalid credentials');
   }
 
+  if (user.isDeleted == true) {
+    throw new ApiError(StatusCodes.UNAUTHORIZED, 'Your account is deleted. Please create a new account.');
+  }
+
   validateUserStatus(user);
 
   // if (!user.isEmailVerified) {

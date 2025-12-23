@@ -29,6 +29,30 @@ export class UserController extends GenericController<
     super(new UserService(), 'User');
   }
 
+  softDeleteById = catchAsync(async (req: Request, res: Response) => {
+    if (!req.params.id) {
+      throw new ApiError(
+        StatusCodes.BAD_REQUEST,
+        `id is required for delete ${this.modelName}`
+      );
+    }
+
+    const id = req.params.id;
+    const deletedObject = await this.userService.softDeleteById(id);
+    if (!deletedObject) {
+      throw new ApiError(
+        StatusCodes.NOT_FOUND,
+        `Object with ID ${id} not found`
+      );
+    }
+    //   return res.status(StatusCodes.NO_CONTENT).json({});
+    sendResponse(res, {
+      code: StatusCodes.OK,
+      data: deletedObject,
+      message: `${this.modelName} soft deleted successfully`,
+    });
+  });
+
 //---------------------------------
 // from previous codebase
 //---------------------------------

@@ -71,6 +71,26 @@ export class UserService extends GenericService<typeof User, IUser> {
     super(User);
   }
 
+  async softDeleteById(id: string) {
+
+    const object = await this.model.findById(id).select('-__v');
+
+    if (!object) {
+      throw new ApiError(StatusCodes.BAD_REQUEST, 'No Object Found');
+      //   return null;
+    }
+
+    if (object.isDeleted === true) {
+      throw new ApiError(StatusCodes.BAD_REQUEST, 'Item already deleted');
+    }
+
+    return await this.model.findByIdAndUpdate(
+      id,
+      { isDeleted: true, deletedAt : new Date() },
+      { new: true }
+    );
+  }
+
   createAdminOrSuperAdmin = async (payload: IAdminOrSuperAdminPayload): Promise<IUser> => {
 
     const existingUser = await User.findOne({ email: payload.email });

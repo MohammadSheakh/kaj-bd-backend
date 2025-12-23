@@ -222,7 +222,7 @@ export class ConversationParticipentsService extends GenericService<
       }
     });
 
-    console.log("uniqueUsers ::", uniqueUsers); 
+    // console.log("uniqueUsers ::", uniqueUsers); 
 
     // This will sort users based on the most recent conversation's updatedAt
 
@@ -232,7 +232,7 @@ export class ConversationParticipentsService extends GenericService<
       return dateB - dateA; // Descending order
     });
 
-    console.log("sortedResult ::", sortedResult);
+    // console.log("sortedResult ::", sortedResult);
 
 
     // return Object.values(uniqueUsers);

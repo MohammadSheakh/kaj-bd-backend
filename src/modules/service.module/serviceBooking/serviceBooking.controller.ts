@@ -218,7 +218,7 @@ export class ServiceBookingController extends GenericController<
       if(req.body.status === TBookingStatus.accepted){
         // provider
         await enqueueWebNotification(
-          `Booking ${updatedObject._id} is accepted`, // by ${updatedObject.userId.name}
+          `Booking ${updatedObject._id} is accepted by provider.`, // by ${updatedObject.userId.name}
           senderId, // senderId
           receiverId, // receiverId
           receiverRole, // receiverRole
@@ -262,7 +262,7 @@ export class ServiceBookingController extends GenericController<
       }else if(req.body.status === TBookingStatus.inProgress){
         // provider
         await enqueueWebNotification(
-          `Booking ${updatedObject._id} status in progress by provider `, // ${updatedObject.userId.name}
+          `The provider has started working on your booking ${updatedObject._id}.`, // ${updatedObject.userId.name}
           senderId, // senderId
           receiverId, // receiverId
           receiverRole, // receiverRole
@@ -290,7 +290,7 @@ export class ServiceBookingController extends GenericController<
         // provider // incomplete ... 
         // 🟢 need to send notification to admin and provider both 
         await enqueueWebNotification(
-          `Booking ${updatedObject._id} status in progress by provider `, // ${updatedObject.userId.name}
+          `Booking ${updatedObject._id} is marked as completed.`, // ${updatedObject.userId.name}
           senderId, // senderId
           receiverId, // receiverId
           receiverRole, // receiverRole
