@@ -222,16 +222,28 @@ export class ConversationParticipentsService extends GenericService<
       }
     });
 
+    console.log("uniqueUsers ::", uniqueUsers); 
+
+    // This will sort users based on the most recent conversation's updatedAt
+
+    const sortedResult = Object.values(uniqueUsers).sort((a: any, b: any) => {
+      const dateA = a.conversations.length > 0 ? new Date(a.conversations[0].updatedAt).getTime() : 0;
+      const dateB = b.conversations.length > 0 ? new Date(b.conversations[0].updatedAt).getTime() : 0;
+      return dateB - dateA; // Descending order
+    });
+
+    console.log("sortedResult ::", sortedResult);
+
 
     // return Object.values(uniqueUsers);
     // Return paginated response with processed data
-  return {
-    results: Object.values(uniqueUsers),
-    page: paginatedResults.page,
-    limit: paginatedResults.limit,
-    totalPages: paginatedResults.totalPages,
-    totalResults: paginatedResults.totalResults
-  };
+    return {
+      results:sortedResult, //Object.values(uniqueUsers),
+      page: paginatedResults.page,
+      limit: paginatedResults.limit,
+      totalPages: paginatedResults.totalPages,
+      totalResults: paginatedResults.totalResults
+    };
   }
 
 

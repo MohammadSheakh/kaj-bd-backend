@@ -1267,14 +1267,15 @@ export class SocketService {
       const userDevices:IUserDevices[] = await UserDevices.find({
         userId, 
       });
+
       if(!userDevices){
         console.log(`⚠️ No FCM token found for user ${userId}`);
         // TODO : MUST : need to think how to handle this case
       }
-      console.log("✔️✔️FCM Token Found !")
-
+      
       // fcmToken,deviceType,deviceName,lastActive,
       for(const userDevice of userDevices){
+
         await sendPushNotificationV2(
           userDevice.fcmToken,
           {
