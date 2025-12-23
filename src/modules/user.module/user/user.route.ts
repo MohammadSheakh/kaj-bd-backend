@@ -231,8 +231,11 @@ router.route('/delete/:id').delete(
   controller.deleteById
 ); // FIXME : change to admin
 
+/*---------------------
+  As per toky vai's requirement.. 
+-----------------------*/
 router.route('/softDelete/:id').put(
-  //auth('common'),
+  auth(TRole.commonUser),
   controller.softDeleteById
 );
 
