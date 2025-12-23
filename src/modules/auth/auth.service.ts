@@ -102,6 +102,8 @@ const createUser = async (userData: ICreateUser, userProfileId:string) => {
     }
   }
 
+  userData.password = await bcryptjs.hash(userData.password, 12);
+
   const user = await User.create(userData);
 
 

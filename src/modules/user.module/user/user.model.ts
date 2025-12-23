@@ -163,12 +163,12 @@ userSchema.statics.isMatchPassword = async function (
 userSchema.pre('save', async function (next) {
 
   // INFO : while running seeder .. comment this out 
-  if (this.isModified('password')) {
-    this.password = await bcryptjs.hash(
-      this.password,
-      Number(config.bcrypt.saltRounds),
-    );
-  }
+  // if (this.isModified('password')) {
+  //   this.password = await bcryptjs.hash(
+  //     this.password,
+  //     Number(config.bcrypt.saltRounds),
+  //   );
+  // }
   next();
 });
 
