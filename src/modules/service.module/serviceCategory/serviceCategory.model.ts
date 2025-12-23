@@ -31,7 +31,7 @@ const ServiceCategorySchema = new Schema<IServiceCategory>(
     // },
     createdBy: {
       type: String,
-      enum: [TRole.admin, TRole.provider],
+      enum: [TRole.admin, TRole.provider, TRole.subAdmin],
       required: [true, 'createdBy is required'],
     },
     createdByUserId: {
