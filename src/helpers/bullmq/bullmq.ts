@@ -4,9 +4,9 @@ import { errorLogger, logger } from "../../shared/logger";
 import { Notification } from "../../modules/notification/notification.model";
 import { INotification } from "../../modules/notification/notification.interface";
 import { redisPubClient } from "../redis/redis";
-import { socketService } from "../socket/socketForChatV3";
 import { TRole } from "../../middlewares/roles";
 import { buildTranslatedField } from "../../utils/buildTranslatedField";
+import { socketService } from "../socket/socketForChatV3WithFirebase";
 
 // Create Queue
 export const scheduleQueue = new Queue("scheduleQueue", {

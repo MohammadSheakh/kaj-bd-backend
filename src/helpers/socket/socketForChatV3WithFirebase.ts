@@ -1043,7 +1043,6 @@ export class SocketService {
             continue;
           }
 
-          
           // Check if user is ONLINE (has active socket connection)
           // const isOnline = onlineUsersArray.includes(participantIdStr);
           const isOnline = await this.isUserOnline(participantId.toString()); // current way need to test
@@ -1241,17 +1240,16 @@ export class SocketService {
    * we call this method into bullmq.ts -> startNotificationWorker
    * 🔗➡️  bullmq.ts -> startNotificationWorker
    * ********* */
-  public async emitToUser(userId: string, event: string, data: INotification | any): Promise<boolean> {
+  public async emitToUser(userId: string, event: string, data: MessageData): Promise<boolean> {
     if (!this.io) return false;
     
+    /*---------------------------
     const isOnline = await this.redisStateManager.isUserOnline(userId);
     if (isOnline) {
       this.io.to(userId).emit(event, data);
       return true;
     }else{
       // send notification via firebase push notification
-
-      console.log("Hit FCM TOKEN BLOCK ⚡")
       // Fetch user's FCM token from DB
       const user = await User.findById(userId, 'fcmToken');
       if (user?.fcmToken) {
@@ -1261,8 +1259,36 @@ export class SocketService {
           userId
         );
       }
-
     }
+    ----------------------------*/
+    try {
+      // --- previous line logic was for one device .. now we design a system where user can have multiple device
+
+      const userDevices:IUserDevices[] = await UserDevices.find({
+        userId, 
+      });
+      if(!userDevices){
+        console.log(`⚠️ No FCM token found for user ${userId}`);
+        // TODO : MUST : need to think how to handle this case
+      }
+      console.log("✔️✔️FCM Token Found !")
+
+      // fcmToken,deviceType,deviceName,lastActive,
+      for(const userDevice of userDevices){
+        await sendPushNotificationV2(
+          userDevice.fcmToken,
+          {
+            text : data.title
+          },
+          userId
+        );
+      }
+
+    } catch (error) {
+      console.error(`❌ Failed to send push notification to ${userId}: 7️⃣`, error);
+    } 
+
+
     return false;
   }
 

@@ -16,7 +16,7 @@ import { Conversation } from "../conversation/conversation.model";
 import { ConversationParticipents } from "../conversationParticipents/conversationParticipents.model";
 import { TFolderName } from "../../../enums/folderNames";
 import { SocketService } from "../../../helpers/socket/socketForChatV3";
-import { socketService } from "../../../helpers/socket/socketForChatV3";
+import { socketService } from "../../../helpers/socket/socketForChatV3WithFirebase";
 // Import the io instance from your socket setup
 
 // Adjust the path as needed to where your io instance is exported

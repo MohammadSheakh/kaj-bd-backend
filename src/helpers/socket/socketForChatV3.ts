@@ -19,6 +19,9 @@ import { MessagerService } from '../../modules/chatting.module/message/message.s
 import { Conversation } from '../../modules/chatting.module/conversation/conversation.model';
 import { ConversationParticipents } from '../../modules/chatting.module/conversationParticipents/conversationParticipents.model';
 import { Message } from '../../modules/chatting.module/message/message.model';
+import { IUserDevices } from '../../modules/user.module/userDevices/userDevices.interface';
+import { UserDevices } from '../../modules/user.module/userDevices/userDevices.model';
+import { sendPushNotificationV2 } from '../../utils/firebaseUtils';
 
 export type IUserProfile = Pick<IUser, '_id' | 'name' | 'profileImage' | 'role' | 'subscriptionType' | 'fcmToken'>;
 
@@ -646,12 +649,15 @@ export class SocketService {
    * ********* */
   public async emitToUser(userId: string, event: string, data: INotification | any): Promise<boolean> {
     if (!this.io) return false;
-    
+    /*-------------------------
     const isOnline = await this.redisStateManager.isUserOnline(userId);
     if (isOnline) {
       this.io.to(userId).emit(event, data);
       return true;
     }else{
+    ---------------------------*/   
+    // As Per Toky Vai .. we always send push notification .. 
+
       // send notification via firebase push notification
 
       console.log("Hit FCM TOKEN BLOCK ⚡")
@@ -665,7 +671,9 @@ export class SocketService {
         );
       }
 
+      /*------------
     }
+      ---------------------*/
     return false;
   }
 

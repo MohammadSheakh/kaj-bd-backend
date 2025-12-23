@@ -12,6 +12,8 @@ import { TLanguage } from '../../../enums/language';
 import { ServiceProvider } from '../serviceProvider/serviceProvider.model';
 //@ts-ignore
 import mongoose from 'mongoose';
+import { TNotificationType } from '../../notification/notification.constants';
+import { enqueueWebNotification } from '../../../services/notification.service';
 
 export class ReviewService extends GenericService<
   typeof Review,
@@ -95,6 +97,17 @@ export class ReviewService extends GenericService<
         }
       )
     }
+
+    await enqueueWebNotification(
+      `You receive a new review from your customer`, // ${updatedObject.userId.name}
+      userId, // senderId
+      existingBooking.providerId, // receiverId
+      'provider', // receiverRole
+      TNotificationType.review, // type
+      data.serviceBookingId, // idOfType  // here we pass serviceBookingId
+      null, // linkFor
+      null // linkId
+    );
 
     // 6. Update Booking TODO : MUST : mongo db transaction add korte hobe 
     existingBooking.hasReview = true;
