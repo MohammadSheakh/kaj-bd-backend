@@ -7,10 +7,24 @@ import { TNotificationType } from './notification.constants';
 
 const notificationModel = new Schema<INotification>(
   {
+    // title: {
+    //   type: String,
+    //   required: [true, "Title is required"],
+    //   trim: true,
+    // },
     title: {
-      type: String,
-      required: [true, "Title is required"],
-      trim: true,
+      // type: String,
+      // required: [true, 'Address is required'],
+      en: {
+        type: String, // 🧲 it shows it is required .. but we provide this
+        required: [true, 'English address is required'],
+        trim: true,
+      },
+      bn: {
+        type: String, // 🧲 it shows it is required .. but we provide this
+        required: [true, 'Bangla address is required'],
+        trim: true,
+      },
     },
     subTitle: {
       type: String,

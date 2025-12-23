@@ -14,7 +14,7 @@ import { ServiceProviderService } from '../serviceProvider/serviceProvider.servi
 import { enqueueWebNotification } from '../../../services/notification.service';
 import { TRole } from '../../../middlewares/roles';
 import { TNotificationType } from '../../notification/notification.constants';
-import { toUTCTime } from '../../../utils/timezone';
+import { toLocalTime, toUTCTime } from '../../../utils/timezone';
 import PaginationService from '../../../common/service/paginationService';
 //@ts-ignore
 import mongoose from 'mongoose';
@@ -97,6 +97,8 @@ export class ServiceBookingService extends GenericService<
      * 📝
      * 
      * ****** */
+    let dateForNotification
+
     if(data.bookingDateTime) {
         const scheduleDate = new Date(data.bookingDateTime);
         
@@ -106,7 +108,10 @@ export class ServiceBookingService extends GenericService<
             // throw new Error('Invalid date or time format');
             throw new ApiError(StatusCodes.BAD_REQUEST, 'Invalid date or time format');
         }
+        dateForNotification = toLocalTime(data.bookingDateTime, userTimeZone);
     }
+
+    
 
     // Translate multiple properties dynamically
     const [addressObj] : [IServiceBooking['address']]  = await Promise.all([
@@ -163,7 +168,7 @@ export class ServiceBookingService extends GenericService<
      * TODO : MUST : address e language er chinta korte hobe 
      * ******* */
     await enqueueWebNotification(
-      `${user.userName} booked your service at ${serviceBookingDTO.bookingDateTime} in ${serviceBookingDTO.address}.`,
+      /*${user.userName} An User booked your service*/ `A user has booked your service for ${dateForNotification} ${serviceBookingDTO.bookingDateTime} in ${serviceBookingDTO.address.en}.`,
       user.userId, // senderId
       serviceBookingDTO.providerId, // receiverId
       TRole.provider, // receiverRole

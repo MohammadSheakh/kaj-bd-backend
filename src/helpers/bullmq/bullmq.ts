@@ -6,6 +6,7 @@ import { INotification } from "../../modules/notification/notification.interface
 import { redisPubClient } from "../redis/redis";
 import { socketService } from "../socket/socketForChatV3";
 import { TRole } from "../../middlewares/roles";
+import { buildTranslatedField } from "../../utils/buildTranslatedField";
 
 // Create Queue
 export const scheduleQueue = new Queue("scheduleQueue", {
@@ -152,8 +153,14 @@ export const startNotificationWorker = () => {
       logger.info(`Processing notification job ${id} ⚡ ${name}`, data);
 
       try {
+        // Translate multiple properties dynamically
+        const [titleObj] : [any]  = await Promise.all([
+          buildTranslatedField(data.title as string)
+        ]);
+
         const notif = await Notification.create({
-          title: data.title,
+          // title: data.title,
+          title: titleObj,
           // subTitle: data.subTitle,
           senderId: data.senderId,
           receiverId: data.receiverId,

@@ -52,14 +52,10 @@ export class ReviewService extends GenericService<
     
     await newReview.save();
 
-    // totalRating: Number,    // sum of all ratings
-    // ratingCount: Number,    // number of reviews
-    // averageRating: Number   // (totalRating / ratingCount), kept for performance
-
     const result = await Review.aggregate([
       {
         $match: {
-          serviceProviderDetailsId: new mongoose.Types.ObjectId(userId),
+          serviceProviderDetailsId: new mongoose.Types.ObjectId(existingBooking.providerDetailsId),
           isDeleted: false
         }
       },
@@ -72,14 +68,7 @@ export class ReviewService extends GenericService<
       }
     ]);
 
-    // console.log("result : ", result);
-
-    // if (result.length === 0) {
-    //   return {
-    //     ratingCount: 0,
-    //     averageRating: 0
-    //   };
-    // }
+    console.log("result-- : ", result);
 
     if(result.length !== 0){
       const { totalRating, ratingCount } = result[0];
@@ -89,11 +78,20 @@ export class ReviewService extends GenericService<
       const averageRating = ratingCount > 0 
         ? parseFloat((totalRating / ratingCount).toFixed(2)) 
         : 0;
+      
+      console.log('averageRating --- ⚡', averageRating);
 
       await ServiceProvider.findByIdAndUpdate(
         existingBooking.providerDetailsId,
         {
           rating: averageRating,
+        }
+      )
+    }else{
+      await ServiceProvider.findByIdAndUpdate(
+        existingBooking.providerDetailsId,
+        {
+          rating: data.rating,
         }
       )
     }

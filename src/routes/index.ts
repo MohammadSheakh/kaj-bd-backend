@@ -36,10 +36,10 @@ const apiRoutes = [
     path: '/users',
     route: UserRoutes,
   },
-  // {
-  //   path: '/admin',
-  //   route: AdminRoutes,
-  // },
+  {
+    path: '/notifications',
+    route: NotificationRoutes,
+  },
 
   ////////////////////// Created By Mohammad Sheakh
 

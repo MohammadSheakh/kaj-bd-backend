@@ -218,7 +218,7 @@ export class ServiceBookingController extends GenericController<
       if(req.body.status === TBookingStatus.accepted){
         // provider
         await enqueueWebNotification(
-          `Booking ${updatedObject._id} is accepted by ${updatedObject.userId.name}`,
+          `Booking ${updatedObject._id} is accepted`, // by ${updatedObject.userId.name}
           senderId, // senderId
           receiverId, // receiverId
           receiverRole, // receiverRole
@@ -234,7 +234,7 @@ export class ServiceBookingController extends GenericController<
           // cancel by provider
 
           await enqueueWebNotification(
-            `Booking ${updatedObject._id} is cancelled by provider ${updatedObject.userId.name}`,
+            `Booking ${updatedObject._id} is cancelled by provider`, // ${updatedObject.userId.name}
             senderId, // senderId
             receiverId, // receiverId
             receiverRole, // receiverRole
@@ -247,7 +247,7 @@ export class ServiceBookingController extends GenericController<
 
           // cancel by user
           await enqueueWebNotification(
-            `Booking ${updatedObject._id} is cancelled by user ${updatedObject.userId.name}`,
+            `Booking ${updatedObject._id} is cancelled by user `, // ${updatedObject.userId.name}
             senderId, // senderId
             receiverId, // receiverId
             receiverRole, // receiverRole
@@ -262,7 +262,7 @@ export class ServiceBookingController extends GenericController<
       }else if(req.body.status === TBookingStatus.inProgress){
         // provider
         await enqueueWebNotification(
-          `Booking ${updatedObject._id} status in progress by provider ${updatedObject.userId.name}`,
+          `Booking ${updatedObject._id} status in progress by provider `, // ${updatedObject.userId.name}
           senderId, // senderId
           receiverId, // receiverId
           receiverRole, // receiverRole
@@ -276,7 +276,7 @@ export class ServiceBookingController extends GenericController<
         // provider
 
         await enqueueWebNotification(
-          `${updatedObject.providerId.userName} requested for payment for Booking ${updatedObject._id}`,
+          /*${updatedObject.providerId.userName}*/`Provider requested for payment for Booking ${updatedObject._id}`,
           senderId, // senderId
           receiverId, // receiverId
           receiverRole, // receiverRole
@@ -290,7 +290,7 @@ export class ServiceBookingController extends GenericController<
         // provider // incomplete ... 
         // 🟢 need to send notification to admin and provider both 
         await enqueueWebNotification(
-          `Booking ${updatedObject._id} status in progress by provider ${updatedObject.userId.name}`,
+          `Booking ${updatedObject._id} status in progress by provider `, // ${updatedObject.userId.name}
           senderId, // senderId
           receiverId, // receiverId
           receiverRole, // receiverRole
@@ -301,18 +301,19 @@ export class ServiceBookingController extends GenericController<
         );
 
 
-        //---------------------------------
-        // Now send notification to admin that patient has purchased training program
-        //---------------------------------
-        await enqueueWebNotification(
-          `${updatedTrainingProgramPurchase.trainingProgramId} Training Program of specialist ${updatedTrainingProgramPurchase.specialistId} purchased by user ${user.userName}. purchaseTrainingProgramId ${updatedTrainingProgramPurchase._id}`,
-          senderId, // senderId
-          null, // receiverId // as admin has no specific receiverId
-          TRole.admin, // receiverRole
-          TNotificationType.serviceBooking, // type
-          null, // linkFor
-          null // linkId
-        );
+        
+        // //---------------------------------  This code is from suplify
+        // // Now send notification to admin that patient has purchased training program
+        // //---------------------------------
+        // await enqueueWebNotification(
+        //   `${updatedTrainingProgramPurchase.trainingProgramId} Training Program of specialist ${updatedTrainingProgramPurchase.specialistId} purchased by user ${user.userName}. purchaseTrainingProgramId ${updatedTrainingProgramPurchase._id}`,
+        //   senderId, // senderId
+        //   null, // receiverId // as admin has no specific receiverId
+        //   TRole.admin, // receiverRole
+        //   TNotificationType.serviceBooking, // type
+        //   null, // linkFor
+        //   null // linkId
+        // );
 
 
       }
