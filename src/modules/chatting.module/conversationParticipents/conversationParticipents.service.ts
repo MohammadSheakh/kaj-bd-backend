@@ -131,8 +131,6 @@ export class ConversationParticipentsService extends GenericService<
 
     const search = options?.search?.trim();
 
-    console.log("🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥");
-
     // Step 1: Find all conversations the logged-in user participates in
     const userConversations = await ConversationParticipents.find({
       userId: loggedInUserId,

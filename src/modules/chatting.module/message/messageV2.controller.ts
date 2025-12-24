@@ -225,9 +225,6 @@ export class MessageControllerV2 extends GenericController<typeof Message, IMess
         // -createdAt
         let result = await this.service.getAllWithPagination(filters, options,populateOptions, select);
 
-
-        console.log("result :: ", result);
-
         // Check if reverse is requested in query parameters
         result = result.results.reverse();
         

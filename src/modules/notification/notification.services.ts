@@ -21,10 +21,13 @@ const getALLNotification = async (
   userId: string
 ) => {
   filters.receiverId = userId;
+
   const unViewNotificationCount = await Notification.countDocuments({
     receiverId: userId,
     viewStatus: false,
   });
+
+  options.sortBy='-createdAt';
 
   const result = await Notification.paginate(filters, options);
   return { ...result, unViewNotificationCount };

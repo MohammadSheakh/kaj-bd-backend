@@ -369,7 +369,7 @@ export class SocketService {
           console.log(`⚠️ User ${participantId} is online but not in room, sending notification 3️⃣`);
           
           // Send message notification to personal room
-          socketService.emitToUser(
+          socketService.emitToUserForCalling(
             participantId,
             eventName,
             {
@@ -480,7 +480,17 @@ export class SocketService {
           console.log(`⚠️ User ${participantId} is online but not in room, sending notification 3️⃣`);
           
           // Send message notification to personal room
-          socketService.emitToUser(
+          // socketService.emitToUser(
+          //   participantId,
+          //   eventName,
+          //   {
+          //     message : `${userProfile?.name} is calling you`,
+          //     image: userProfile?.profileImage,
+          //     conversationId: conversationId,
+          //   }
+          // )
+
+          socketService.emitToUserForCalling(
             participantId,
             eventName,
             {
@@ -586,7 +596,7 @@ export class SocketService {
           console.log(`⚠️ User ${participantId} is online but not in room, sending notification 3️⃣`);
           
           // Send message notification to personal room
-          socketService.emitToUser(
+          socketService.emitToUserForCalling(
             participantId,
             eventName,
             {
@@ -675,7 +685,7 @@ export class SocketService {
           console.log(`⚠️ User ${participantId} is online but not in room, sending notification 3️⃣`);
           
           // Send message notification to personal room
-          socketService.emitToUser(
+          socketService.emitToUserForCalling(
             participantId,
             eventName,
             {
@@ -762,7 +772,7 @@ export class SocketService {
           console.log(`⚠️ User ${participantId} is online but not in room, sending notification 3️⃣`);
           
           // Send message notification to personal room
-          socketService.emitToUser(
+          socketService.emitToUserForCalling(
             participantId,
             eventName,
             {
@@ -933,7 +943,7 @@ export class SocketService {
           populateOptions, 
           '' // select
         );
-        console.log("messages: 🟢🟢 ", messages);
+        // console.log("messages: 🟢🟢 ", messages);
         callback?.({ success: true, data: messages});
       } catch (error) {
         console.error('Error fetching conversations:', error);
@@ -1083,11 +1093,18 @@ export class SocketService {
             console.log(`⚠️ User ${participantId} is online but not in room, sending notification 3️⃣`);
             
             // Send message notification to personal room
-            this.emitToUser(
+            // this.emitToUser(
+            //   participantId,
+            //   eventName,
+            //   messageToEmit
+            // )
+
+            this.emitToUserForCalling(
               participantId,
               eventName,
               messageToEmit
             )
+            
 
             // Send conversation list update  .to(participantId)
             this.emit(`conversation-list-updated::${participantId}`, {
@@ -1263,7 +1280,7 @@ export class SocketService {
       // --- previous line logic was for one device .. now we design a system where user can have multiple device
 
       const userDevices:IUserDevices[] = await UserDevices.find({
-        userId, 
+        userId,
       });
 
       if(!userDevices){
@@ -1277,7 +1294,7 @@ export class SocketService {
         await sendPushNotificationV2(
           userDevice.fcmToken,
           {
-            text : data.title,
+            text : data.title
           },
           userId
         );
@@ -1286,6 +1303,52 @@ export class SocketService {
     } catch (error) {
       console.error(`❌ Failed to send push notification to ${userId}: 7️⃣`, error);
     } 
+
+
+    return false;
+  }
+
+  // This method is same as emitToUser but its not have any push notification usecases .. as Toky vai is not develop push notification for calling
+  public async emitToUserForCalling(userId: string, event: string, data: MessageData): Promise<boolean> {
+    if (!this.io) return false;
+    
+    
+    const isOnline = await this.redisStateManager.isUserOnline(userId);
+    if (isOnline) {
+      this.io.to(userId).emit(event, data);
+      return true;
+    }
+    
+    /*------------------------
+    try {
+      // --- previous line logic was for one device .. now we design a system where user can have multiple device
+
+      const userDevices:IUserDevices[] = await UserDevices.find({
+        userId,
+      });
+
+      if(!userDevices){
+        console.log(`⚠️ No FCM token found for user ${userId}`);
+        // TODO : MUST : need to think how to handle this case
+      }
+      
+      // fcmToken,deviceType,deviceName,lastActive,
+      for(const userDevice of userDevices){
+
+        await sendPushNotificationV2(
+          userDevice.fcmToken,
+          {
+            text : data.title
+          },
+          userId
+        );
+      }
+
+    } catch (error) {
+      console.error(`❌ Failed to send push notification to ${userId}: 7️⃣`, error);
+    } 
+
+    --------------------------*/
 
 
     return false;
