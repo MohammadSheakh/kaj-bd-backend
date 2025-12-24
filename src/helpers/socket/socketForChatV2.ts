@@ -175,6 +175,7 @@ class SocketService {
       
       logger.info(`👥 Room ${conversationId} has ${roomUsers.length} users: ${roomUsers.join(', ')}`);
 
+      
       // Notify others in the chat
       socket.to(conversationId).emit('user-joined-chat', {
         userId,

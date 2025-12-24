@@ -423,8 +423,6 @@ export class SocketService {
       // Optional: double-check user is in conversation
       // ...
 
-      
-
       // ✅ Start pending call in Redis
       await this.redisStateManager.startPendingCall(conversationId, userId);
 
@@ -1279,7 +1277,7 @@ export class SocketService {
         await sendPushNotificationV2(
           userDevice.fcmToken,
           {
-            text : data.title
+            text : data.title,
           },
           userId
         );

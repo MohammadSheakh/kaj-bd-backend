@@ -134,7 +134,7 @@ export const sendPushNotificationV2 = async (
     if (error.code === 'messaging/invalid-registration-token' ||
         error.code === 'messaging/registration-token-not-registered') {
       console.error(`❌ Invalid FCM token for receiver ${receiverId}`);
-      console.error('   Token should be removed from database');
+      console.error('Token should be removed from database');
       
       // TODO: Remove invalid token from user document
       // await User.findByIdAndUpdate(receiverId, { $unset: { fcmToken: 1 } });
