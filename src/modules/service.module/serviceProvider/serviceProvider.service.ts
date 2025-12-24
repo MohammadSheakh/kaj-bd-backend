@@ -271,7 +271,7 @@ export class ServiceProviderService extends GenericService<
 
       const nearbyLocations:ILocation = await mongoose.model('Location').aggregate(nearbyLocationsPipeline);
       
-      console.log("nearbyLocations :: ", nearbyLocations);
+      // console.log("nearbyLocations :: ", nearbyLocations);
       // console.log(`Found ${nearbyLocations.length} nearby locations`);
 
       if (nearbyLocations.length === 0) {
@@ -404,7 +404,7 @@ export class ServiceProviderService extends GenericService<
       // Execute pipeline
       let results = await ServiceProvider.aggregate(pipeline);
 
-      console.log("results ::: ", results);
+      // console.log("results ::: ↪️↪️", results);
 
       /*---------------------
       // Add distances from our pre-calculated map

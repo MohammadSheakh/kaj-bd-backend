@@ -719,7 +719,9 @@ export class ServiceProviderController extends GenericController<
       }
     }
 
-    const result = await this.serviceProviderService.getAllWithAggregationV3(filters, options );
+    const result = await this.serviceProviderService.getAllWithAggregationV3(filters, options);
+
+    console.log("Result with location filtering : ↪️↪️↪️", result);
 
     sendResponse(res, {
       code: StatusCodes.OK,
