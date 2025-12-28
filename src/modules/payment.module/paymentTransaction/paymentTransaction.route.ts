@@ -51,7 +51,8 @@ router.route('/paginate').get(
     'paymentIntent',
     'amount',
     'currency',
-    'paymentStatus'// pending-processing-completed-failed-cancelled
+    'paymentStatus',// pending-processing-completed-failed-cancelled
+    ...paginationOptions
   ])),
   controller.getAllWithPagination
 );

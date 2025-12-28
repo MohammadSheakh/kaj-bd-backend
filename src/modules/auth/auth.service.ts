@@ -127,6 +127,11 @@ const createUser = async (userData: ICreateUser, userProfileId:string) => {
       userId : user._id
     });
 
+    const [verificationToken, otp] = await Promise.all([
+      TokenService.createVerifyEmailToken(user),
+      OtpService.createVerificationEmailOtp(user.email)
+    ]);
+
     /********
      * TODO : MUST
      * Lets send notification to admin that new Provider registered
@@ -151,14 +156,14 @@ const createUser = async (userData: ICreateUser, userProfileId:string) => {
       // providerApprovalStatus : TProviderApprovalStatus.pending, // we make this pending  later in serviceProvider Data Create part
     })
     
-    return { user };
+    return { user, verificationToken };
   }
 
   // , { otp }
   // Run token and OTP creation in parallel
-  const [verificationToken] = await Promise.all([
+  const [verificationToken, otp] = await Promise.all([
     TokenService.createVerifyEmailToken(user),
-    // OtpService.createVerificationEmailOtp(user.email)
+    OtpService.createVerificationEmailOtp(user.email)
   ]);
 
 

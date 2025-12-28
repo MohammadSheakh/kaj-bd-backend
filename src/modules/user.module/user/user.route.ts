@@ -13,6 +13,7 @@ const upload = fileUploadHandler(UPLOADS_FOLDER);
 import * as validation from './user.validation';
 import { setRequestFiltersV2, setRequstFilterAndValue } from '../../../middlewares/setRequstFilterAndValue';
 import { imageUploadPipelineForUpdateUserProfile } from './user.middleware';
+import { IsProviderRejected } from '../../../middlewares/provider/IsProviderRejected';
 
 export const optionValidationChecking = <T extends keyof IUser | 'sortBy' | 'page' | 'limit' | 'populate'>(
   filters: T[]
@@ -131,7 +132,7 @@ router.route('/profile/for-admin').get(
 // Admin | change approvalStatus of a doctor / specialist profile
 //---------------------------------
 router.route('/change-approval-status').put(
-  auth(TRole.admin),
+  auth(TRole.admin, TRole.subAdmin),
   // validateRequest(validation.changeApprovalStatusValidationSchema),
   controller.changeApprovalStatusByUserId
 )
@@ -159,6 +160,7 @@ router.route('/home-page/popular').get(
 //---------------------------------
 router.route('/home-page/for-provider').get(
   auth(TRole.provider),
+  IsProviderRejected(),
   controller.getEarningAndCategoricallyBookingCountAndRecentJobRequest
 )
 

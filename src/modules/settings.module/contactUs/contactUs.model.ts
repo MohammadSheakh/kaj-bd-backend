@@ -14,6 +14,10 @@ const ContactUsSchema = new Schema<IContactUs>(
       type: String,
       required: [true, 'Phone number is required'],
     },
+    detailsOverview: {
+      type: String,
+      required: [true, 'Phone number is required'],
+    },
     isDeleted: {
       type: Boolean,
       required: [false, 'isDeleted is not required'],

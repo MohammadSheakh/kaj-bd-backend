@@ -10,6 +10,7 @@ import auth from '../../../middlewares/auth';
 import multer from "multer";
 import { TRole } from '../../../middlewares/roles';
 import { getLoggedInUserAndSetReferenceToUser } from '../../../middlewares/getLoggedInUserAndSetReferenceToUser';
+import { IsProviderRejected } from '../../../middlewares/provider/IsProviderRejected';
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
@@ -33,6 +34,7 @@ const controller = new BankInfoController();
 
 router.route('/paginate').get(
   auth(TRole.provider),
+  IsProviderRejected(),
   validateFiltersForQuery(optionValidationChecking(['_id',...paginationOptions])),
   getLoggedInUserAndSetReferenceToUser("userId"),
   controller.getAllWithPagination
@@ -56,6 +58,7 @@ router.route('/:id').get(
  * ********** */
 router.route('/create-or-update').put(
   auth(TRole.provider),
+  IsProviderRejected(),
   validateRequest(validation.createOrUpdateBankInfoValidationSchema),
   controller.createOrUpdate
 );

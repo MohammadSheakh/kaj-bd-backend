@@ -11,6 +11,7 @@ import multer from "multer";
 import { TRole } from '../../../middlewares/roles';
 import { setQueryOptions } from '../../../middlewares/setQueryOptions';
 import { getLoggedInUserAndSetReferenceToUser } from '../../../middlewares/getLoggedInUserAndSetReferenceToUser';
+import { IsProviderRejected } from '../../../middlewares/provider/IsProviderRejected';
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
@@ -34,6 +35,7 @@ const controller = new WalletTransactionHistoryController();
 
 router.route('/paginate').get(
   auth(TRole.provider),
+  IsProviderRejected(),
   validateFiltersForQuery(optionValidationChecking(['_id', 'walletId', ...paginationOptions])),
   controller.getAllWithPagination
 );
@@ -49,6 +51,7 @@ router.route('/paginate').get(
  *----------------------------------------------*/
 router.route('/paginate-with-wallet').get(
   auth(TRole.provider),
+  IsProviderRejected(),
   validateFiltersForQuery(optionValidationChecking(['_id', 'walletId', ...paginationOptions])),
   getLoggedInUserAndSetReferenceToUser('userId'),
   setQueryOptions({ // this will work on transaction history

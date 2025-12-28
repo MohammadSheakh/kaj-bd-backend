@@ -17,6 +17,7 @@ import { checkProviderCanAcceptBooking, checkProviderCanCancelBooking, checkProv
 import { allowOnlyFields } from '../../../middlewares/allowOnlyFields';
 import { TBookingStatus } from './serviceBooking.constant';
 import { filterByDateRange } from '../../../middlewares/filterByDateRange';
+import { IsProviderRejected } from '../../../middlewares/provider/IsProviderRejected';
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
@@ -99,6 +100,7 @@ router.route('/paginate/for-admin').get(
 //-------------------------------------------
 router.route('/paginate/for-provider').get(
   auth(TRole.provider),
+  IsProviderRejected(),
   validateFiltersForQuery(optionValidationChecking(['_id','status', ...paginationOptions])),
   getLoggedInUserAndSetReferenceToUser('providerId'),
   setQueryOptions({
@@ -153,6 +155,7 @@ router.route('/with-costs-summary/for-admin/:id').get(
 //-------------------------------------------
 router.route('/user-details/:id').get(
   auth(TRole.provider),
+  IsProviderRejected(),
   setQueryOptions({
     populate: [ { 
       path: 'userId', 
@@ -169,6 +172,7 @@ router.route('/user-details/:id').get(
 //-------------------------------------------
 router.route('/update-status/:id/status/accept').put(
   auth(TRole.provider),
+  IsProviderRejected(),
   checkLoggedInUsersPermissionToManipulateModel(
     'ServiceBooking',
     'providerId',
@@ -186,6 +190,7 @@ router.route('/update-status/:id/status/accept').put(
 //-------------------------------------------
 router.route('/update-status/:id/status/cancel-by-provider').put(
   auth(TRole.provider),
+  IsProviderRejected(),
   checkLoggedInUsersPermissionToManipulateModel(
     'ServiceBooking',
     'providerId',
@@ -203,6 +208,7 @@ router.route('/update-status/:id/status/cancel-by-provider').put(
 //-------------------------------------------
 router.route('/update-status/:id/status/inProgress').put(
   auth(TRole.provider),
+  IsProviderRejected(),
   checkLoggedInUsersPermissionToManipulateModel(
     'ServiceBooking', 
     'providerId',
@@ -222,6 +228,7 @@ router.route('/update-status/:id/status/inProgress').put(
 //-------------------------------------------
 router.route('/update-status/:id/status/paymentRequest').put(
   auth(TRole.provider),
+  IsProviderRejected(),
   checkLoggedInUsersPermissionToManipulateModel(
     'ServiceBooking', 
     'providerId',
@@ -243,6 +250,7 @@ router.route('/update-status/:id/status/paymentRequest').put(
 //-------------------------------------------
 router.route('/update-work-proof/:id').put(
   auth(TRole.provider),
+  IsProviderRejected(),
   checkLoggedInUsersPermissionToManipulateModel(
     'ServiceBooking', 
     'providerId',

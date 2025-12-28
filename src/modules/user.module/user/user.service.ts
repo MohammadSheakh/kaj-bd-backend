@@ -36,6 +36,8 @@ import { Banner } from '../../banner/banner.model';
 import { IServiceProvider } from '../../service.module/serviceProvider/serviceProvider.interface';
 import { UserRoleData } from '../userRoleData/userRoleData.model';
 import { IUserRoleData } from '../userRoleData/userRoleData.interface';
+//@ts-ignore
+import bcryptjs from 'bcryptjs';
 
 //@ts-ignore
 import {
@@ -103,7 +105,8 @@ export class UserService extends GenericService<typeof User, IUser> {
       acceptTOC: true
     })
 
-     
+    payload.password = await bcryptjs.hash(payload.password, 12);
+
     const result:IUser = await User.create({
       name: payload.name,
       email: payload.email,
@@ -183,8 +186,6 @@ export class UserService extends GenericService<typeof User, IUser> {
 
     if(loggedInUser.role == TRole.provider){
       
-      console.log("as provider ... ", loggedInUser.role)
-
       const serviceProvider = await ServiceProvider.findOne({
         providerId: id
       }).select('serviceName rating').lean();
@@ -1212,18 +1213,15 @@ export class UserService extends GenericService<typeof User, IUser> {
       providerId : userId,
     }).select("providerApprovalStatus");
 
-    console.log("usersRoleData : ", usersRoleData);
-    console.log("serviceProvidesDetails : ", serviceProviderDetails);
-
-    let updateRoleData = await UserRoleData.findByIdAndUpdate(
-      usersRoleData?._id,
+    let updateServiceProviderDetails = await ServiceProvider.findByIdAndUpdate(
+      serviceProviderDetails?._id,
       {
         providerApprovalStatus : approvalStatus
       }
     );
-
-    let updateServiceProviderDetails = await ServiceProvider.findByIdAndUpdate(
-      serviceProviderDetails?._id,
+    
+    let updateRoleData = await UserRoleData.findByIdAndUpdate(
+      usersRoleData?._id,
       {
         providerApprovalStatus : approvalStatus
       }

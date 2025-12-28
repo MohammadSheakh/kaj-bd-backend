@@ -8,6 +8,7 @@ export interface IContactUs {
   
   email : string;
   phoneNumber : string;
+  detailsOverview : string;
 
   isDeleted? : boolean;  
   createdAt?: Date;

@@ -8,6 +8,7 @@ import auth from '../../../middlewares/auth';
 
 import multer from "multer";
 import { TRole } from '../../../middlewares/roles';
+import { IsProviderRejected } from '../../../middlewares/provider/IsProviderRejected';
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
@@ -58,12 +59,17 @@ router.route('/').get(
 //-----------------------------------
 router.route('/').post(
   auth(TRole.provider),
+  IsProviderRejected(),
   // validateRequest(validation.createHelpMessageValidationSchema),
   controller.create
 );
 
-router.route('/delete/:id').delete(
-  //auth('common'),
+//-----------------------------------
+// Provider | Hard Delete additional cost  🆕
+//-----------------------------------
+router.route('/:id').delete(
+  auth(TRole.provider),
+  IsProviderRejected(),
   controller.deleteById
 ); // FIXME : change to admin
 

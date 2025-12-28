@@ -16,6 +16,7 @@ import { imageUploadPipelineForCreateServiceProviderInformation, imageUploadPipe
 import { setRequestFiltersV2 } from '../../../middlewares/setRequstFilterAndValue';
 import { TProviderApprovalStatus } from '../../user.module/userRoleData/userRoleData.constant';
 import { setQueryOptions } from '../../../middlewares/setQueryOptions';
+import { IsProviderRejected } from '../../../middlewares/provider/IsProviderRejected';
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 const router = express.Router();
@@ -85,6 +86,7 @@ router.route('/paginate/by-location').get(
 //---------------------------------
 router.route('/details-with-nid').get(
   auth(TRole.provider),
+  IsProviderRejected(),
   controller.getServiceProviderDetailsAndNIDImagesFromUserProfile
 );
 
@@ -133,6 +135,7 @@ router.route('/').get(
 //----------------------------------------
 router.route('/').post(
   auth(TRole.provider),
+  IsProviderRejected(),
   ...imageUploadPipelineForCreateServiceProviderInformation, //🥇
   // validateRequest(validation.createHelpMessageValidationSchema), // TODO add validation
   controller.create
@@ -145,6 +148,7 @@ router.route('/').post(
 //----------------------------------------
 router.route('/with-locationInfo').post(
   auth(TRole.provider),
+  IsProviderRejected(),
   ...imageUploadPipelineForCreateServiceProviderInformation, 
   // validateRequest(validation.createHelpMessageValidationSchema), // TODO add validation
   controller.createV2
@@ -160,6 +164,7 @@ router.route('/with-locationInfo').post(
    *----------------------------------------------*/
 router.route('/upload-attachments').put(
   auth(TRole.provider),
+  IsProviderRejected(),
   ...imageUploadPipelineForUpdateAttachmentsOfServiceProvider, //🥇
   controller.uploadAttachments
 );
@@ -174,6 +179,7 @@ router.route('/upload-attachments').put(
    *----------------------------------------------*/
 router.route('/upload-attachments-v2').put(
   auth(TRole.provider),
+  IsProviderRejected(),
   ...imageUploadPipelineForUpdateAttachmentsOfServiceProvider, //🥇
   controller.uploadAttachmentsV2
 );

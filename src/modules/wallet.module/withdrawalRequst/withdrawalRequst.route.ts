@@ -14,6 +14,7 @@ import { TWithdrawalRequst } from './withdrawalRequst.constant';
 import { setQueryOptions } from '../../../middlewares/setQueryOptions';
 import { getLoggedInUserAndSetReferenceToUser } from '../../../middlewares/getLoggedInUserAndSetReferenceToUser';
 import { filterByDateRange } from '../../../middlewares/filterByDateRange';
+import { IsProviderRejected } from '../../../middlewares/provider/IsProviderRejected';
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
@@ -39,6 +40,7 @@ const controller = new WithdrawalRequstController();
 
 router.route('/paginate').get(
   auth(TRole.provider),
+  IsProviderRejected(),
   validateFiltersForQuery(optionValidationChecking(['_id', ...paginationOptions])),
   getLoggedInUserAndSetReferenceToUser('userId'),
   // setRequstFilterAndValue('status', TWithdrawalRequst.requested), // requested 
@@ -101,6 +103,7 @@ router.route('/').get(
 //---------------------------------
 router.route('/').post(
   auth(TRole.provider),
+  IsProviderRejected(),
   validateRequest(validation.createWithdrawalRequstValidationSchema),
   controller.create
 );

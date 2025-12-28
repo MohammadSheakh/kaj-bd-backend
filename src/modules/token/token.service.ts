@@ -48,21 +48,22 @@ const verifyToken = async (
   tokenType: TokenType
 ) => {
 
-  // console.log("token : ", token);
-  // console.log("secret : ", secret);
-  // console.log("tokenType : ", tokenType);
+  console.log("------------------------------------");
+  console.log("token : ", token);
+  console.log("secret : ", secret);
+  console.log("tokenType : ", tokenType);
 
   const decoded = jwt.verify(token, secret) as JwtPayload;
 
-  // console.log("decoded : ", decoded);
-
+  console.log("decoded ==:== ", decoded);
+  
   const storedToken = await Token.findOne({
     token,
     user: decoded.userId,
     type: tokenType
   });
 
-  
+  console.log("storedToken ---:--- ", storedToken);
 
   // ------------------------ as per toky vai  TODO : MUST : NEED_TO_TEST
   if (!storedToken) {
@@ -71,6 +72,7 @@ const verifyToken = async (
       'Token is invalid or already used'
     );
   }
+
   if (storedToken.expiresAt < new Date()) {
     throw new ApiError(StatusCodes.BAD_REQUEST, 'Token has expired');
   }
@@ -83,12 +85,33 @@ const verifyToken = async (
 };
 
 const createVerifyEmailToken = async (user: IUserMain) => {
+
+
+  const payload = { userId: user._id, email: user.email, role: user.role };
+  await Token.deleteMany({ user: user._id });
+  const verifyEmailToken = createToken(
+    payload,
+    config.token.TokenSecret,
+    config.token.verifyEmailTokenExpiration
+  );
+  const expiresAt = getExpirationTime(config.token.verifyEmailTokenExpiration);
+
+  await Token.create({
+    token: verifyEmailToken,
+    user: user._id,
+    type: TokenType.VERIFY,
+    expiresAt,
+  });
+  return verifyEmailToken;
+
+  /*
   const payload = { userId: user._id, email: user.email, role: user.role };
  const verifyEmailToken = createToken(
     payload,
     config.token.TokenSecret,
     config.token.verifyEmailTokenExpiration
   );
+  */
   /**************
   await Token.deleteMany({ user: user._id });
   
@@ -103,7 +126,10 @@ const createVerifyEmailToken = async (user: IUserMain) => {
   ****************/
 
   /**************
+   * 
+   * ****************/
   
+  /*
   const [, tokenDoc] = await Promise.all([
     Token.deleteMany({ user: user._id }), // Clean up old tokens
     Token.create({
@@ -114,7 +140,10 @@ const createVerifyEmailToken = async (user: IUserMain) => {
     })
   ]);
 
-  ****************/
+  
+  */
+
+  /*-----------
 
   // TODO : Need to add type
   let tokenRelatedValues : any = {
@@ -126,8 +155,13 @@ const createVerifyEmailToken = async (user: IUserMain) => {
 
     eventEmitterForTokenDeleteAndCreate.emit('eventEmitForTokenDeleteAndCreate', tokenRelatedValues);
 
-  return verifyEmailToken;
+  -------------*/
+  
+  
+  //return verifyEmailToken;
 };
+
+
 
 const createResetPasswordToken = async (user: IUserMain) => {
   const payload = { userId: user._id, email: user.email, role: user.role };
