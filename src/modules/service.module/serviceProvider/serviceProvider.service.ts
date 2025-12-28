@@ -234,8 +234,8 @@ export class ServiceProviderService extends GenericService<
       delete userMatchStage.createdAt;
     }
 
-    console.log("userMatchStage :: ", userMatchStage);
-    console.log("Location params :: ", { userLatitude, userLongitude, maxDistance });
+    // console.log("userMatchStage :: ", userMatchStage);
+    // console.log("Location params :: ", { userLatitude, userLongitude, maxDistance });
 
     // 📍 Build pipeline based on whether geospatial search is needed
     let pipeline: any[] = [];
@@ -313,7 +313,7 @@ export class ServiceProviderService extends GenericService<
         // Step 1: Match service providers
         { $match: userMatchStage },
 
-        /*---------------------------------------------
+        
         // Step 2: Lookup provider user
         {
           $lookup: {
@@ -329,6 +329,8 @@ export class ServiceProviderService extends GenericService<
             preserveNullAndEmptyArrays: true
           }
         },
+
+        /*---------------------------------------------
 
         // Step 3: Lookup location details
         {
@@ -346,6 +348,7 @@ export class ServiceProviderService extends GenericService<
           }
         },
 
+        -------------------------------------------*/
         // Step 4: Lookup attachments for gallery
         {
           $lookup: {
@@ -356,7 +359,7 @@ export class ServiceProviderService extends GenericService<
           }
         },
 
-        -------------------------------------------*/
+        
 
         // Step 5: Project fields
         {
@@ -376,15 +379,23 @@ export class ServiceProviderService extends GenericService<
             locationId: 1,
 
             /*---------------------------------
+
+            // Location info
+            location: '$locationDetails.location',
+
+            ---------------------------------*/
             
             // Provider info
             providerName: '$provider.name',
             profileImage: '$provider.profileImage',
             
-            // Location info
-            location: '$locationDetails.location',
+            
             address: '$locationDetails.address',
             
+            
+
+            
+
             // Attachments
             attachmentsForGallery: {
               $map: { 
@@ -393,8 +404,6 @@ export class ServiceProviderService extends GenericService<
                 in: '$$att.attachment' 
               }
             }
-
-            ---------------------------------*/
 
 
           }
