@@ -50,7 +50,7 @@ export const IsProviderRejected = <T> () => {
 
     if(serviceProviderDetails.providerApprovalStatus == TProviderApprovalStatus.reject){
         sendResponse(res, {
-            code: StatusCodes.BAD_REQUEST,
+            code: 555,
             message: 'You are blocked by admin.',
             success: false,
         });
