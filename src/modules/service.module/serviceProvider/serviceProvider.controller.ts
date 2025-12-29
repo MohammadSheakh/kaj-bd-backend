@@ -95,7 +95,7 @@ export class ServiceProviderController extends GenericController<
 
     let createServiceProvider : ICreateServiceProviderDTO; 
     if(data.serviceCategoryId){
-      console.log("hit")
+      
       createServiceProvider = {
         serviceCategoryId : data.serviceCategoryId,
         serviceName : nameObj,
@@ -104,9 +104,7 @@ export class ServiceProviderController extends GenericController<
         providerId : (req.user as IUser).userId,
       }
     }else{
-      console.log("miss : first create category")
       // first create category
-      
       const [nameObj] : [IServiceCategory['name']]  = await Promise.all([
         buildTranslatedField(data.categoryCustomName as string)
       ]);
@@ -130,8 +128,6 @@ export class ServiceProviderController extends GenericController<
         providerId : (req.user as IUser).userId,
       }
     }
-
-    
 
     const updatedServiceProvidersProfile : IUpdateProfileDTO= {
       backSideCertificateImage :  req.body.backSideCertificateImage,
@@ -169,6 +165,19 @@ export class ServiceProviderController extends GenericController<
   // this V2
   createV2 = catchAsync(async (req: Request, res: Response) => {
     const data:ICreateServiceProvider = req.body;
+
+    //------ First we need to check nidNumber is already exist or not 
+    const nidNumberExists = await ServiceProvider.findOne({
+      nidNumber : data.nidNumber
+    });
+
+    if(nidNumberExists){
+      throw new ApiError(
+        StatusCodes.CONFLICT,
+        `NID Number ${data.nidNumber} already exists.`
+      );
+    }
+    //------ End of nidNumber check
 
     // TODO : MUST : 
     // already ekbar serviceProviderDetails create korle .. ar create kora jabe na .. 
@@ -290,17 +299,17 @@ export class ServiceProviderController extends GenericController<
 
     let createServiceProvider : ICreateServiceProviderDTO; 
     if(data.serviceCategoryId){
-      console.log("hit")
+      
       createServiceProvider = {
         serviceCategoryId : data.serviceCategoryId,
         serviceName : nameObj,
         yearsOfExperience : data.yearsOfExperience,
         startPrice : data.startPrice,
         providerId : (req.user as IUser).userId,
-        locationId : createdLocation._id
+        locationId : createdLocation._id,
+        nidNumber : data.nidNumber,
       }
     }else{
-      console.log("miss : first create category")
       // first create category
       
       const [nameObj] : [IServiceCategory['name']]  = await Promise.all([
@@ -324,12 +333,12 @@ export class ServiceProviderController extends GenericController<
         yearsOfExperience : data.yearsOfExperience,
         startPrice : data.startPrice,
         providerId : (req.user as IUser).userId,
-        locationId : createdLocation._id
+        locationId : createdLocation._id,
+        nidNumber : data.nidNumber,
       }
     }
 
-    
-
+  
     const updatedServiceProvidersProfile : IUpdateProfileDTO= {
       backSideCertificateImage :  req.body.backSideCertificateImage,
       frontSideCertificateImage : req.body.frontSideCertificateImage,

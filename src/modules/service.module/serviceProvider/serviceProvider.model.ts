@@ -94,6 +94,10 @@ const ServiceProviderSchema = new Schema<IServiceProvider>(
         required: [false, 'attachments is not required'],
       }
     ],
+    nidNumber: {
+      type: Number,
+      required: [false, 'nidNumber is not required'],
+    },
     yearsOfExperience: {
       type: Number,
       required: [true, 'Years of experience is required'],

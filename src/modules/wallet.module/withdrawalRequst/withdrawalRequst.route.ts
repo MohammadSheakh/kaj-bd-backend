@@ -102,7 +102,7 @@ router.route('/').get(
 router.route('/').post(
   auth(TRole.provider),
   IsProviderRejected(),
-  validateRequest(validation.createWithdrawalRequstValidationSchema),
+  // validateRequest(validation.createWithdrawalRequstValidationSchema),
   controller.create
 );
 
