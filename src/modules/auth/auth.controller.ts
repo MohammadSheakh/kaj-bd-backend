@@ -100,7 +100,6 @@ const register = catchAsync(async (req :Request, res:Response) => {
     // we already created wallet for provider in AuthService.createUser function
     //---------------------------------
 
-  
     // For Provider
     sendResponse(res, {
       code: StatusCodes.CREATED,

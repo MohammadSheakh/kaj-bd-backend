@@ -23,6 +23,7 @@ import { Types } from 'mongoose';
 import { sendPushNotificationV2 } from '../../utils/firebaseUtils';
 import { UserDevices } from '../../modules/user.module/userDevices/userDevices.model';
 import { IUserDevices } from '../../modules/user.module/userDevices/userDevices.interface';
+import { config } from '../../config';
 
 export type IUserProfile = Pick<IUser, '_id' | 'name' | 'profileImage' | 'role' | 'subscriptionType' | 'fcmToken'>;
 
@@ -95,6 +96,7 @@ export class SocketService {
 
   // 🥇
   public async initialize(
+    socketPort: number,
     server: http.Server, 
     redisPubClient: any, 
     redisSubClient: any,
@@ -129,6 +131,10 @@ export class SocketService {
         },
         // allowEIO3: true, // Support older clients
         // transports: ['polling', 'websocket']
+      });
+
+      server.listen(socketPort, config.backend.ip as string, () => {
+        logger.info(colors.green(`🔌 Socket.IO listening on http://${config.backend.ip}:${socketPort}`));
       });
 
       // Initialize Redis state manager

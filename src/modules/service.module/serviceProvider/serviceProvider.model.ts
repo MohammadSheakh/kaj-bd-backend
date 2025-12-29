@@ -95,7 +95,7 @@ const ServiceProviderSchema = new Schema<IServiceProvider>(
       }
     ],
     nidNumber: {
-      type: Number,
+      type: String,
       required: [false, 'nidNumber is not required'],
     },
     yearsOfExperience: {
@@ -117,6 +117,7 @@ const ServiceProviderSchema = new Schema<IServiceProvider>(
       default: TProviderApprovalStatus.pending,
     },
 
+    
   
     isDeleted: {
       type: Boolean,
