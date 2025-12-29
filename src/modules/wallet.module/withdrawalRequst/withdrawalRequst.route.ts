@@ -36,8 +36,6 @@ const paginationOptions: Array<'sortBy' | 'page' | 'limit' | 'populate'> = [
 // const taskService = new TaskService();
 const controller = new WithdrawalRequstController();
 
-
-
 router.route('/paginate').get(
   auth(TRole.provider),
   IsProviderRejected(),

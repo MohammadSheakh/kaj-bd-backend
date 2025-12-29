@@ -3,7 +3,7 @@ import { model, Schema } from 'mongoose';
 import { IWithdrawalRequst, IWithdrawalRequstModel } from './withdrawalRequst.interface';
 import paginate from '../../../common/plugins/paginate';
 import { TWithdrawalRequst } from './withdrawalRequst.constant';
-import { TBankAccount } from '../bankInfo/bankInfo.constant';
+import { TAccountType, TBankAccount, TWithdrawalRequstType } from '../bankInfo/bankInfo.constant';
 
 
 const WithdrawalRequstSchema = new Schema<IWithdrawalRequst>(
@@ -24,17 +24,17 @@ const WithdrawalRequstSchema = new Schema<IWithdrawalRequst>(
 
     bankAccountNumber: {
       type: String,
-      required: [true, 'bankAccountNumber is required'],
+      required: [false, 'bankAccountNumber is not required'],
     },
 
     bankRoutingNumber: {
       type: String,
-      required: [true, 'bankRoutingNumber is required'],
+      required: [false, 'bankRoutingNumber is not required'],
     },
 
     bankAccountHolderName: {
       type: String,
-      required: [true, 'bankAccountHolderName is required'],
+      required: [false, 'bankAccountHolderName is not required'],
     },
 
     bankAccountType: {
@@ -43,17 +43,42 @@ const WithdrawalRequstSchema = new Schema<IWithdrawalRequst>(
         TBankAccount.savings,
         TBankAccount.current  
       ],
-      required: [true, 'bankAccountType is required'],
+      required: [false, 'bankAccountType is not required'],
     },
 
     bankBranch: {
       type: String,
-      required: [true, 'bankBranch is required'],
+      required: [false, 'bankBranch is not required'],
     },
 
     bankName: {
       type: String,
-      required: [true, 'bankName is required'],
+      required: [false, 'bankName is not required'],
+    },
+
+    type: {
+      type: String,
+      enum : [
+        TWithdrawalRequstType.bank,
+        TWithdrawalRequstType.bkash,
+        TWithdrawalRequstType.nagad,
+        TWithdrawalRequstType.rocket 
+      ],
+      required: [true, 'type is required'],
+    },
+
+    mobileNo: {
+      type: String,
+      required: [false, 'mobileNo is not required'],
+    },
+
+    accountType : {
+      type: String,
+      enum : [
+        TAccountType.personal,
+        TAccountType.merchant,
+      ],
+      required: [false, 'accountType is not required'],
     },
 
     status:{

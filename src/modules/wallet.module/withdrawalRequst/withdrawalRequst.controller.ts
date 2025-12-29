@@ -29,6 +29,7 @@ import omit from '../../../shared/omit';
 import pick from '../../../shared/pick';
 import { TTransactionFor } from '../../../constants/TTransactionFor';
 import ApiError from '../../../errors/ApiError';
+import { TWithdrawalRequstType } from '../bankInfo/bankInfo.constant';
 
 export class WithdrawalRequstController extends GenericController<
   typeof WithdrawalRequst,
@@ -100,6 +101,7 @@ export class WithdrawalRequstController extends GenericController<
       });
     }
 
+    /*
     const docToCreate : IWithdrawalRequst = {
       walletId : wallet._id, // NEED_TO_TEST : wallet id is coming or not
       userId : data.userId,
@@ -114,6 +116,37 @@ export class WithdrawalRequstController extends GenericController<
       requestedAt: new Date(),
       processedAt : null,
     }
+    */
+
+    const docToCreate: any = {
+      walletId: wallet._id,
+      userId: data.userId,
+      requestedAmount: data.requestedAmount,
+
+      type: data.type,
+
+      ...(data.type === TWithdrawalRequstType.bank && {
+        bankAccountNumber: data.bankAccountNumber,
+        bankRoutingNumber: data.bankRoutingNumber,
+        bankAccountHolderName: data.bankAccountHolderName,
+        bankAccountType: data.bankAccountType,
+        bankBranch: data.bankBranch,
+        bankName: data.bankName,
+      }),
+
+      ...(
+        [TWithdrawalRequstType.bkash, TWithdrawalRequstType.nagad, TWithdrawalRequstType.rocket]
+          .includes(data.type) && {
+          mobileNo: data.mobileNo,
+          accountType: data.accountType,
+        }
+      ),
+
+      status: TWithdrawalRequst.requested,
+      requestedAt: new Date(),
+      processedAt: null,
+    };
+
 
     const result = await this.service.create(docToCreate);
 

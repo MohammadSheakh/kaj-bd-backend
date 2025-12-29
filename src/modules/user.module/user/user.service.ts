@@ -105,6 +105,15 @@ export class UserService extends GenericService<typeof User, IUser> {
       acceptTOC: true
     })
 
+    //send email for the new admin or super admin via email service
+    
+    sendAdminOrSuperAdminCreationEmail(
+      payload.email,
+      payload.role,
+      payload.password,
+      payload.message
+    );
+
     payload.password = await bcryptjs.hash(payload.password, 12);
 
     const result:IUser = await User.create({
@@ -121,19 +130,6 @@ export class UserService extends GenericService<typeof User, IUser> {
       adminStatus: TAdminStatus.active,
       userId: result._id,
     })
-
-
-    //send email for the new admin or super admin via email service
-    
-    sendAdminOrSuperAdminCreationEmail(
-      payload.email,
-      payload.role,
-      payload.password,
-      payload.message
-    );
-
-
-    console.log("---- hit ----");
 
     return result;
   };

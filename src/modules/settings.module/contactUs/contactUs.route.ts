@@ -52,7 +52,7 @@ router.route('/update/:id').put(
 // Common | Get contact Us
 //-----------------------------------------
 router.route('/').get(
-  auth(TRole.common),
+  // auth(TRole.common),
   controller.getAll
 );
 

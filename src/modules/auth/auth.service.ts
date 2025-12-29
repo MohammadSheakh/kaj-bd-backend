@@ -113,6 +113,11 @@ const createUser = async (userData: ICreateUser, userProfileId:string) => {
     userId : user._id
   });
 
+  const [verificationToken, otp] = await Promise.all([
+      TokenService.createVerifyEmailToken(user),
+      OtpService.createVerificationEmailOtp(user.email)
+  ]);
+
   if(userData.role === TRole.provider){
 
   /*---------------------------
@@ -127,10 +132,10 @@ const createUser = async (userData: ICreateUser, userProfileId:string) => {
       userId : user._id
     });
 
-    const [verificationToken, otp] = await Promise.all([
-      TokenService.createVerifyEmailToken(user),
-      OtpService.createVerificationEmailOtp(user.email)
-    ]);
+    // const [verificationToken, otp] = await Promise.all([
+    //   TokenService.createVerifyEmailToken(user),
+    //   OtpService.createVerificationEmailOtp(user.email)
+    // ]);
 
     /********
      * TODO : MUST
@@ -161,10 +166,10 @@ const createUser = async (userData: ICreateUser, userProfileId:string) => {
 
   // , { otp }
   // Run token and OTP creation in parallel
-  const [verificationToken, otp] = await Promise.all([
-    TokenService.createVerifyEmailToken(user),
-    OtpService.createVerificationEmailOtp(user.email)
-  ]);
+  // const [verificationToken, otp] = await Promise.all([
+  //   TokenService.createVerifyEmailToken(user),
+  //   OtpService.createVerificationEmailOtp(user.email)
+  // ]);
 
 
   eventEmitterForOTPCreateAndSendMail.emit('eventEmitterForOTPCreateAndSendMail', { email: user.email });
@@ -399,7 +404,8 @@ const resetPassword = async (
     otp,
     user?.isResetPassword ? OtpType.RESET_PASSWORD : OtpType.VERIFY,
   );
-  user.password = newPassword;
+  user.password =  await bcryptjs.hash(newPassword, 12);
+
   user.isResetPassword = false;
   await user.save();
   const { password, ...userWithoutPassword } = user.toObject();
@@ -422,7 +428,7 @@ const changePassword = async (
     throw new ApiError(StatusCodes.UNAUTHORIZED, 'Password is incorrect');
   }
 
-  user.password = newPassword;
+  user.password = await bcryptjs.hash(newPassword, 12) ;
   await user.save();
   const { password, ...userWithoutPassword } = user.toObject();
   return userWithoutPassword;
