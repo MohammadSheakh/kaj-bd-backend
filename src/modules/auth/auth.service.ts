@@ -113,9 +113,9 @@ const createUser = async (userData: ICreateUser, userProfileId:string) => {
     userId : user._id
   });
 
-  const [verificationToken/*, otp*/] = await Promise.all([
+  const [verificationToken, otp] = await Promise.all([
       TokenService.createVerifyEmailToken(user),
-      // OtpService.createVerificationEmailOtp(user.email)
+      OtpService.createVerificationEmailOtp(user.email)
   ]);
 
   if(userData.role === TRole.provider){
@@ -161,7 +161,7 @@ const createUser = async (userData: ICreateUser, userProfileId:string) => {
   }
 
 
-  eventEmitterForOTPCreateAndSendMail.emit('eventEmitterForOTPCreateAndSendMail', { email: user.email });
+  // eventEmitterForOTPCreateAndSendMail.emit('eventEmitterForOTPCreateAndSendMail', { email: user.email });
 
   // , otp
   return { user, verificationToken  }; // FIXME  : otp remove korte hobe ekhan theke .. 
