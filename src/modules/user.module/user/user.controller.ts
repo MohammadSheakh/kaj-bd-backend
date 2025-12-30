@@ -91,7 +91,7 @@ export class UserController extends GenericController<
       }
     ];
 
-    const select = 'name profileImage email phoneNumber';
+    const select = 'name profileImage email phoneNumber role';
 
     const result = await this.service.getById(id, populateOptions, select);
 
@@ -303,7 +303,10 @@ export class UserController extends GenericController<
 
     const select = 'name email phoneNumber createdAt'; 
 
-    const result = await this.userService.getAllWithAggregationWithStatistics(query, options, req.user.userId/*, profileFilter*/);
+    // const result = await this.userService.getAllWithAggregationWithStatistics(query, options, req.user.userId/*, profileFilter*/);
+
+    
+    const result = await this.userService.getAllWithAggregationWithStatistics_V2_ProviderCountFix(query, options, req.user.userId/*, profileFilter*/);
 
     sendResponse(res, {
       code: StatusCodes.OK,

@@ -306,7 +306,7 @@ export class ServiceProviderService extends GenericService<
       // Add locationId filter to match stage
       userMatchStage.locationId = { $in: nearbyLocationIds };
 
-      console.log("Updated userMatchStage with location filter: ", userMatchStage);
+      // console.log("Updated userMatchStage with location filter: ", userMatchStage);
 
       // Build main pipeline
       pipeline = [

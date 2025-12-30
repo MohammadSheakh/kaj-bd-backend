@@ -19,12 +19,20 @@ import { PaymentTransactionService } from '../../payment.module/paymentTransacti
 import { PaymentTransaction } from '../../payment.module/paymentTransaction/paymentTransaction.model';
 import { TTransactionFor } from '../../../constants/TTransactionFor';
 import { enqueueWebNotification } from '../../../services/notification.service';
-import { TBookingStatus } from './serviceBooking.constant';
+import { TBookingStatus, TPaymentStatus } from './serviceBooking.constant';
 import { TRole } from '../../../middlewares/roles';
 import { TNotificationType } from '../../notification/notification.constants';
 import { SSLGateway } from '../../payment.module/payment/gateways/sslcommerz/sslcommerz.gateway';
 import { Review } from '../review/review.model';
 import { IReview } from '../review/review.interface';
+import { User } from '../../user.module/user/user.model';
+import { IAdditionalCost } from '../additionalCost/additionalCost.interface';
+import { PaymentMethod, TPaymentGateway } from '../../payment.module/paymentTransaction/paymentTransaction.constant';
+import { IWallet } from '../../wallet.module/wallet/wallet.interface';
+import { Wallet } from '../../wallet.module/wallet/wallet.model';
+import { WalletTransactionHistory } from '../../wallet.module/walletTransactionHistory/walletTransactionHistory.model';
+import { TWalletTransactionHistory, TWalletTransactionStatus } from '../../wallet.module/walletTransactionHistory/walletTransactionHistory.constant';
+import { TCurrency } from '../../../enums/payment';
 
 export class ServiceBookingController extends GenericController<
   typeof ServiceBooking,
@@ -347,6 +355,209 @@ export class ServiceBookingController extends GenericController<
     sendResponse(res, {
       code: StatusCodes.OK,
       data: result,
+      message: `${this.modelName} updated successfully`,
+    });
+  })
+
+  paymentSuccessful= catchAsync(async(req: Request, res: Response) => {
+    
+    const session = await mongoose.startSession();
+    
+        let finalAmount = 0;
+
+        let isBookingExist : IServiceBooking | null;
+        let existingUser: IUser | null;
+
+        await session.withTransaction(async () => {
+            existingUser = await User.findById(loggedInUser.userId);
+            
+            isBookingExist = await ServiceBooking.findById(serviceBookingId).session(session);
+
+            console.log('isBookingExist :: ', isBookingExist);
+
+            if(!isBookingExist){
+                throw new ApiError(StatusCodes.NOT_FOUND, "Service Booking not found");
+            }
+
+            finalAmount = isBookingExist.startPrice;
+            
+            console.log('finalAmount :: ', finalAmount);
+
+            const additionalCosts : IAdditionalCost[] | null = await AdditionalCost.find({
+                serviceBookingId : isBookingExist,
+                isDeleted : false,
+            }).session(session);
+
+            console.log('additionalCosts :: ', additionalCosts);
+
+            let totalAdditionalCost;
+
+            if(additionalCosts.length > 0){
+                totalAdditionalCost = additionalCosts.reduce((sum, cost) => {
+                    return sum + ( cost.price || 0 )
+                }, 0)
+
+                console.log('totalAdditionalCost :: ', totalAdditionalCost);
+
+                finalAmount += totalAdditionalCost;
+            }
+
+            console.log('finalAmount :: ', finalAmount);
+
+            isBookingExist.totalCost = finalAmount;
+
+            // we dont need to create any booking here .. we can update totalCost
+            await isBookingExist.save();
+
+        });
+        
+      session.endSession();
+
+
+      //-------------------------------------------------
+      //-------------------------------------------------
+
+
+      // Check if payment already processed
+      const isPaymentExist = await PaymentTransaction.findOne({ transactionId: tran_id });
+      
+      if (isPaymentExist) {
+          return res.redirect(`${config.frontend.url}/payment/success?already_processed=true`);
+      }
+
+      // Create Payment Transaction
+      const newPayment = await PaymentTransaction.create({
+          userId: userId,
+          referenceFor,
+          referenceId,
+          paymentGateway: TPaymentGateway.sslcommerz, // TODO : MUST :
+          transactionId: tran_id,
+          paymentIntent: val_id,
+          amount: parseFloat(finalAmount), //amount
+          currency: 'BDT',
+          paymentStatus: TPaymentStatus.completed, // import fix korte hobe .. option gula check dite hboe TODO : MUST :
+          gatewayResponse: null, //sslData,
+      });
+
+      // Update Booking
+      const updatedBooking :IServiceBooking =  await ServiceBooking.findByIdAndUpdate(referenceId, {
+          $set: {
+              status: TBookingStatus.completed, // finally we make this status completed .. 
+              paymentStatus: TPaymentStatus.completed,  
+              paymentTransactionId: newPayment._id,
+              paymentMethod : PaymentMethod.online,
+          }
+      });
+
+      let startPrice :number = parseInt(updatedBooking?.startPrice); // TODO : MUST : Fix korte hobe 
+      
+      let adminsPercentOfStartPrice:number = parseFloat(updatedBooking?.adminPercentageOfStartPrice); // we need to add this money to admin's wallet
+
+      let finalAmountToAddProvidersWallet : number = parseFloat(amount) - parseFloat(adminsPercentOfStartPrice);
+
+      const wallet : IWallet = await Wallet.findOne({ userId:updatedBooking.providerId });
+      const balanceBeforeTransaction = wallet.amount;
+      const balanceAfterTransaction = wallet.amount + finalAmountToAddProvidersWallet;
+
+
+      // add money to Admins wallet ----------------------------------------
+      const admin:IUser = await User.findOne({ role: TRole.admin });
+
+      const adminWallet : IWallet = await Wallet.findOne({ userId : admin._id });
+      const balanceBeforeTransactionForAdmin = adminWallet.amount;
+      const balanceAfterTransactionForAdmin = adminWallet.amount + adminsPercentOfStartPrice;
+
+      const updatedAdminWallet :IWallet = await Wallet.findOneAndUpdate(
+          { userId:admin._id },
+          { $inc: { 
+              amount: parseFloat(adminsPercentOfStartPrice),
+              totalBalance: parseFloat(adminsPercentOfStartPrice) // we actually dont need to add this 
+            } 
+          },
+          { new: true }
+      );
+
+      // also create wallet transaction history for admin
+      await WalletTransactionHistory.create(
+          {
+              walletId:updatedAdminWallet._id,
+              paymentTransactionId: newPayment._id,
+              type : TWalletTransactionHistory.credit,
+              amount : parseFloat(adminsPercentOfStartPrice),
+              currency : TCurrency.bdt,
+              status : TWalletTransactionStatus.completed,
+              referenceFor : TTransactionFor.ServiceBooking,
+              referenceId : updatedBooking._id,
+              balanceBefore: balanceBeforeTransactionForAdmin,
+              balanceAfter: balanceAfterTransactionForAdmin
+          },
+      );
+
+      // add money to the Providers wallet .. ------------------------------------------
+      const updatedWallet :IWallet = await Wallet.findOneAndUpdate(
+          { userId:updatedBooking.providerId },
+          { $inc: { 
+                  amount: parseFloat(finalAmountToAddProvidersWallet),
+                  totalBalance: parseFloat(amount)
+              } 
+          },
+          { new: true }
+      );
+
+      // also create wallet transaction history for provider
+      await WalletTransactionHistory.create(
+        { 
+          userId:updatedBooking.providerId,
+          walletId:updatedWallet._id,
+          paymentTransactionId: newPayment._id,
+          type : TWalletTransactionHistory.credit,
+          amount : parseFloat(finalAmountToAddProvidersWallet),
+          currency : TCurrency.bdt,
+          status : TWalletTransactionStatus.completed,
+          referenceFor : TTransactionFor.ServiceBooking,
+          referenceId : updatedBooking._id,
+          balanceBefore: balanceBeforeTransaction,
+          balanceAfter: balanceAfterTransaction
+        },
+      );
+
+      // Send notification to admin and provider about the money received ..
+      await enqueueWebNotification(
+          `BDT ${amount} is added to your wallet for Booking ${referenceId} TnxId : ${newPayment._id}`,
+          updatedBooking.userId, // senderId
+          updatedBooking.providerId, // receiverId
+          TRole.provider, // receiverRole
+          TNotificationType.serviceBooking, // type
+          updatedBooking._id, // idOfType
+          null, // linkFor
+          null // linkId
+      );
+
+      await enqueueWebNotification(
+          `BDT ${amount} is added to ${updatedBooking.providerId} wallet for Booking ${referenceId} TnxId : ${newPayment._id}`,
+          updatedBooking.userId, // senderId
+          null, // receiverId
+          TRole.admin, // receiverRole
+          TNotificationType.payment, // type
+          updatedBooking._id, // idOfType
+          null, // linkFor
+          null // linkId
+      );
+
+    return finalAmount;
+  })
+
+  getTotalPriceToPay =  catchAsync(async (req: Request, res: Response) => {
+    const loggedInUser = (req.user as IUser);
+
+    // here id is serviceBookingId
+
+    // processPayment is makePayment 
+    const result = await this.serviceBookingService.getTotalPriceToPay(req.params.id, loggedInUser);
+  
+    sendResponse(res, {
+      code: StatusCodes.OK,
+      data: null,
       message: `${this.modelName} updated successfully`,
     });
   })

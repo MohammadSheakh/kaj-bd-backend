@@ -32,6 +32,11 @@ export class ServiceCategoryController extends GenericController<
     const [nameObj] : [IServiceCategory['name']]  = await Promise.all([
       buildTranslatedField(data.name as string)
     ]);
+
+    if(data.attachments?.length === 0){
+      data.attachments = ['69535f1491c6c9abde0ed93e']; // default attachment id for default image
+      // this should come from env file
+    }
     
     const serviceCategoryDTO:ICreateServiceCategory = {
       attachments : data.attachments,

@@ -37,7 +37,7 @@ const controller = new UserController();
 // Admin | 02-01 | Get All Users from Users Table With Statistics
 //---------------------------------
 router.route('/paginate').get(
-  auth(TRole.admin, TRole.subAdmin),
+  auth(TRole.admin, TRole.subAdmin, TRole.user),
   validateFiltersForQuery(optionValidationChecking(['_id', 'name', 'createdAt', ...paginationOptions])),
   setRequstFilterAndValue('role', 'user'),
   controller.getAllWithPaginationV2WithStatistics

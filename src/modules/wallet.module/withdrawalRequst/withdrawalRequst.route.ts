@@ -57,7 +57,7 @@ router.route('/paginate').get(
 // Admin | 07-01 Show All Withdraw Request .. which status is requested .. filter by from and to date
 //---------------------------------
 router.route('/paginate/for-admin').get(
-  auth(TRole.admin),
+  auth(TRole.admin, TRole.subAdmin),
   validateFiltersForQuery(optionValidationChecking(['_id', 'status', 'from', 'to', ...paginationOptions])),
   filterByDateRange(),
   setQueryOptions({
@@ -79,7 +79,7 @@ router.route('/:id').get(
 //  Admin | 07-02 Upload receipt And Update status :id actually withdrawalRequestId [approved]
 //---------------------------------
 router.route('/:id').put(
-  auth(TRole.admin),
+  auth(TRole.admin, TRole.subAdmin),
   [
     upload.fields([
       { name: 'proofOfPayment', maxCount: 1 }, // Allow up to 1 photos
