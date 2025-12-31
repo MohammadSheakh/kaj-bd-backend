@@ -18,7 +18,7 @@ export const imageUploadPipelineForCreateServiceCategory = [
     {
       name: 'attachments',
       folder: TFolderName.serviceCategory,
-      required: true, // optional
+      required: false, // optional
       allowedMimeTypes: ['image/jpeg', 'image/png'], // , 'application/pdf'
     },
   ]),

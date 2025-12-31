@@ -21,6 +21,7 @@ export const config = {
     translation : process.env.Firebase_Service_Account_Path_For_Translation,
   },
 
+  //--------- for kaj bd
   agora: {
     appId: process.env.AGORA_APP_ID,
     appCertificationPrimary: process.env.AGORA_APP_CERTIFICATE_PRIMARY,
@@ -97,6 +98,7 @@ export const config = {
   //   cancel_url: process.env.STRIPE_CANCEL_URL, // http://10.10.7.79:7000/api/v1/payments/cancel
   // },
   
+  //--------- for kaj bd
   sslcommerz: {
     store_id: process.env.SSL_STORE_ID,
     store_passwd: process.env.SSL_STORE_PASSWORD,
@@ -118,4 +120,9 @@ export const config = {
     Validation_API : process.env.SSL_VALIDATION_API,
     Validation_API_Web_Service_name : process.env.SSL_VALIDATION_API_WEB_SERVICE,
   },
+
+  //--------- for kaj bd
+  kajbd : {
+    default_service_category_image_id : process.env.DEFAULT_SERVICE_CATEGORY_IMAGE_ID
+  }
 };

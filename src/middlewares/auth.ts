@@ -77,7 +77,7 @@ const auth = (...roles: TRole[]/******** Previously it was string[] */) =>
         if (!hasRole) {
           throw new ApiError(
             StatusCodes.FORBIDDEN,
-            "You don't have permission to access this API"
+            `You don't have permission to access this API ${user.name} | ${user._id} | ${user.role} | ${req.originalUrl}`
           );
         }
       }

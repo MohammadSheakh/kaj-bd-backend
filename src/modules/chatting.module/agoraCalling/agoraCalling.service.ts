@@ -93,7 +93,7 @@ export class AgoraCallingService extends GenericService<
         if (isOnline) { // && !isInConversationRoom
           // ⚠️ User is online but NOT in this conversation room
           // Send both socket notification AND conversation list update
-          console.log(`⚠️ User ${participantId} is online but not in room, sending notification 3️⃣`);
+          // console.log(`⚠️ User ${participantId} is online but not in room, sending notification 3️⃣`);
           
           // Send message notification to personal room
           socketService.emitToUser(

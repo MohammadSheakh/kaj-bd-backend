@@ -37,7 +37,7 @@ const controller = new UserController();
 // Admin | 02-01 | Get All Users from Users Table With Statistics
 //---------------------------------
 router.route('/paginate').get(
-  auth(TRole.admin, TRole.subAdmin),
+  auth(TRole.admin, TRole.subAdmin, TRole.user),
   validateFiltersForQuery(optionValidationChecking(['_id', 'name', 'createdAt', ...paginationOptions])),
   setRequstFilterAndValue('role', 'user'),
   controller.getAllWithPaginationV2WithStatistics
@@ -156,10 +156,13 @@ router.route('/home-page/popular').get(
 
 
 //--------------------------------- kaj bd
-// Provider | Home Page | 03-01 | get earning by category, categorically booking count, all recent job request  
+// Provider | Home Page | 03-01 | get earning by category, categorically booking count, all recent job request 
+//
+// As per Imtiaz vai .. when user pays for a booking .. as a user from app .. app dev needs to update this 
+// providers API ... so .. we need to give permission to user also to access this API ..
 //---------------------------------
 router.route('/home-page/for-provider').get(
-  auth(TRole.provider),
+  auth(TRole.provider, TRole.user),
   IsProviderRejected(),
   controller.getEarningAndCategoricallyBookingCountAndRecentJobRequest
 )

@@ -11,7 +11,8 @@ import os from 'os';
 import cluster from 'cluster';
 //@ts-ignore
 import { createAdapter } from '@socket.io/redis-adapter';
-
+//@ts-ignore
+import http from "http";
 import { startNotificationWorker, startScheduleWorker } from './helpers/bullmq/bullmq'; // ⬅️ ADD THIS
 import connectToDb from './config/mongoDbConfig';
 import { initializeRedis, redisClient, redisPubClient, redisSubClient } from './helpers/redis/redis';
@@ -90,8 +91,20 @@ async function main() {
 
     // const redisStateClient = createRedisClient(); // New Redis client for state management
 
+    // --- SOCKET.IO ON DIFFERENT PORT --- go to postman and connect  newsheakh3000.sobhoy.com   for socket
+    const socketPort = 6738; // 👈 choose your socket port
+    const socketServer = http.createServer(); // independent HTTP server only for socket.io
+
+
     // Initialize Socket.IO with Redis state management
-    await socketService.initialize(server, redisPubClient, redisSubClient, redisPubClient);
+    await socketService.initialize(
+      // server,
+      socketPort,
+      socketServer,
+      redisPubClient,
+      redisSubClient,
+      redisPubClient
+    );
 
 
 

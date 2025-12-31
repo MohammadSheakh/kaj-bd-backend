@@ -185,12 +185,15 @@ export class ConversationParticipentsService extends GenericService<
       dontWantToInclude
     );
 
-    console.log("paginatedResults ::", paginatedResults.results[0].conversationId);
+    // console.log("paginatedResults ::", paginatedResults.results[0].conversationId);
 
     // Step 3: Remove duplicates and format data
     const uniqueUsers = {};
     
     paginatedResults.results.forEach(participant => {
+      
+      console.log("conversationParticipents.service.ts -> participant ::", participant);
+      
       const userId = participant.userId._id.toString();
       
       if (!uniqueUsers[userId]) {

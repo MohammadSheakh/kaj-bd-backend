@@ -148,7 +148,7 @@ router.route('/').post(
 //----------------------------------------
 router.route('/with-locationInfo').post(
   auth(TRole.provider),
-  IsProviderRejected(),
+  // this api does not need IsProviderRejected bcus provider is creating his info first time
   ...imageUploadPipelineForCreateServiceProviderInformation, 
   // validateRequest(validation.createHelpMessageValidationSchema), // TODO add validation
   controller.createV2

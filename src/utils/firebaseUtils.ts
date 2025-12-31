@@ -123,11 +123,11 @@ export const sendPushNotificationV2 = async (
 
     console.log('👉🔔👈 Push Notification V2 sent successfully:', response);
     
-    console.log('✅ Push notification sent successfully:', {
-      receiverId,
-      messageId: response,
-      title: notificationTitle
-    });
+    // console.log('✅ Push notification sent successfully:', {
+    //   receiverId,
+    //   messageId: response,
+    //   title: notificationTitle
+    // });
 
   } catch (error: any) {
     // Handle specific FCM errors

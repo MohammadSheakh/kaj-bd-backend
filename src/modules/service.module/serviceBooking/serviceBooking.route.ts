@@ -320,6 +320,20 @@ router.route('/pay/create/:id').post(
 )
 
 
+//------------------------------------- 🆕
+//
+// As Imtiaz vai face issue to pay with backends Url .. 
+// now may be we can try something like .. Rakibul vai will pay in front end ..
+// so for that .. he needs to know the price..
+// lets calculate the price and give that to Front end .. so that Rakibul vai can pay and hit another
+// api that .. payment is successful
+//--------------------------------------
+router.route('/get-total-price-to-pay/:id').get(
+  auth(TRole.user),  
+  controller.getTotalPriceToPay
+)
+
+
 router.route('/delete/:id').delete(
   //auth('common'),
   controller.deleteById
