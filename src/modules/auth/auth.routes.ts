@@ -45,7 +45,8 @@ router.post(
   AuthController.forgotPassword,
 );
 
-router.post('/resend-otp', AuthController.resendOtp);
+router.post('/resend-otp', 
+  AuthController.resendOtp);
 
 //[🚧][🧑‍💻✅][🧪] // 🆗 
 router.post(

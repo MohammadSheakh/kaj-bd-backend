@@ -15,7 +15,7 @@ const usersData = [
   // this admin needs a wallet .. 
   {
     name: 'Admin',
-    email: 'a@gmail.com',
+    email: 'kaajbdofficial@gmail.com',
     password: '$2b$12$cxPF29g99duEaWshhIjW6.TXTEzCccwZaL8jil3gFvhMjogg4HxiW', // Hashed password asdfasdf
     role: 'admin',
     isEmailVerified: true,
@@ -24,6 +24,17 @@ const usersData = [
     failedLoginAttempts : 0,
     deletedAt: null,
   },
+  {
+    name: 'Admin',
+    email: 'shadathossan3500@gmail.com',
+    password: '$2b$12$cxPF29g99duEaWshhIjW6.TXTEzCccwZaL8jil3gFvhMjogg4HxiW', // Hashed password asdfasdf
+    role: 'admin',
+    isEmailVerified: true,
+    isDeleted: false,
+    isResetPassword:false,
+    failedLoginAttempts : 0,
+    deletedAt: null,
+  }
 ];
 
 // Function to drop the entire database

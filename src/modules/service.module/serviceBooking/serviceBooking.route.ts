@@ -99,7 +99,7 @@ router.route('/paginate/for-admin').get(
 // Provider | 03-04 | Get all Job Request
 //-------------------------------------------
 router.route('/paginate/for-provider').get(
-  auth(TRole.provider),
+  auth(TRole.provider, TRole.user),
   IsProviderRejected(),
   validateFiltersForQuery(optionValidationChecking(['_id','status', ...paginationOptions])),
   getLoggedInUserAndSetReferenceToUser('providerId'),

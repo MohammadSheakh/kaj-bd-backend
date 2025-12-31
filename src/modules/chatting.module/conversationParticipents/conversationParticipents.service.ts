@@ -192,35 +192,39 @@ export class ConversationParticipentsService extends GenericService<
     
     paginatedResults.results.forEach(participant => {
       
-      console.log("conversationParticipents.service.ts -> participant ::", participant);
+      // console.log("conversationParticipents.service.ts -> participant ::", participant);
       
-      const userId = participant.userId._id.toString();
+      const userId = participant?.userId?._id.toString();
       
-      if (!uniqueUsers[userId]) {
-        uniqueUsers[userId] = {
-          userId: {
-            _userId: participant.userId._id,
-            name: participant.userId.name,
-            profileImage: participant.userId.profileImage,
-            role: participant.userId.role
-          },
-          conversations: [],
-          // isOnline: global.socketUtils.isUserOnline(userId), // 😄😄😄😄😄😄😄
-        };
+      if(userId != null){
+        if (!uniqueUsers[userId]) {
+                uniqueUsers[userId] = {
+                  userId: {
+                    _userId: participant.userId._id,
+                    name: participant.userId.name,
+                    profileImage: participant.userId.profileImage,
+                    role: participant.userId.role
+                  },
+                  conversations: [],
+                  // isOnline: global.socketUtils.isUserOnline(userId), // 😄😄😄😄😄😄😄
+                };
+              }
+              
+              // Add conversation if not already added
+              const conversationExists = uniqueUsers[userId].conversations.some(
+                conv => conv._conversationId.toString() === participant.conversationId._id.toString()
+              );
+              
+              if (!conversationExists) {
+                uniqueUsers[userId].conversations.push({
+                  _conversationId: participant.conversationId._id,
+                  lastMessage: participant.conversationId.lastMessage,
+                  updatedAt: participant.conversationId.updatedAt
+                });
+              }
       }
+
       
-      // Add conversation if not already added
-      const conversationExists = uniqueUsers[userId].conversations.some(
-        conv => conv._conversationId.toString() === participant.conversationId._id.toString()
-      );
-      
-      if (!conversationExists) {
-        uniqueUsers[userId].conversations.push({
-          _conversationId: participant.conversationId._id,
-          lastMessage: participant.conversationId.lastMessage,
-          updatedAt: participant.conversationId.updatedAt
-        });
-      }
     });
 
     // console.log("uniqueUsers ::", uniqueUsers); 

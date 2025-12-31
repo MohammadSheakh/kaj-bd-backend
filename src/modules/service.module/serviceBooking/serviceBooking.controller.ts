@@ -214,6 +214,8 @@ export class ServiceBookingController extends GenericController<
     let senderId = null;
     let receiverRole = null;
 
+    console.log("updatedObject ::: Test With Imtiaz vai .. Cancel Booking ..  ", updatedObject);
+
     if(loggedInUser.role === TRole.provider){
       senderId = updatedObject.providerId._id;
       receiverId = updatedObject.userId._id;

@@ -107,6 +107,15 @@ export const sendPushNotification = async (
     }
  * ********* */
 
+export const isValidUrl = (string: string): boolean => {
+  try {
+    new URL(string);
+    return true;
+  } catch (_) {
+    return false;
+  }
+};
+
 export const sendPushNotificationV2 = async (
   fcmToken: string,
   messageData: IMessageToEmmit | string, // Can accept object or stringified JSON
@@ -115,8 +124,39 @@ export const sendPushNotificationV2 = async (
   try {
     // Initialize Firebase Admin SDK only once
     initializeFirebase();
+    
+    // console.log("messageData -> 🆕🆕 ", messageData);
 
-    const {message, notificationTitle} = await buildFCMMessageV2(messageData as IMessageToEmmit , fcmToken);
+
+    //---------------------------------------- START
+
+    // Parse messageData if it's a string
+    let parsedMessageData = typeof messageData === 'string'
+      ? JSON.parse(messageData)
+      : { ...messageData };
+
+    // Normalize imageUrl if present
+    if (
+      parsedMessageData?.image &&
+      typeof parsedMessageData.image === 'object' &&
+      parsedMessageData.image.imageUrl
+    ) {
+      const { imageUrl } = parsedMessageData.image;
+      if (!isValidUrl(imageUrl)) {
+        parsedMessageData.image.imageUrl = 'https://newsheakh6737.sobhoy.com/uploads/users/user.png';
+      }
+    }
+
+    console.log("messageData -> 🆕🆕 ", parsedMessageData);
+
+    //---------------------------------------- END
+
+    
+    // const {message, notificationTitle} = await buildFCMMessageV2(messageData as IMessageToEmmit , fcmToken);
+
+    const {message, notificationTitle} = await buildFCMMessageV2(parsedMessageData as IMessageToEmmit , fcmToken);
+
+
 
     // Send the notification
     const response = await admin.messaging().send(message);
