@@ -50,15 +50,15 @@ export const checkUserCanCancelBooking = () => {
         // if (diffInHours < 4) {
         //------------------------------------------------------------------
 
-        // const hoursPassed = differenceInHours(new Date(), new Date(booking.bookingDateTime));
+        const hoursPassed = differenceInHours(new Date(), new Date(booking.bookingDateTime));
 
-        // if (hoursPassed < 4) {
-        //     return sendResponse(res, {
-        //         code: StatusCodes.BAD_REQUEST,
-        //         message: 'You can only cancel after 4 hours have passed since the booking time.',
-        //         success: false,
-        //     });
-        // }
+        if (hoursPassed < 4) {
+            return sendResponse(res, {
+                code: StatusCodes.BAD_REQUEST,
+                message: 'You can only cancel after 4 hours have passed since the booking time.',
+                success: false,
+            });
+        }
 
         next();
     }

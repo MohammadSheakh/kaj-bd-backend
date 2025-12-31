@@ -148,7 +148,7 @@ export class ServiceBookingService extends GenericService<
       adminPercentageOfStartPrice: serviceProviderData.startPrice * (parseInt(adminPercentage?.percentage) / 100)
     }
 
-    console.log('serviceBookingDTO', serviceBookingDTO);
+    // console.log('serviceBookingDTO', serviceBookingDTO);
 
     const createdServiceBooking : IServiceBooking = await ServiceBooking.create(serviceBookingDTO); 
 

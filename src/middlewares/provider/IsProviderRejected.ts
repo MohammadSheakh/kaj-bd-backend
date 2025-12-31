@@ -37,7 +37,7 @@ export const IsProviderRejected = <T> () => {
         providerId: req.user.userId
     })
 
-    console.log("serviceProviderDetails :: ", serviceProviderDetails);
+    // console.log("serviceProviderDetails :: ", serviceProviderDetails);
 
     if (!serviceProviderDetails) {
       sendResponse(res, {

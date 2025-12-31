@@ -148,7 +148,7 @@ export const startNotificationWorker = () => {
       job: IScheduleJobForNotification
       // job : Job<INotification, any, NotificationJobName>
     ) => {
-      console.log("job.data testing startNotificationWorker::", job.data)
+      // console.log("job.data testing startNotificationWorker::", job.data)
       const { id, name, data } = job;
       logger.info(`Processing notification job ${id} ⚡ ${name}`, data);
 

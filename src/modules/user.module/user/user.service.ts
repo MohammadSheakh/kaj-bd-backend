@@ -1461,7 +1461,7 @@ export class UserService extends GenericService<typeof User, IUser> {
       delete userMatchStage.createdAt;
     }
 
-    console.log("userMatchStage :: ", userMatchStage)
+    // console.log("userMatchStage :: ", userMatchStage)
    
     // 📈⚙️ OPTIMIZATION:
     const pipeline = [
@@ -1607,7 +1607,7 @@ export class UserService extends GenericService<typeof User, IUser> {
     );
 
 
-    console.log("res :: ", res)
+    // console.log("res :: ", res)
 
 
 
@@ -1663,7 +1663,7 @@ export class UserService extends GenericService<typeof User, IUser> {
 
       ServiceProvider.find({
         providerApprovalStatus: 'accept',
-        rating: { $lt: 3.5 },
+        rating: { $gt: 3.5 }, // lt
         isDeleted: false,
       })
         .limit(10)
@@ -1673,7 +1673,7 @@ export class UserService extends GenericService<typeof User, IUser> {
           select: 'attachment attachmentType',
         }),
 
-      Banner.find({ isDeleted: false }).limit(5).select('attachments').populate({
+      Banner.find({ isDeleted: false }).limit(10).select('attachments').populate({
         path: 'attachments',
         select: 'attachment',
       }),  

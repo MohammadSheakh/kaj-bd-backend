@@ -33,6 +33,8 @@ import { Wallet } from '../../wallet.module/wallet/wallet.model';
 import { WalletTransactionHistory } from '../../wallet.module/walletTransactionHistory/walletTransactionHistory.model';
 import { TWalletTransactionHistory, TWalletTransactionStatus } from '../../wallet.module/walletTransactionHistory/walletTransactionHistory.constant';
 import { TCurrency } from '../../../enums/payment';
+//@ts-ignore
+import mongoose from 'mongoose';
 
 export class ServiceBookingController extends GenericController<
   typeof ServiceBooking,
@@ -190,9 +192,9 @@ export class ServiceBookingController extends GenericController<
       { path: 'providerDetailsId', select: 'serviceName' },
     ]);
 
-    console.log("req.body -> ", req.body);
-    console.log("req.params -> ", req.params);
-    console.log("updatedObject -> ", updatedObject);
+    // console.log("req.body -> ", req.body);
+    // console.log("req.params -> ", req.params);
+    // console.log("updatedObject -> ", updatedObject);
 
 
     if (!updatedObject) {
@@ -359,7 +361,14 @@ export class ServiceBookingController extends GenericController<
     });
   })
 
+  // front-end app will call this after successful payment with
+  // serviceBookingId, tran_id
   paymentSuccessful= catchAsync(async(req: Request, res: Response) => {
+
+    const loggedInUser = req.user;
+    const serviceBookingId = req.query.serviceBookingId;
+    const tran_id = req.query.transactionId;
+    
     
     const session = await mongoose.startSession();
     
