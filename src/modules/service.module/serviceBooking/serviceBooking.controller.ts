@@ -48,6 +48,27 @@ export class ServiceBookingController extends GenericController<
     super(new ServiceBookingService(), 'ServiceBooking');
   }
 
+  getBookingDetailsWithUserDetails = catchAsync(async (req: Request, res: Response) => {
+    const id = req.params.id;
+
+    const result = await ServiceBooking.findById(id)
+      .select('startPrice address bookingDateTime status')
+      .populate([
+        {
+          path: 'userId',
+          select: 'phoneNumber name profileImage role', //🆕phoneNumber  // name profileImage role
+          populate: { path: 'profileId', select: 'gender location' }
+        }
+      ]);
+
+
+    sendResponse(res, {
+      code: StatusCodes.OK,
+      data: result,
+      message: `${this.modelName} retrieved successfully`,
+    });
+  });
+
   getAllWithPaginationV2 = catchAsync(async (req: Request, res: Response) => {
     //const filters = pick(req.query, ['_id', 'title']); // now this comes from middleware in router
     const filters =  omit(req.query, ['sortBy', 'limit', 'page', 'populate']);

@@ -91,7 +91,6 @@ const userSchema = new Schema<IUser, UserModal>(
       type: String,
     },
     
-
     lastPasswordChange: { type: Date },
     isResetPassword: {
       type: Boolean,

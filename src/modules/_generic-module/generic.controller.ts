@@ -156,7 +156,7 @@ export class GenericController<ModelType, InterfaceType> {
 
     // ✅ Default values
     let populateOptions: (string | { path: string; select: string }[]) = [];
-    let select = '-isDeleted -createdAt -updatedAt -__v';
+    let select = '-isDeleted -createdAt -updatedAt'; // -__v
 
     // ✅ If middleware provided overrides → use them
     if (req.queryOptions) {

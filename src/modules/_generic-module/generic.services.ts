@@ -77,18 +77,26 @@ export class GenericService<ModelType, InterfaceType> {
     let query = this.model.findById(id).select(select);
     
     if (populateOptions && populateOptions.length > 0) {
-        
-        // Check if it's the old format (array of strings)
-        if (typeof populateOptions[0] === 'string') {
-            // query = query.select(populateOptions[0]);
-            populateOptions.forEach(field => {
-                query = query.populate(field as string);
-            });
-        } else {
-            populateOptions.forEach(option => {
-                query = query.populate(option);
-            });
-        }
+      
+      console.log("populateOptions : ", populateOptions);
+
+      // Check if it's the old format (array of strings)
+      if (typeof populateOptions[0] === 'string') {
+        console.log("if block hit ")
+        // query = query.select(populateOptions[0]);
+        populateOptions.forEach(field => {
+            console.log('field : ', field);  
+
+            query = query.populate(field as string);
+        });
+      } else {
+
+        console.log("else block hit ")
+        populateOptions.forEach(option => {
+            console.log('option : ', option);
+            query = query.populate(option);
+        });
+      }
     }
     
     const object = await query.select('-__v');

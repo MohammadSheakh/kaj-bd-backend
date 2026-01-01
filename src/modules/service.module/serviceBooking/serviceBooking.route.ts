@@ -152,19 +152,26 @@ router.route('/with-costs-summary/for-admin/:id').get(
 
 //-------------------------------------------
 // Provider | 03-05 Home | get booking details with user  information
-//-------------------------------------------
+// ISSUE : This version is not return users phone number .. 💎✨🔍 -> V2 Found
+//------------------------------------------- 
 router.route('/user-details/:id').get(
   auth(TRole.provider),
   IsProviderRejected(),
   setQueryOptions({
-    populate: [ { 
-      path: 'userId', 
-      select: 'name profileImage role',
+    populate: [{
+      path: 'userId', //userId 
+      select: 'phoneNumber name profileImage role', //🆕phoneNumber  // name profileImage role 
       populate: { path: 'profileId', select: 'gender location' }
     }],
     select: `startPrice address bookingDateTime status`
   }),
   controller.getByIdV2
+);
+
+router.route('/user-details-v2/:id').get(
+  auth(TRole.provider),
+  IsProviderRejected(),
+  controller.getBookingDetailsWithUserDetails
 );
 
 //-------------------------------------------
