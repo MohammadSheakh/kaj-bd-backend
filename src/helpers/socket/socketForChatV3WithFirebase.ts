@@ -23,6 +23,7 @@ import { Types } from 'mongoose';
 import { sendPushNotificationV2 } from '../../utils/firebaseUtils';
 import { UserDevices } from '../../modules/user.module/userDevices/userDevices.model';
 import { IUserDevices } from '../../modules/user.module/userDevices/userDevices.interface';
+import { config } from '../../config';
 
 export type IUserProfile = Pick<IUser, '_id' | 'name' | 'profileImage' | 'role' | 'subscriptionType' | 'fcmToken'>;
 
@@ -95,6 +96,7 @@ export class SocketService {
 
   // 🥇
   public async initialize(
+    socketPort: number,
     server: http.Server, 
     redisPubClient: any, 
     redisSubClient: any,
@@ -129,6 +131,10 @@ export class SocketService {
         },
         // allowEIO3: true, // Support older clients
         // transports: ['polling', 'websocket']
+      });
+
+      server.listen(socketPort, config.backend.ip as string, () => {
+        logger.info(colors.green(`🔌 Socket.IO listening on http://${config.backend.ip}:${socketPort}`));
       });
 
       // Initialize Redis state manager
@@ -366,7 +372,7 @@ export class SocketService {
         if (isOnline) { // && !isInConversationRoom
           // ⚠️ User is online but NOT in this conversation room
           // Send both socket notification AND conversation list update
-          console.log(`⚠️ User ${participantId} is online but not in room, sending notification 3️⃣`);
+          // console.log(`⚠️ User ${participantId} is online but not in room, sending notification 3️⃣`);
           
           // Send message notification to personal room
           socketService.emitToUserForCalling(
@@ -477,7 +483,7 @@ export class SocketService {
         if (isOnline) { // && !isInConversationRoom
           // ⚠️ User is online but NOT in this conversation room
           // Send both socket notification AND conversation list update
-          console.log(`⚠️ User ${participantId} is online but not in room, sending notification 3️⃣`);
+          // console.log(`⚠️ User ${participantId} is online but not in room, sending notification 3️⃣`);
           
           // Send message notification to personal room
           // socketService.emitToUser(
@@ -593,7 +599,7 @@ export class SocketService {
         if (isOnline) { // && !isInConversationRoom
           // ⚠️ User is online but NOT in this conversation room
           // Send both socket notification AND conversation list update
-          console.log(`⚠️ User ${participantId} is online but not in room, sending notification 3️⃣`);
+          // console.log(`⚠️ User ${participantId} is online but not in room, sending notification 3️⃣`);
           
           // Send message notification to personal room
           socketService.emitToUserForCalling(
@@ -682,7 +688,7 @@ export class SocketService {
         if (isOnline) { // && !isInConversationRoom
           // ⚠️ User is online but NOT in this conversation room
           // Send both socket notification AND conversation list update
-          console.log(`⚠️ User ${participantId} is online but not in room, sending notification 3️⃣`);
+          // console.log(`⚠️ User ${participantId} is online but not in room, sending notification 3️⃣`);
           
           // Send message notification to personal room
           socketService.emitToUserForCalling(
@@ -769,7 +775,7 @@ export class SocketService {
         if (isOnline) { // && !isInConversationRoom
           // ⚠️ User is online but NOT in this conversation room
           // Send both socket notification AND conversation list update
-          console.log(`⚠️ User ${participantId} is online but not in room, sending notification 3️⃣`);
+          // console.log(`⚠️ User ${participantId} is online but not in room, sending notification 3️⃣`);
           
           // Send message notification to personal room
           socketService.emitToUserForCalling(
@@ -1090,7 +1096,7 @@ export class SocketService {
           } else if (isOnline && !isInConversationRoom) {
             // ⚠️ User is online but NOT in this conversation room
             // Send both socket notification AND conversation list update
-            console.log(`⚠️ User ${participantId} is online but not in room, sending notification 3️⃣`);
+            // console.log(`⚠️ User ${participantId} is online but not in room, sending notification 3️⃣`);
             
             // Send message notification to personal room
             // this.emitToUser(
@@ -1122,6 +1128,23 @@ export class SocketService {
               createdAt: updatedConversation?.createdAt || new Date(),
               _conversationId: updatedConversation?._id,
             });
+
+            const userDevices:IUserDevices[] = await UserDevices.find({
+              userId: participantId, 
+            });
+            if(!userDevices){
+              console.log(`⚠️ No FCM token found for user ${participantId}`);
+              // TODO : MUST : need to think how to handle this case
+            }
+
+            // fcmToken,deviceType,deviceName,lastActive,
+            for(const userDevice of userDevices){
+              await sendPushNotificationV2(
+                userDevice.fcmToken,
+                messageToEmit,
+                participantId
+              );
+            }
 
           } else {
             // 🔴 User is OFFLINE - send push notification

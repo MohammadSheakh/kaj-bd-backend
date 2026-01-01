@@ -90,8 +90,11 @@ const register = catchAsync(async (req :Request, res:Response) => {
     email : req.body.email,
     password : req.body.password,
     role : data.role,
-    profileId : userProfile._id
+    profileId : userProfile._id,
+    phoneNumber : `${data.phoneNumber}`,
   }
+
+  //`0${data.phoneNumber}`
 
   const result = await AuthService.createUser(userDTO, userProfile._id);
 
@@ -100,7 +103,6 @@ const register = catchAsync(async (req :Request, res:Response) => {
     // we already created wallet for provider in AuthService.createUser function
     //---------------------------------
 
-  
     // For Provider
     sendResponse(res, {
       code: StatusCodes.CREATED,

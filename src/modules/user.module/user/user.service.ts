@@ -869,6 +869,428 @@ export class UserService extends GenericService<typeof User, IUser> {
     }
   }
 
+
+  async getAllWithAggregationWithStatistics_V2_ProviderCountFix(
+      filters: any, 
+      options: PaginateOptions,
+      userId: String, // logged in User .. For this case .. Admin Id
+      
+    ) {
+
+       // Separate general filters and profile-specific filters
+  const generalFilters = omit(filters, ['approvalStatus']); // Exclude profile-specific fields
+      
+    // 📈⚙️ OPTIMIZATION:
+    const pipeline = [
+        // Step 1: Match users based on filters
+        ...(Object.keys(filters).length > 0 ? [{ $match: generalFilters }] : []),
+        
+        // Step 2: Lookup profile information
+        {
+            $lookup: {
+                from: 'userprofiles', // Collection name (adjust if different)
+                localField: 'profileId',
+                foreignField: '_id',
+                as: 'profileInfo'
+            }
+        },
+        
+        // Step 3: Unwind profile array (convert array to object)
+        {
+            $unwind: {
+                path: '$profileInfo',
+                preserveNullAndEmptyArrays: true // Keep users without profiles
+            }
+        },
+
+        // Step 5: Project the required fields
+        {
+            $project: {
+                _id: 1,
+                name: 1,
+                email: 1,
+                phoneNumber: 1,
+                role: 1,
+                profileId: 1,
+                createdAt: 1,
+                // Add approval status from profile
+                dob: '$profileInfo.dob',
+                // Optionally include other profile fields
+                gender: '$profileInfo.gender',
+                location: '$profileInfo.location'
+            }
+        },
+    ];
+
+    // 📈⚙️ OPTIMIZATION: Get role-based statistics first
+    const statisticsPipeline = [
+        {
+            $group: {
+                _id: '$role',
+                count: { $sum: 1 }
+            }
+        }
+    ];
+
+
+    // 📈⚙️ OPTIMIZATION: Get total service booking count
+    const serviceBookingStatPipeline = [
+      {
+        $group: {
+            _id: null,
+            count: { $sum: 1 }
+        }
+      }
+    ];
+
+    // lets calculate total revenue for admin
+
+    //------- calculate this months and last months providers count
+    // also calculate percentage { (newVal - oldVal) / old } * 100
+    // result minus means decreased , positive means increment
+    //------ do same thing for user also .. 
+
+    async function calculateCurrentAndLastMonthsUserCountByRole(role : string) {
+        const now = new Date();
+        const monthStart = startOfMonth(now);
+
+        const lastMonthStart = startOfMonth(subMonths(now, 1));
+        const lastMonthEnd = endOfMonth(subMonths(now, 1));
+
+        const baseQuery = { isDeleted: false, role };
+        
+            const [
+              allCount,
+              thisMonthEarnings,
+              lastMonthEarnings,
+            ] = await Promise.all([
+
+              // All Count
+              User.aggregate([
+                { $match: { ...baseQuery } },
+                {
+                  $group: {
+                    _id: null,
+                    // total: { $sum: '$amount' },
+                    count: { $sum: 1 },
+                  },
+                },
+              ]),
+              
+              // This month earnings
+              User.aggregate([
+                { $match: { ...baseQuery, createdAt: { $gte: monthStart } } },
+                {
+                  $group: {
+                    _id: null,
+                    // total: { $sum: '$amount' },
+                    count: { $sum: 1 },
+                  },
+                },
+              ]),
+        
+              // Last month earnings
+              User.aggregate([
+                {
+                  $match: {
+                    ...baseQuery,
+                    createdAt: { $gte: lastMonthStart, $lte: lastMonthEnd },
+                  },
+                },
+                {
+                  $group: {
+                    _id: null,
+                    // total: { $sum: '$amount' },
+                    count: { $sum: 1 },
+                  },
+                },
+              ]),
+            ]);
+        
+            // Calculate growth percentages
+            
+            
+            const thisMonthTotal = thisMonthEarnings[0]?.count || 0;
+            const lastMonthTotal = lastMonthEarnings[0]?.count || 0;
+            const monthlyGrowth =
+              lastMonthTotal > 0
+                ? ((thisMonthTotal - lastMonthTotal) / lastMonthTotal) * 100
+                : 0;
+
+        return {
+            allCount : allCount[0]?.count || 0,
+            thisMonthTotal,
+            lastMonthTotal,
+            monthlyGrowth
+        };
+    }
+
+
+    async function calculateCurrentAndLastMonthsServiceBookingCount() {
+        const now = new Date();
+        const monthStart = startOfMonth(now);
+
+        const lastMonthStart = startOfMonth(subMonths(now, 1));
+        const lastMonthEnd = endOfMonth(subMonths(now, 1));
+
+        const baseQuery = { isDeleted: false };
+        
+            const [
+              allBookingCount,
+              thisMonthBooking,
+              lastMonthBooking,
+            ] = await Promise.all([
+
+              // This month earnings
+              ServiceBooking.aggregate([
+                { $match: { ...baseQuery } },
+                {
+                  $group: {
+                    _id: null,
+                    // total: { $sum: '$amount' },
+                    count: { $sum: 1 },
+                  },
+                },
+              ]),
+              
+              // This month earnings
+              ServiceBooking.aggregate([
+                { $match: { ...baseQuery, createdAt: { $gte: monthStart } } },
+                {
+                  $group: {
+                    _id: null,
+                    // total: { $sum: '$amount' },
+                    count: { $sum: 1 },
+                  },
+                },
+              ]),
+        
+              // Last month earnings
+              ServiceBooking.aggregate([
+                {
+                  $match: {
+                    ...baseQuery,
+                    createdAt: { $gte: lastMonthStart, $lte: lastMonthEnd },
+                  },
+                },
+                {
+                  $group: {
+                    _id: null,
+                    // total: { $sum: '$amount' },
+                    count: { $sum: 1 },
+                  },
+                },
+              ]),
+            ]);
+        
+            // Calculate growth percentages
+            
+            
+            const thisMonthTotal = thisMonthBooking[0]?.count || 0;
+            const lastMonthTotal = lastMonthBooking[0]?.count || 0;
+            const monthlyGrowth =
+              lastMonthTotal > 0
+                ? ((thisMonthTotal - lastMonthTotal) / lastMonthTotal) * 100
+                : 0;
+
+        return {
+            allBookingCount : allBookingCount[0]?.count || 0,
+            thisMonthTotal,
+            lastMonthTotal,
+            monthlyGrowth
+        };
+    }
+
+    //------- get all revenue for admin .. 
+    
+    const walletIdOfUser:IUser = await User.findById(userId).select('walletId')
+
+    async function getTotalRevenueByMonths(year:string) {
+        
+        const targetYear = parseInt(year, 10) || new Date().getFullYear();
+        
+        const totalTransactionsByMonth = await WalletTransactionHistory.aggregate([
+            {
+                $match: {
+                    walletId : walletIdOfUser.walletId,
+                    isDeleted: false,
+                    createdAt: {
+                        $gte: new Date(targetYear, 0, 1), // Start of current year
+                        $lt: new Date(targetYear + 1, 0, 1) // Start of next year
+                    }
+                }
+            },
+            {
+                $group: {
+                    _id: {
+                        month: { $month: "$createdAt" },
+                        year: { $year: "$createdAt" }
+                    },
+                    total: { $sum: '$amount' },
+                    count: { $sum: 1 }
+                }
+            },
+            {
+                $sort: { "_id.month": 1 }
+            }
+        ]);
+
+        const totalTransactionsAmountForAdmin = await WalletTransactionHistory.aggregate([
+            {
+                $match: {
+                    walletId : walletIdOfUser.walletId,
+                    isDeleted: false,
+                    
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    total: { $sum: '$amount' },
+                }
+            }
+        ]);
+
+        // Create array with all 12 months initialized to 0
+        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                           'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        
+        const result = monthNames.map((name, index) => ({
+            month: name,
+            count: 0,
+            amount : 0,
+        }));
+
+        // Fill in actual counts
+        totalTransactionsByMonth.forEach(item => {
+            const monthIndex = item._id.month - 1; // MongoDB months are 1-indexed
+            result[monthIndex].count = item.count;
+            result[monthIndex].amount = item.total;
+        });
+
+        // Calculate average report count
+        const totalReports = result.reduce((sum, month) => sum + month.count, 0);
+        // const averageReportCount = totalReports / 12;
+
+        return {
+            monthlyData: result,
+            totalTransactionsAmountForAdmin : totalTransactionsAmountForAdmin[0]?.total || 0,
+            // averageReportCount: parseFloat(averageReportCount.toFixed(2))
+        };
+    }
+
+
+    const [
+      totalRevenueByMonth,
+      currentAndLastMonthUserCount, 
+      currentAndLastMonthProviderCount,
+      serviceBookingCount
+    ]
+     = await Promise.all([
+      await getTotalRevenueByMonths(filters?.year as string),  // TODO: eta test korte hobe thik result dicche kina
+      await calculateCurrentAndLastMonthsUserCountByRole("user"),
+      await calculateCurrentAndLastMonthsUserCountByRole("provider"),
+      await calculateCurrentAndLastMonthsServiceBookingCount(),
+    ])
+
+
+
+    // Get statistics
+    const roleStats = await User.aggregate(statisticsPipeline);
+    
+    // get BookingCount 
+    const bookingCount = await ServiceBooking.aggregate(serviceBookingStatPipeline);
+
+
+    const paymentTransactionStatPipeline = [
+      {
+        $group: {
+            _id: null,
+            count: { $sum: 1 },
+            total: { $sum: '$amount' },
+        }
+      }
+    ];
+
+    // get total transaction amount for admin 
+    const totalTransactionAmountForAdmin = await PaymentTransaction
+    .aggregate(paymentTransactionStatPipeline);
+
+
+    //--------------- Find out the approved provider count ----------- START
+    const countPipeline = [
+      // 1️⃣ Match users (same as before)
+      // { $match: userMatchStage },
+
+      // 2️⃣ Lookup role data
+      {
+        $lookup: {
+          from: 'userroledatas',
+          localField: '_id',
+          foreignField: 'userId',
+          as: 'userRoleDataInfo'
+        }
+      },
+
+      // 3️⃣ Unwind
+      {
+        $unwind: {
+          path: '$userRoleDataInfo',
+          preserveNullAndEmptyArrays: false
+        }
+      },
+
+      // 4️⃣ Match accepted providers only
+      {
+        $match: {
+          'userRoleDataInfo.providerApprovalStatus': 'accept'
+        }
+      },
+
+      // 5️⃣ Count only
+      {
+        $count: 'totalAcceptedProviders'
+      }
+    ];
+
+    const acceptedProvidersCount = await User.aggregate(countPipeline);
+    //--------------------------------------------------------------- END
+
+    // Transform stats into the required format
+    const statistics = {
+      // totalUser: roleStats.reduce((sum, stat) => sum + stat.count, 0),
+      totalUser: roleStats.find(stat => stat._id === 'user')?.count || 0,
+
+
+      // totalProviders: roleStats.find(stat => stat._id === 'provider')?.count || 0,
+      // totalProviders: 12,
+
+      totalProviders: acceptedProvidersCount[0]?.totalAcceptedProviders + 1 || 0, // hotfix: only shows thoses providers who's status is accept
+      
+      totalSubAdmin: roleStats.find(stat => stat._id === 'subAdmin')?.count || 0,
+      totalAdmin: roleStats.find(stat => stat._id === 'admin')?.count || 0,
+      totalServiceBooking: bookingCount[0]?.count || 0,
+      totalTransactionAmountForAdmin : totalTransactionAmountForAdmin[0]?.total || 0
+    };
+
+    // Use pagination service for aggregation
+    const res =
+      await PaginationService.aggregationPaginate(
+      User, 
+      pipeline,
+      options
+    );
+
+    return {
+      statistics,
+      totalRevenueByMonth,
+      currentAndLastMonthUserCount,
+      currentAndLastMonthProviderCount,
+      serviceBookingCount,
+      ...res
+    }
+  }
+
   //---------------------------------kaj bd
   //  Admin | User Management
   //---------------------------------
@@ -1039,7 +1461,7 @@ export class UserService extends GenericService<typeof User, IUser> {
       delete userMatchStage.createdAt;
     }
 
-    console.log("userMatchStage :: ", userMatchStage)
+    // console.log("userMatchStage :: ", userMatchStage)
    
     // 📈⚙️ OPTIMIZATION:
     const pipeline = [
@@ -1185,7 +1607,7 @@ export class UserService extends GenericService<typeof User, IUser> {
     );
 
 
-    console.log("res :: ", res)
+    // console.log("res :: ", res)
 
 
 
@@ -1241,7 +1663,7 @@ export class UserService extends GenericService<typeof User, IUser> {
 
       ServiceProvider.find({
         providerApprovalStatus: 'accept',
-        rating: { $lt: 3.5 },
+        rating: { $gt: 3.5 }, // lt
         isDeleted: false,
       })
         .limit(10)
@@ -1251,7 +1673,7 @@ export class UserService extends GenericService<typeof User, IUser> {
           select: 'attachment attachmentType',
         }),
 
-      Banner.find({ isDeleted: false }).limit(5).select('attachments').populate({
+      Banner.find({ isDeleted: false }).limit(10).select('attachments').populate({
         path: 'attachments',
         select: 'attachment',
       }),  

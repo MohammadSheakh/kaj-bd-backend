@@ -19,9 +19,12 @@ const upload = multer({ storage: storage });
 
 export const checkUserCanCancelBooking = () => {
     return async(req: Request, res:Response, next:NextFunction) => {
-        const booking:IServiceBooking = await ServiceBooking.findOne({
-            _id : req.params.id,
-        });
+        const booking:IServiceBooking = await ServiceBooking.findById(
+        req.params.id
+        // {
+        //     id : req.params.id,
+        // }
+        );
 
         if(!booking){
             sendResponse(res, {
@@ -43,22 +46,20 @@ export const checkUserCanCancelBooking = () => {
 
     
         // Calculate the difference in hours
-        // const diffInMs = now.getTime() - bookingTime.getTime();
-        // const diffInHours = diffInMs / (1000 * 60 * 60);
+        
+        const hoursPassed = differenceInHours(new Date(), new Date(booking.createdAt)); // booking.bookingDateTime
 
-        // // Check if 4 hours have passed
-        // if (diffInHours < 4) {
-        //------------------------------------------------------------------
+        console.log('Current Time:', new Date());
+        console.log('Booking Created At:', new Date(booking.createdAt));
+        console.log('hoursPassed since booking createdAt:', hoursPassed);
 
-        // const hoursPassed = differenceInHours(new Date(), new Date(booking.bookingDateTime));
-
-        // if (hoursPassed < 4) {
-        //     return sendResponse(res, {
-        //         code: StatusCodes.BAD_REQUEST,
-        //         message: 'You can only cancel after 4 hours have passed since the booking time.',
-        //         success: false,
-        //     });
-        // }
+        if (hoursPassed < 4) {
+            return sendResponse(res, {
+                code: StatusCodes.BAD_REQUEST,
+                message: 'You can only cancel after 4 hours have passed since the booking time.',
+                success: false,
+            });
+        }
 
         next();
     }

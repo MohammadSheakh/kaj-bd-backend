@@ -46,11 +46,11 @@ export class WalletTransactionHistoryController extends GenericController<
 
     const result = await this.service.getAllWithPagination(filters, options, populateOptions , select );
 
-    console.log('result: ', result);
+    // console.log('result: ', result);
 
     const wallet = await Wallet.findOne({ userId: req.user.userId });
 
-    console.log('wallet: ', wallet);
+    // console.log('wallet: ', wallet);
 
     sendResponse(res, {
       code: StatusCodes.OK,

@@ -23,6 +23,13 @@ import { IAdditionalCost } from '../additionalCost/additionalCost.interface';
 import { AdditionalCost } from '../additionalCost/additionalCost.model';
 import { AdminPercentage } from '../../adminPercentage/adminPercentage.model';
 import { IAdminPercentage } from '../../adminPercentage/adminPercentage.interface';
+import { PaymentTransaction } from '../../payment.module/paymentTransaction/paymentTransaction.model';
+import { config } from '../../../config';
+import { IWallet } from '../../wallet.module/wallet/wallet.interface';
+import { WalletTransactionHistory } from '../../wallet.module/walletTransactionHistory/walletTransactionHistory.model';
+import { TWalletTransactionHistory, TWalletTransactionStatus } from '../../wallet.module/walletTransactionHistory/walletTransactionHistory.constant';
+import { TTransactionFor } from '../../../constants/TTransactionFor';
+import { Wallet } from '../../wallet.module/wallet/wallet.model';
 
 // const serviceProviderService = new ServiceProviderService();
 
@@ -141,7 +148,7 @@ export class ServiceBookingService extends GenericService<
       adminPercentageOfStartPrice: serviceProviderData.startPrice * (parseInt(adminPercentage?.percentage) / 100)
     }
 
-    console.log('serviceBookingDTO', serviceBookingDTO);
+    // console.log('serviceBookingDTO', serviceBookingDTO);
 
     const createdServiceBooking : IServiceBooking = await ServiceBooking.create(serviceBookingDTO); 
 
@@ -236,6 +243,68 @@ export class ServiceBookingService extends GenericService<
   
   // we use processPayment of sslcommerz.gateway.ts ----------------- -------------- -------------- -------------
 
+
+  // this function will return final amount ... 
+  // this amount will pay front end app via sslcommerz sdk ..
+  // after this front-end will hit /payment-successful api so that backend know
+  // payment is done .. and backend can update database and send notification and 
+  // add amount to admin and providers wallet
+  async getTotalPriceToPay(serviceBookingId: any, loggedInUser: IUser) : Promise<any> {
+    
+    const session = await mongoose.startSession();
+    
+        let finalAmount = 0;
+
+        let isBookingExist : IServiceBooking | null;
+        let existingUser: IUser | null;
+
+        await session.withTransaction(async () => {
+            existingUser = await User.findById(loggedInUser.userId);
+            
+            isBookingExist = await ServiceBooking.findById(serviceBookingId).session(session);
+
+            console.log('isBookingExist :: ', isBookingExist);
+
+            if(!isBookingExist){
+                throw new ApiError(StatusCodes.NOT_FOUND, "Service Booking not found");
+            }
+
+            finalAmount = isBookingExist.startPrice;
+            
+            console.log('finalAmount :: ', finalAmount);
+
+            const additionalCosts : IAdditionalCost[] | null = await AdditionalCost.find({
+                serviceBookingId : isBookingExist,
+                isDeleted : false,
+            }).session(session);
+
+            console.log('additionalCosts :: ', additionalCosts);
+
+            let totalAdditionalCost;
+
+            if(additionalCosts.length > 0){
+                totalAdditionalCost = additionalCosts.reduce((sum, cost) => {
+                    return sum + ( cost.price || 0 )
+                }, 0)
+
+                console.log('totalAdditionalCost :: ', totalAdditionalCost);
+
+                finalAmount += totalAdditionalCost;
+            }
+
+            console.log('finalAmount :: ', finalAmount);
+
+            isBookingExist.totalCost = finalAmount;
+
+            // we dont need to create any booking here .. we can update totalCost
+            await isBookingExist.save();
+
+        });
+        
+        session.endSession();
+
+    return finalAmount;
+  }
 
 
 }
